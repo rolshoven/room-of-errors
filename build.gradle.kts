@@ -1,9 +1,11 @@
 plugins {
   val kotlin = "1.7.21"
   val flyway = "9.8.2"
+  val jooq = "8.0"
   kotlin("multiplatform") version kotlin
   kotlin("plugin.serialization") version kotlin
   id("org.flywaydb.flyway") version flyway
+  id("nu.studer.jooq") version jooq
   application
 }
 
@@ -19,6 +21,7 @@ object Versions {
   const val multiplatformUUID = "0.6.0"
   const val hikari = "5.0.1"
   const val h2 = "2.1.214"
+  const val jooq = "3.17.5"
 }
 
 repositories {
@@ -26,8 +29,9 @@ repositories {
   maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
 
-fun kotlinw(target: String): String =
-  "org.jetbrains.kotlin-wrappers:kotlin-$target"
+dependencies {
+  jooqGenerator("com.h2database:h2:${Versions.h2}")
+}
 
 kotlin {
   jvm {
@@ -83,6 +87,8 @@ kotlin {
         // persistence
         implementation("com.zaxxer:HikariCP:${Versions.hikari}")
         implementation("com.h2database:h2:${Versions.h2}")
+        implementation("org.jooq:jooq:${Versions.jooq}")
+
       }
     }
     val jvmTest by getting {
@@ -108,19 +114,77 @@ kotlin {
     }
   }
 }
+fun kotlinw(target: String): String =
+  "org.jetbrains.kotlin-wrappers:kotlin-$target"
 
 application {
   mainClass.set("com.fynnian.application.ServerKt")
 }
 
+val dbDriver = "org.h2.Driver"
+val dbUrl = "jdbc:h2:file:${project.buildDir}/flyway/horrors_db"
+val dbUser = "test"
+val dbPassword = "test"
+val dbSchema = "room_of_horrors"
+
 flyway {
-  url = "jdbc:h2:file:${project.buildDir}/flyway/horrors_db"
-  user = "test"
-  password = "test"
-  schemas = arrayOf("room_of_horrors")
+  url = dbUrl
+  user = dbUser
+  password = dbPassword
+  schemas = arrayOf(dbSchema)
   locations = arrayOf(
     "filesystem:${project.kotlin.sourceSets["jvmMain"].resources.srcDirs.first()}/db"
   )
+  cleanDisabled = false
+}
+
+
+jooq {
+  configurations {
+    create("main") {
+      jooqConfiguration.apply {
+        jdbc.apply {
+          driver = dbDriver
+          url = dbUrl
+          user = dbUser
+          password = dbPassword
+        }
+        generator.apply {
+          name = "org.jooq.codegen.DefaultGenerator"
+          database.apply {
+            name = "org.jooq.meta.h2.H2Database"
+            inputSchema = dbSchema
+            excludes = """
+              flyway_schema_history
+            """.trimIndent()
+
+          }
+          generate.apply {
+            isDeprecated = false
+            isRecords = true
+            isImmutablePojos = true
+            isFluentSetters = true
+          }
+          target.apply {
+            packageName = "com.fynnian.application.jooq"
+            directory = "build/generated-src/jooq/main"
+          }
+          strategy.name = "org.jooq.codegen.DefaultGeneratorStrategy"
+        }
+      }
+    }
+  }
+}
+
+tasks.named<nu.studer.gradle.jooq.JooqGenerate>("generateJooq") {
+  dependsOn(tasks.getByName<org.flywaydb.gradle.task.FlywayMigrateTask>("flywayMigrate"))
+
+  // declare Flyway migration scripts as inputs on the jOOQ task
+  inputs.files(project.kotlin.sourceSets["jvmMain"].resources.asFileTree)
+    .withPropertyName("migrations")
+    .withPathSensitivity(PathSensitivity.RELATIVE)
+
+  allInputsDeclared.set(true)
 }
 
 // include JS artifacts in any JAR we generate
