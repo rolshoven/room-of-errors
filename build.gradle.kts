@@ -14,6 +14,9 @@ object Versions {
   const val coroutines = "1.6.4"
   const val ktor = "2.0.3"
   const val logback = "1.2.11"
+  const val multiplatformUUID = "0.6.0"
+  const val hikari = "5.0.1"
+  const val h2 = "1.4.200"
 }
 
 repositories {
@@ -50,6 +53,9 @@ kotlin {
         implementation("io.ktor:ktor-client-core:${Versions.ktor}")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.serializationJson}")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
+
+        // global uuid
+        implementation("com.benasher44:uuid:${Versions.multiplatformUUID}")
       }
     }
     val commonTest by getting {
@@ -67,9 +73,14 @@ kotlin {
         implementation("io.ktor:ktor-server-compression:${Versions.ktor}")
         implementation("io.ktor:ktor-server-core-jvm:${Versions.ktor}")
         implementation("io.ktor:ktor-server-netty:${Versions.ktor}")
+        implementation("io.ktor:ktor-server-status-pages:${Versions.ktor}")
         implementation("io.ktor:ktor-serialization-kotlinx-json:${Versions.ktor}")
         implementation("ch.qos.logback:logback-classic:${Versions.logback}")
         implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2")
+
+        // persistence
+        implementation("com.zaxxer:HikariCP:${Versions.hikari}")
+        implementation("com.h2database:h2:${Versions.h2}")
       }
     }
     val jvmTest by getting {
