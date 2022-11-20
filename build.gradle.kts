@@ -1,7 +1,9 @@
 plugins {
   val kotlin = "1.7.21"
+  val flyway = "9.8.2"
   kotlin("multiplatform") version kotlin
   kotlin("plugin.serialization") version kotlin
+  id("org.flywaydb.flyway") version flyway
   application
 }
 
@@ -16,7 +18,7 @@ object Versions {
   const val logback = "1.2.11"
   const val multiplatformUUID = "0.6.0"
   const val hikari = "5.0.1"
-  const val h2 = "1.4.200"
+  const val h2 = "2.1.214"
 }
 
 repositories {
@@ -109,6 +111,16 @@ kotlin {
 
 application {
   mainClass.set("com.fynnian.application.ServerKt")
+}
+
+flyway {
+  url = "jdbc:h2:file:${project.buildDir}/flyway/horrors_db"
+  user = "test"
+  password = "test"
+  schemas = arrayOf("room_of_horrors")
+  locations = arrayOf(
+    "filesystem:${project.kotlin.sourceSets["jvmMain"].resources.srcDirs.first()}/db"
+  )
 }
 
 // include JS artifacts in any JAR we generate
