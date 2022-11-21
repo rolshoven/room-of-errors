@@ -8,5 +8,5 @@ import kotlinx.serialization.Serializable
 data class User(
   @Serializable(with = UuidSerializer::class)
   val id: Uuid,
-  val profession: String
+  val profession: String?
 )

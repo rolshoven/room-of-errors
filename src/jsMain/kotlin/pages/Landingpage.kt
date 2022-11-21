@@ -1,7 +1,7 @@
 package pages
 
 
-import AppPaths
+import com.fynnian.application.common.AppPaths
 import csstype.TextAlign
 import mui.material.*
 import mui.system.responsive

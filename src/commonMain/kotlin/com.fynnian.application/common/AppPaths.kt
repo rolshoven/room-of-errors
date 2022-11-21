@@ -5,9 +5,10 @@ enum class AppPaths(val path: String) {
   API_USERS("/users"),
   API_ROOMS("/rooms"),
   API_ROOMS_MANAGEMENT("/management"),
+  STATIC_ROOT("/static"),
   HOME("/"),
-  STATIC_ROOT("/static")
-
+  ROOM("/room/"),
+  MANAGEMENT("/management")
 }
 
 enum class AppPathParams(val param: String) {

@@ -2,6 +2,7 @@ package pages
 
 import com.benasher44.uuid.uuid4
 import com.fynnian.application.common.room.*
+import components.UserContext
 import csstype.*
 import kotlinx.js.get
 import mui.icons.material.Save
@@ -19,15 +20,13 @@ import react.dom.html.ReactHTML.main
 import react.dom.html.ReactHTML.p
 import react.dom.onChange
 import react.router.useParams
+import react.useContext
 import react.useState
-
-external interface RoomProps: Props {
-
-}
 
 val RoomPage = FC<Props> {
 
   val roomId = useParams()["id"] ?: ""
+  val user = useContext(UserContext)
   val (cord, setCord) = useState<Coordinates>()
   val (answers, setAnswers) = useState<MutableList<Answer>>(mutableListOf())
   val (currentAnswer, setCurrentAnswer) = useState("")

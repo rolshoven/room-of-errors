@@ -1,5 +1,7 @@
 import browser.document
+import com.fynnian.application.common.AppPaths
 import components.ThemeModule
+import components.UserStorage
 import mui.material.useMediaQuery
 import pages.Landingpage
 import pages.Management
@@ -24,7 +26,9 @@ fun main() {
 private val App = FC<Props> {
   val mobileMode = useMediaQuery("(max-width:960px)")
   ThemeModule {
-    Routing()
+    UserStorage {
+      Routing()
+    }
   }
 }
 
@@ -45,10 +49,4 @@ private val Routing = FC<Props> {
       }
     }
   }
-}
-
-enum class AppPaths(val path: String) {
-  HOME("/"),
-  ROOM("/room/"),
-  MANAGEMENT("/management")
 }
