@@ -13,7 +13,6 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.html.*
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
 
@@ -46,7 +45,7 @@ fun Application.module() {
       resources()
     }
     route(AppPaths.API_ROOT.path) {
-      userApi()
+      userApi(config)
     }
   }
 }

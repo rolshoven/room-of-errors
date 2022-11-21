@@ -14,3 +14,7 @@ fun ApplicationCall.getUUIDParam(key: String): Uuid {
     }
   } ?: throw APIException.BadRequest("Missing required path parameter $key")
 }
+
+fun ApplicationCall.checkRequestIds(path: Uuid, payload: Uuid) {
+  if (path != payload) throw APIException.BadRequest("Path id $path doesn't match payload id $payload for resource")
+}
