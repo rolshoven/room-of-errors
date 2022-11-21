@@ -157,7 +157,14 @@ jooq {
             excludes = """
               flyway_schema_history
             """.trimIndent()
-
+            // keep force type block for reference
+            // forcedTypes.addAll(listOf(
+            //   org.jooq.meta.jaxb.ForcedType().apply {
+            //     userType = "com.fynnian.application.common.domain.Coordinates"
+            //     converter = "com.fynnian.application.jooq.CoordinatesConverter"
+            //     includeExpression = ".*\\.coordinates.*"
+            //   }
+            // ))
           }
           generate.apply {
             isDeprecated = false

@@ -1,10 +1,8 @@
 package pages
 
+import com.benasher44.uuid.uuid4
+import com.fynnian.application.common.room.*
 import csstype.*
-import domain.Answer
-import domain.Coordinates
-import domain.Room
-import domain.RoomImage
 import kotlinx.js.get
 import mui.icons.material.Save
 import mui.icons.material.Warning
@@ -35,10 +33,16 @@ val RoomPage = FC<Props> {
   val (currentAnswer, setCurrentAnswer) = useState("")
   val room = Room(
     roomId,
+    RoomStatus.OPEN,
     "Station",
-    RoomImage(
+    "",
+    "",
+    1,
+    listOf(RoomImage(
+      uuid4(),
       "https://static01.nyt.com/images/2019/03/24/travel/24trending-shophotels1/24trending-shophotels1-jumbo.jpg?quality=75&auto=webp",
       "station image"
+    )
     )
   )
 
@@ -56,7 +60,7 @@ val RoomPage = FC<Props> {
       }
       Typography {
         component = p
-        + "Room Code: ${room.id}"
+        + "Room Code: ${room.code}"
       }
       Typography {
         component = p
@@ -66,8 +70,8 @@ val RoomPage = FC<Props> {
     Box {
       img {
         id = "room-image"
-        src = room.image.url
-        alt = room.image.title
+        src = room.images.first().url
+        alt = room.images.first().title
         loading = ImgLoading.lazy
         onClick = {
           setCord(Coordinates(it.clientX, it.clientY))
@@ -130,8 +134,11 @@ val RoomPage = FC<Props> {
               onClick = {
                 addAnswer(
                   Answer(
+                    id = uuid4(),
                     no = answers.size + 1,
-                    roomId = roomId,
+                    imageId = uuid4(),
+                    userId = uuid4(),
+                    roomCode = roomId,
                     coordinates = cord,
                     answer = currentAnswer
                   )

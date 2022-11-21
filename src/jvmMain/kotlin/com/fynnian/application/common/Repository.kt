@@ -5,11 +5,11 @@ import org.jooq.DSLContext
 import org.jooq.impl.DSL
 import java.sql.DriverManager
 
-class Repository(private val dataSource: DataSource) {
+open class Repository(private val dataSource: DataSource) {
 
-  fun createContext(): DSLContext {
-    with(DriverManager.getConnection(dataSource.url, dataSource.user, dataSource.password)) {
-      return DSL.using(this, dataSource.dialect)
+  fun <T> jooq(statement: DSLContext.() -> T): T {
+    DriverManager.getConnection(dataSource.url, dataSource.user, dataSource.password).use {
+      return DSL.using(it, dataSource.dialect).statement()
     }
   }
 

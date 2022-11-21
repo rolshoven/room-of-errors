@@ -1,6 +1,7 @@
-package com.fynnian.application.common
+package com.fynnian.application.common.user
 
 import com.benasher44.uuid.Uuid
+import com.fynnian.application.common.UuidSerializer
 import kotlinx.serialization.Serializable
 
 @Serializable

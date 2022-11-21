@@ -1,9 +1,10 @@
 package com.fynnian.application.user
 
-import com.fynnian.application.APIException
-import com.fynnian.application.common.*
-import com.fynnian.application.config.AppConfig
-import com.fynnian.application.jooq.Tables.USERS
+import com.fynnian.application.common.AppPaths
+import com.fynnian.application.common.user.User
+import com.fynnian.application.common.checkRequestIds
+import com.fynnian.application.common.getUUIDParam
+import com.fynnian.application.config.DI
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -12,22 +13,16 @@ import io.ktor.server.routing.*
 
 private const val idParam = "id"
 
-fun Route.userApi(config: AppConfig) {
+fun Route.userApi(dependencies: DI) {
   route(AppPaths.API_USERS.path) {
     route("/{$idParam}") {
       // get user by id
       get() {
         val id = call.getUUIDParam(idParam)
 
-        Repository(config.dataSource)
-          .createContext()
-          .select(USERS.asterisk())
-          .from(USERS)
-          .where(USERS.ID.eq(id))
-          .map { it.into(USERS).toDomain() }
-          .firstOrNull()
-          ?.also { call.respond(it) }
-          ?: throw APIException.NotFound("User with id: $id not found")
+        dependencies.userRepository
+          .getUserById(id)
+          .also { call.respond(it) }
       }
       // create / update user by id
       put {
@@ -35,31 +30,18 @@ fun Route.userApi(config: AppConfig) {
         val request = call.receive<User>()
         call.checkRequestIds(id, request.id)
 
-        Repository(config.dataSource)
-          .createContext()
-          .insertInto(USERS)
-          .set(request.toRecord())
-          .onConflict(USERS.ID)
-          .doUpdate()
-          .set(request.toRecord())
-          .returning()
-          .map { it.into(USERS).toDomain() }
-          .first()
+        dependencies.userRepository
+          .upsertUser(request)
           .also { call.respond(it) }
-
       }
       // delete user
       delete {
         val id = call.getUUIDParam(idParam)
 
-        Repository(config.dataSource)
-          .createContext()
-          .deleteFrom(USERS)
-          .where(USERS.ID.eq(id))
-          .returning()
-          .firstOrNull()
+        dependencies.userRepository
+          .deleteUser(id)
           .also { call.response.status(HttpStatusCode.OK) }
-          ?: throw APIException.NotFound("User with id: $id not found")
+
       }
     }
   }
