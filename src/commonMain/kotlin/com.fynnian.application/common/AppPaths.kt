@@ -7,7 +7,7 @@ enum class AppPaths(val path: String) {
   API_ROOMS_MANAGEMENT("/management"),
   STATIC_ROOT("/static"),
   HOME("/"),
-  ROOM("/room/"),
+  ROOM("/room"),
   MANAGEMENT("/management")
 }
 

@@ -63,7 +63,7 @@ val Landingpage = FC<LandingpageProps> {
           disabled = roomId.isBlank()
           onClick = {
             console.log(roomId)
-            navigate(AppPaths.ROOM.path + roomId)
+            navigate(AppPaths.ROOM.path + "/$roomId")
           }
           +"Go to room"
         }

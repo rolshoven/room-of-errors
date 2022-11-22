@@ -41,7 +41,7 @@ private val Routing = FC<Props> {
         element = createElement(Landingpage)
       }
       Route {
-        path = AppPaths.ROOM.path + ":id"
+        path = AppPaths.ROOM.path + "/:id"
         element = createElement(RoomPage)
       }
       Route {

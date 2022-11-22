@@ -47,12 +47,12 @@ fun Application.module() {
     gzip()
   }
   routing {
-    get(AppPaths.HOME.path) {
-      call.respondText(
-        this::class.java.classLoader.getResource("index.html")!!.readText(),
-        ContentType.Text.Html
-      )
-    }
+    // for all web pages serve the index html, react browser router handles the reset in the client
+    get(AppPaths.HOME.path) { call.serveIndexHTML() }
+    get(AppPaths.ROOM.path + "/*") { call.serveIndexHTML() }
+    get(AppPaths.MANAGEMENT.path) { call.serveIndexHTML() }
+    get(AppPaths.MANAGEMENT.path + "/*") { call.serveIndexHTML() }
+
     // setup proxy for delivering the js file in dev mode from the webpack dev server
     if (config.profile == Profile.DEV) {
       get("/static/{file...}") {
@@ -74,4 +74,11 @@ fun Application.module() {
       roomManagementApi(dependencies)
     }
   }
+}
+
+suspend fun ApplicationCall.serveIndexHTML() {
+  respondText(
+    this::class.java.classLoader.getResource("index.html")!!.readText(),
+    ContentType.Text.Html
+  )
 }
