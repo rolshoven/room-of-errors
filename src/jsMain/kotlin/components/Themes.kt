@@ -1,7 +1,7 @@
 package components
 
 import kotlinx.js.jso
-import mui.material.CssBaseline
+import mui.material.*
 import mui.material.PaletteMode.dark
 import mui.material.PaletteMode.light
 import mui.material.styles.Theme
@@ -36,6 +36,25 @@ val ThemeModule = FC<PropsWithChildren> { props ->
 
       CssBaseline()
       + props.children
+    }
+  }
+}
+
+val ThemeSwitch = FC<Props> {
+  val (theme, setTheme) = useContext(ThemeContext)
+
+  FormControl {
+    variant = FormControlVariant.standard
+    FormControlLabel {
+      label = ReactNode(theme.palette.mode.toString())
+      control = Switch.create() {
+        name = "theme"
+        checked = theme == Themes.Dark
+        onChange = { _, _ ->
+          if (theme == Themes.Dark) setTheme(Themes.Light)
+          else setTheme(Themes.Dark)
+        }
+      }
     }
   }
 }

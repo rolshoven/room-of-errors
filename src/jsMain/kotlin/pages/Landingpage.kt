@@ -2,6 +2,9 @@ package pages
 
 
 import com.fynnian.application.common.AppPaths
+import components.MainContainer
+import components.Spacer
+import components.SpacerPropsSize
 import csstype.TextAlign
 import mui.material.*
 import mui.system.responsive
@@ -12,7 +15,6 @@ import react.Props
 import react.ReactNode
 import react.dom.html.InputType
 import react.dom.html.ReactHTML.h2
-import react.dom.html.ReactHTML.main
 import react.dom.onChange
 import react.router.useNavigate
 import react.useState
@@ -25,14 +27,15 @@ val Landingpage = FC<LandingpageProps> {
   val (roomId, setRoomId) = useState("")
   val navigate = useNavigate()
 
-  Container {
-    component = main
-    maxWidth = "xs"
-    CssBaseline
-    Box {
+  MainContainer {
+    Container {
+      maxWidth = "xs"
+
       Stack {
         spacing = responsive(1)
-
+        Spacer {
+          size = SpacerPropsSize.LARGE
+        }
         Typography {
           component = h2
           sx {
@@ -40,12 +43,15 @@ val Landingpage = FC<LandingpageProps> {
           }
           + "welcome to the room of horrors"
         }
+        Spacer {
+          size = SpacerPropsSize.SMALL
+        }
         TextField {
           id = "roomId"
           name = "roomId"
           type = InputType.text
-          label = ReactNode("please enter a room code")
-          placeholder = "room code"
+          label = ReactNode("please enter an 8 char room code")
+          placeholder = "abcd1234"
           value = roomId
           onChange = {
             val e = it.target as HTMLInputElement

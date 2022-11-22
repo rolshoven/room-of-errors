@@ -2,6 +2,7 @@ package pages
 
 import com.benasher44.uuid.uuid4
 import com.fynnian.application.common.room.*
+import components.MainContainer
 import components.UserContext
 import csstype.*
 import kotlinx.js.get
@@ -49,9 +50,7 @@ val RoomPage = FC<Props> {
     setAnswers { it.add(answer); it }
   }
 
-  Container {
-    component = main
-    maxWidth = "xl"
+  MainContainer {
     Box {
       Typography {
         component = p
