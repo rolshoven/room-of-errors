@@ -3,9 +3,14 @@ package com.fynnian.application
 import com.fynnian.application.common.AppPaths
 import com.fynnian.application.config.AppConfig
 import com.fynnian.application.config.DI
+import com.fynnian.application.config.Profile
 import com.fynnian.application.room.roomApi
 import com.fynnian.application.room.roomManagementApi
 import com.fynnian.application.user.userApi
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -48,8 +53,20 @@ fun Application.module() {
         ContentType.Text.Html
       )
     }
-    static(AppPaths.STATIC_ROOT.path) {
-      resources()
+    // setup proxy for delivering the js file in dev mode from the webpack dev server
+    if (config.profile == Profile.DEV) {
+      get("/static/{file...}") {
+        val file = call.parameters["file"]
+        val client = HttpClient(CIO)
+        val proxyCall = client.get("http://localhost:9090/$file")
+        val contentType = proxyCall.headers["Content-Type"]?.let(ContentType::parse)
+          ?: ContentType.Application.OctetStream
+        call.respondBytes(proxyCall.readBytes(), contentType)
+      }
+    } else {
+      static(AppPaths.STATIC_ROOT.path) {
+        resources()
+      }
     }
     route(AppPaths.API_ROOT.path) {
       userApi(dependencies)
