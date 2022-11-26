@@ -12,14 +12,12 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.js.get
 import mui.icons.material.Save
-import mui.icons.material.Warning
 import mui.material.*
 import mui.material.Size
 import mui.material.styles.TypographyVariant
 import mui.system.sx
 import react.*
 import react.dom.html.InputType
-import react.dom.html.ReactHTML.img
 import react.dom.onChange
 import react.router.useParams
 
@@ -84,31 +82,15 @@ val RoomPage = FC<Props> {
         Spacer {
           size = SpacerPropsSize.SMALL
         }
-        Box {
-          img {
-            id = "room-image"
-            src = room.images.first().url
-            alt = room.images.first().title
+        RoomImage {
+          image = room.images.first()
+          onImageClick = { setCord(Coordinates(it.clientX, it.clientY)) }
+          this.answers = answers
 
-            onClick = {
-              setCord(Coordinates(it.clientX, it.clientY))
-            }
-          }
-          answers.forEach {
-            Icon {
-              sx {
-                position = Position.absolute
-                top = it.coordinates.vertical.px
-                left = it.coordinates.horizontal.px
-              }
-              Warning {
-                sx {
-                  color = NamedColor.black
-                }
-              }
-            }
-          }
           cord?.let {
+            ImageMarker {
+              coordinates = it
+            }
             Box {
               sx {
                 position = Position.absolute
@@ -168,16 +150,15 @@ val RoomPage = FC<Props> {
               }
             }
           }
-
+        }
+        Typography {
+          variant = TypographyVariant.body1
+          +(cord?.let { "clicked ${cord.horizontal} | ${cord.vertical}" } ?: "click on the image")
+        }
+        answers.map {
           Typography {
             variant = TypographyVariant.body1
-            +(cord?.let { "clicked ${cord.horizontal} | ${cord.vertical}" } ?: "click on the image")
-          }
-          answers.map {
-            Typography {
-              variant = TypographyVariant.body1
-              +"${it.coordinates} - ${it.answer}"
-            }
+            +"${it.coordinates} - ${it.answer}"
           }
         }
       }
