@@ -34,11 +34,6 @@ val MainContainer = FC<PropsWithChildren> { props ->
         item = true
         md = 8
         xs = 12
-//        if (isLoaded) {
-//          + props.children
-//        } else {
-//          CircularProgress { }
-//        }
         + props.children
       }
       Grid {

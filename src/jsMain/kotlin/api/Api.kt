@@ -2,6 +2,7 @@ package api
 
 import com.benasher44.uuid.Uuid
 import com.fynnian.application.common.AppPaths
+import com.fynnian.application.common.room.Room
 import com.fynnian.application.common.user.User
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -40,3 +41,12 @@ class UserApi : Api() {
 
 }
 
+class RoomApi : Api() {
+  private val basePath: String = listOf(AppPaths.API_ROOT, AppPaths.API_ROOMS).joinToString("") { it.path }
+
+  suspend fun getRoom(code: String): Room? {
+    val response = client.get("$basePath/$code").call.response
+    return if (response.status == HttpStatusCode.OK) response.body()
+    else null
+  }
+}
