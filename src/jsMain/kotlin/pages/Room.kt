@@ -5,9 +5,7 @@ import com.benasher44.uuid.uuid4
 import com.fynnian.application.common.room.Answer
 import com.fynnian.application.common.room.Coordinates
 import com.fynnian.application.common.room.Room
-import components.MainContainer
-import components.RoomNavigator
-import components.UserContext
+import components.*
 import csstype.*
 import dom.html.HTMLTextAreaElement
 import kotlinx.coroutines.MainScope
@@ -17,11 +15,11 @@ import mui.icons.material.Save
 import mui.icons.material.Warning
 import mui.material.*
 import mui.material.Size
+import mui.material.styles.TypographyVariant
 import mui.system.sx
 import react.*
 import react.dom.html.InputType
 import react.dom.html.ReactHTML.img
-import react.dom.html.ReactHTML.p
 import react.dom.onChange
 import react.router.useParams
 
@@ -77,19 +75,14 @@ val RoomPage = FC<Props> {
           preNavigation = { setLoading(true) }
         }
       } else {
-        Box {
-          Typography {
-            component = p
-            +"Room name ${room.title}"
-          }
-          Typography {
-            component = p
-            +"Room Code: ${room.code}"
-          }
-          Typography {
-            component = p
-            +"mark all the errors on the image"
-          }
+        Spacer {
+          size = SpacerPropsSize.SMALL
+        }
+        RoomInfo {
+          this.room = room
+        }
+        Spacer {
+          size = SpacerPropsSize.SMALL
         }
         Box {
           img {
@@ -177,12 +170,12 @@ val RoomPage = FC<Props> {
           }
 
           Typography {
-            component = p
+            variant = TypographyVariant.body1
             +(cord?.let { "clicked ${cord.horizontal} | ${cord.vertical}" } ?: "click on the image")
           }
           answers.map {
             Typography {
-              component = p
+              variant = TypographyVariant.body1
               +"${it.coordinates} - ${it.answer}"
             }
           }

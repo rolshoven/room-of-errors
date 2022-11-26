@@ -3,6 +3,7 @@ package components
 import com.fynnian.application.common.AppPaths
 import csstype.TextAlign
 import mui.material.*
+import mui.material.styles.TypographyVariant
 import mui.system.responsive
 import mui.system.sx
 import org.w3c.dom.HTMLInputElement
@@ -33,7 +34,7 @@ val RoomNavigator = FC<RoomNavigatorProps> { props ->
         size = SpacerPropsSize.LARGE
       }
       Typography {
-        component = ReactHTML.h2
+        variant = TypographyVariant.body1
         sx {
           textAlign = TextAlign.center
         }
