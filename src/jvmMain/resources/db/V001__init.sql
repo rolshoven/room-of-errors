@@ -39,8 +39,8 @@ create table answers(
     user_id uuid not null,
     answer_number integer not null,
     answer varchar(2000) not null,
-    x_coordinate integer not null,
-    y_coordinate integer not null,
+    x_coordinate double precision not null,
+    y_coordinate double precision not null,
     created_at timestamp with time zone not null default now(),
     updated_at timestamp with time zone not null default now(),
 

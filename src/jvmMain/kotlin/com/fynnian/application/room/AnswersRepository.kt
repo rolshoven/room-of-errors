@@ -68,8 +68,8 @@ fun AnswersRecord.toDomain() = Answer(
   no = answerNumber,
   answer = answer,
   coordinates = Coordinates(
-    horizontal = xCoordinate.toDouble(),
-    vertical = yCoordinate.toDouble()
+    horizontal = xCoordinate,
+    vertical = yCoordinate
   )
 )
 
@@ -80,6 +80,6 @@ fun Answer.toRecord() = AnswersRecord().also {
   it.userId = userId
   it.answerNumber = no
   it.answer = answer
-  it.xCoordinate = coordinates.horizontal.toInt()
-  it.yCoordinate = coordinates.vertical.toInt()
+  it.xCoordinate = coordinates.horizontal
+  it.yCoordinate = coordinates.vertical
 }
