@@ -5,10 +5,7 @@ import com.benasher44.uuid.Uuid
 import com.fynnian.application.common.room.Answer
 import com.fynnian.application.common.room.Coordinates
 import com.fynnian.application.common.room.RoomImage
-import csstype.NamedColor
-import csstype.Position
-import csstype.pct
-import csstype.px
+import csstype.*
 import dom.html.HTMLImageElement
 import emotion.react.css
 import mui.icons.material.Warning
@@ -28,8 +25,11 @@ external interface RoomImageProps : PropsWithChildren {
 val RoomImage = FC<RoomImageProps> { props ->
 
   Box {
+    sx {
+      position = Position.relative
+    }
     img {
-      id = "room-image-${props.image.id}"
+      id = props.image.id.toRoomImageId()
       src = props.image.url
       alt = props.image.title
       onClick = props.onImageClick
@@ -43,7 +43,7 @@ val RoomImage = FC<RoomImageProps> { props ->
 }
 
 fun Answer.getMarker() = document.getElementById(id.toMarkerId())
-
+fun Uuid.toRoomImageId() = "room-image-${this}"
 fun Uuid.toMarkerId() = "marker-${this}"
 external interface ImageMarkerProps : Props {
   var coordinates: Coordinates
@@ -55,9 +55,12 @@ val ImageMarker = FC<ImageMarkerProps> { props ->
     id = props.id?.toMarkerId() ?: "new-marker"
     sx {
       position = Position.absolute
-      top = (props.coordinates.vertical - 12.5).px
-      left = (props.coordinates.horizontal - 12.5).px
+//      top = (props.coordinates.vertical - 12.5).px
+//      left = (props.coordinates.horizontal - 12.5).px
+      top = props.coordinates.vertical.pct
+      left = props.coordinates.horizontal.pct
       color = NamedColor.black
+      zIndex = integer(1)
     }
   }
 }

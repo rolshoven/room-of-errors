@@ -7,6 +7,7 @@ import com.fynnian.application.common.room.Coordinates
 import com.fynnian.application.common.room.Room
 import components.*
 import csstype.*
+import dom.html.HTMLImageElement
 import dom.html.HTMLTextAreaElement
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -17,6 +18,7 @@ import mui.material.Size
 import mui.material.styles.TypographyVariant
 import mui.system.sx
 import react.*
+import react.dom.events.MouseEvent
 import react.dom.html.InputType
 import react.dom.onChange
 import react.router.useParams
@@ -72,6 +74,19 @@ val RoomPage = FC<Props> {
     }
   }
 
+  fun calculateCoordinates(event: MouseEvent<HTMLImageElement, *>): Coordinates {
+    val image = event.target as HTMLImageElement
+    // get te image position, the offset to add or subtract
+    val offsetX = image.getBoundingClientRect().left
+    val offsetY = image.getBoundingClientRect().top
+
+    // calculate the relational percent of the X and Y positions so that we can handle different resolutions
+    return Coordinates(
+      (event.clientX - offsetX) / image.width * 100,
+      (event.clientY - offsetY) / image.height * 100
+    )
+  }
+
   MainContainer {
     if (loading) {
       Box {
@@ -95,7 +110,7 @@ val RoomPage = FC<Props> {
         }
         RoomImage {
           image = room.images.first()
-          onImageClick = { setCord(Coordinates(it.clientX, it.clientY)) }
+          onImageClick = { event -> setCord(calculateCoordinates(event)) }
 
           answers.map {
             ImageMarker {
@@ -111,9 +126,10 @@ val RoomPage = FC<Props> {
             Box {
               sx {
                 position = Position.absolute
-                top = it.vertical.px
-                left = it.horizontal.px
+                top = it.vertical.pct
+                left = it.horizontal.pct
                 overflow = Overflow.hidden
+                zIndex = integer(1)
                 after {
                   content = Content()
                   position = Position.absolute
