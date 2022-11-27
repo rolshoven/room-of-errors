@@ -85,7 +85,13 @@ val RoomPage = FC<Props> {
         RoomImage {
           image = room.images.first()
           onImageClick = { setCord(Coordinates(it.clientX, it.clientY)) }
-          this.answers = answers
+
+          answers.map {
+            ImageMarker {
+              id = it.id
+              coordinates = it.coordinates
+            }
+          }
 
           cord?.let {
             ImageMarker {
@@ -155,10 +161,16 @@ val RoomPage = FC<Props> {
           variant = TypographyVariant.body1
           +(cord?.let { "clicked ${cord.horizontal} | ${cord.vertical}" } ?: "click on the image")
         }
-        answers.map {
+        answers.map {answer ->
           Typography {
             variant = TypographyVariant.body1
-            +"${it.coordinates} - ${it.answer}"
+            +"${answer.coordinates} - ${answer.answer}"
+            onMouseOver = {
+              answer.getMarker()?.sx?.color = NamedColor.blue
+            }
+            onMouseLeave = {
+              answer.getMarker()?.sx?.color = NamedColor.black
+            }
           }
         }
       }
