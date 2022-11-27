@@ -58,10 +58,17 @@ val RoomPage = FC<Props> {
     }
   }
 
+  val reloadAnswers = {
+    scope.launch {
+      answers = api.getAnswers(roomCode, user!!)
+    }
+    Unit
+  }
+
   fun addAnswer(answer: Answer) {
     scope.launch {
       api.upsertAnswer(roomCode, answer)
-      answers = api.getAnswers(roomCode, user!!)
+      reloadAnswers()
     }
   }
 
@@ -135,7 +142,6 @@ val RoomPage = FC<Props> {
                     val e = it.target as HTMLTextAreaElement
                     setCurrentAnswer(e.value)
                   }
-
                 }
                 IconButton {
                   size = Size.medium
@@ -165,17 +171,9 @@ val RoomPage = FC<Props> {
           variant = TypographyVariant.body1
           +(cord?.let { "clicked ${cord.horizontal} | ${cord.vertical}" } ?: "click on the image")
         }
-        answers.map {answer ->
-          Typography {
-            variant = TypographyVariant.body1
-            +"${answer.coordinates} - ${answer.answer}"
-            onMouseOver = {
-              answer.getMarker()?.sx?.color = NamedColor.blue
-            }
-            onMouseLeave = {
-              answer.getMarker()?.sx?.color = NamedColor.black
-            }
-          }
+        AnswerList {
+          this.answers = answers
+          this.reloadAnswers = reloadAnswers
         }
       }
     }
