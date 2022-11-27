@@ -33,7 +33,7 @@ val RoomPage = FC<Props> {
   val (loading, setLoading) = useState(true)
   val user = useContext(UserContext)
   val (cord, setCord) = useState<Coordinates>()
-  val (answers, setAnswers) = useState<MutableList<Answer>>(mutableListOf())
+  var answers by useState<List<Answer>>(mutableListOf())
   val (currentAnswer, setCurrentAnswer) = useState("")
 
   // workaround for the missing router support in the wrapper
@@ -48,17 +48,21 @@ val RoomPage = FC<Props> {
 
   useEffect {
     scope.launch {
-      if (loading && roomCode.isNotBlank()) {
+      if (loading && roomCode.isNotBlank() && user != null) {
         api.getRoom(roomCode).let {
           setRoom(it)
           setLoading(false)
         }
+        answers = api.getAnswers(roomCode, user)
       }
     }
   }
 
   fun addAnswer(answer: Answer) {
-    setAnswers { it.add(answer); it }
+    scope.launch {
+      api.upsertAnswer(roomCode, answer)
+      answers = api.getAnswers(roomCode, user!!)
+    }
   }
 
   MainContainer {
@@ -141,8 +145,8 @@ val RoomPage = FC<Props> {
                       Answer(
                         id = uuid4(),
                         no = answers.size + 1,
-                        imageId = uuid4(),
-                        userId = uuid4(),
+                        imageId = room.images.first().id,
+                        userId = user!!.id,
                         roomCode = roomCode,
                         coordinates = cord,
                         answer = currentAnswer

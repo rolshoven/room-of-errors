@@ -1,6 +1,5 @@
 import browser.document
 import com.fynnian.application.common.AppPaths
-import components.Navigation
 import components.ThemeModule
 import components.UserStorage
 import mui.material.useMediaQuery
