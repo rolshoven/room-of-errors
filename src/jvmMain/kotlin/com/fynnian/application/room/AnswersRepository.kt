@@ -17,6 +17,7 @@ class AnswersRepository(dataSource: DataSource) : Repository(dataSource) {
       select(ANSWERS.asterisk())
         .from(ANSWERS)
         .where(ANSWERS.ROOM_CODE.eq(roomCode))
+        .orderBy(ANSWERS.ANSWER_NUMBER)
         .map { it.into(ANSWERS).toDomain() }
     }
   }
