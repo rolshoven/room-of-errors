@@ -150,7 +150,7 @@ val RoomPage = FC<Props> {
                     addAnswer(
                       Answer(
                         id = uuid4(),
-                        no = answers.size + 1,
+                        no = answers.maxOfOrNull { it.no }?.plus(1) ?: 1,
                         imageId = room.images.first().id,
                         userId = user!!.id,
                         roomCode = roomCode,
