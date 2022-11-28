@@ -1,6 +1,6 @@
 package components
 
-import kotlinx.js.jso
+import js.core.jso
 import mui.material.*
 import mui.material.PaletteMode.dark
 import mui.material.PaletteMode.light

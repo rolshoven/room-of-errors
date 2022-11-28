@@ -13,7 +13,7 @@ group = "com.fynnian"
 version = "1.0-SNAPSHOT"
 
 object Versions {
-  const val wrapperBom = "1.0.0-pre.442"
+  const val wrapperBom = "1.0.0-pre.453"
   const val serializationJson = "1.4.1"
   const val coroutines = "1.6.4"
   const val ktor = "2.0.3"
@@ -217,4 +217,5 @@ tasks.getByName<JavaExec>("run") {
 // https://stackoverflow.com/a/72731728/12381648
 rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
   versions.webpackCli.version = "4.10.0"
+  versions.webpackDevServer.version = "4.0.0"
 }

@@ -11,11 +11,14 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 
 open class Api {
   val client = HttpClient {
     install(ContentNegotiation) {
-      json()
+      json(Json {
+        ignoreUnknownKeys = true
+      })
     }
   }
 }
@@ -86,7 +89,7 @@ class RoomManagementApi : Api() {
   }
 
   suspend fun getRoom(code: String): Room? {
-    val response = client.get("$basePath/$code").call.response
+    val response = client.get("$basePath/$code")
     return if (response.status == HttpStatusCode.OK) response.body()
     else null
   }

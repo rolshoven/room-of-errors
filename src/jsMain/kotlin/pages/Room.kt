@@ -9,9 +9,9 @@ import components.*
 import csstype.*
 import dom.html.HTMLImageElement
 import dom.html.HTMLTextAreaElement
+import js.core.get
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import kotlinx.js.get
 import mui.icons.material.Save
 import mui.material.*
 import mui.material.Size
