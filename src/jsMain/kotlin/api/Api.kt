@@ -73,3 +73,36 @@ class RoomApi : Api() {
     else HttpStatusCode.NotFound
   }
 }
+
+class RoomManagementApi : Api() {
+  private val basePath: String =
+    listOf(AppPaths.API_ROOT, AppPaths.API_ROOMS, AppPaths.API_ROOMS_MANAGEMENT).joinToString("") { it.path }
+
+
+  suspend fun getRooms(): List<Room> {
+    val response = client.get(basePath)
+    return if (response.status == HttpStatusCode.OK) response.body()
+    else emptyList()
+  }
+
+  suspend fun getRoom(code: String): Room? {
+    val response = client.get("$basePath/$code").call.response
+    return if (response.status == HttpStatusCode.OK) response.body()
+    else null
+  }
+
+  suspend fun upsertRoom(room: Room): Room? {
+    val response = client.put("$basePath/${room.code}}") {
+      contentType(ContentType.Application.Json)
+      setBody(room)
+    }
+    return if (response.status == HttpStatusCode.OK) response.body()
+    else null
+  }
+
+  suspend fun deleteRoom(code: String): HttpStatusCode {
+    val response = client.delete("$basePath/$code")
+    return if (response.status == HttpStatusCode.OK) HttpStatusCode.OK
+    else HttpStatusCode.NotFound
+  }
+}

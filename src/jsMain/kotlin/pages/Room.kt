@@ -89,9 +89,7 @@ val RoomPage = FC<Props> {
 
   MainContainer {
     if (loading) {
-      Box {
-        CircularProgress { }
-      }
+      LoadingSpinner { }
     } else {
       if (room == null) {
         RoomNavigator {
