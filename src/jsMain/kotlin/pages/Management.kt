@@ -30,6 +30,13 @@ val Management = FC<Props> {
     }
   }
 
+  val reloadRooms = {
+    scope.launch {
+      rooms = api.getRooms()
+    }
+    Unit
+  }
+
   MainContainer {
     if (loading) {
       LoadingSpinner { }
@@ -38,7 +45,9 @@ val Management = FC<Props> {
         size = SpacerPropsSize.SMALL
       }
       Box {
-        CreateRoomDialog { }
+        CreateRoomDialog {
+          this.reloadRooms = reloadRooms
+        }
       }
       RoomList {
         this.rooms = rooms

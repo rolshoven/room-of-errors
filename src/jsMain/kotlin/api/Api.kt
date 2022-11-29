@@ -9,9 +9,13 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import js.typedarrays.Int8Array
+import kotlinx.coroutines.await
 import kotlinx.serialization.json.Json
+import web.file.File
 
 open class Api {
   val client = HttpClient {
@@ -95,9 +99,35 @@ class RoomManagementApi : Api() {
   }
 
   suspend fun upsertRoom(room: Room): Room? {
-    val response = client.put("$basePath/${room.code}}") {
+    val response = client.put("$basePath/${room.code}") {
       contentType(ContentType.Application.Json)
       setBody(room)
+    }
+    return if (response.status == HttpStatusCode.OK) response.body()
+    else null
+  }
+
+  //ToDo: Proper
+  suspend fun createRoomWithUpload(room: Room, image: File): Room? {
+    val imageByteArray = image.arrayBuffer().await().let { Int8Array(it).unsafeCast<ByteArray>() }
+    val response = client.put("$basePath/${room.code}") {
+      setBody(
+        MultiPartFormDataContent(
+          formData {
+            append("code", room.code)
+            append("title", room.title)
+            append("description", room.description)
+            append("question", room.question)
+            append("imageTitle", room.images.first().title)
+
+            append("image", imageByteArray, Headers.build {
+              append(HttpHeaders.ContentType, "image/png")
+              append(HttpHeaders.ContentDisposition, "filename=\"${room.images.first().title}.png\"")
+            })
+          },
+          boundary = "WebAppBoundary"
+        )
+      )
     }
     return if (response.status == HttpStatusCode.OK) response.body()
     else null
