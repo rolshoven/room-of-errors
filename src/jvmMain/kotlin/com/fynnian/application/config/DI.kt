@@ -6,8 +6,7 @@ import com.fynnian.application.room.RoomRepository
 import com.fynnian.application.user.UserRepository
 
 data class DI(
-  private val config: AppConfig
-
+  val config: AppConfig
 ) {
   val repository: Repository = Repository(config.dataSource)
   val userRepository = UserRepository(config.dataSource)

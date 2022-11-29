@@ -22,6 +22,7 @@ import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
+import java.io.File
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
 
@@ -67,6 +68,10 @@ fun Application.module() {
       static(AppPaths.STATIC_ROOT.path) {
         resources()
       }
+    }
+    static(AppPaths.STATIC_IMAGES_ROOT.path) {
+      staticRootFolder = File(config.content.uploadDir)
+      files(".")
     }
     route(AppPaths.API_ROOT.path) {
       userApi(dependencies)

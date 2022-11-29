@@ -21,7 +21,8 @@ enum class Profile {
 
 data class AppConfig(
   val profile: Profile,
-  val dataSource: DataSource
+  val dataSource: DataSource,
+  val content: Content
 ) {
   companion object {
     private const val root = "ktor.environment"
@@ -29,7 +30,8 @@ data class AppConfig(
       return AppConfig(
         config.propertyOrNull("$root.profile")
           ?.let { Profile.fromString(it.getString()) } ?: Profile.DEV,
-        DataSource.initFrom(config)
+        DataSource.initFrom(config),
+        Content.initFrom(config)
       )
     }
   }
@@ -56,6 +58,21 @@ data class DataSource(val map: Map<String, String?>) {
           "url" to config.getPropertyByKey("$root.url"),
           "user" to config.getPropertyByKey("$root.user"),
           "password" to config.getPropertyByKey("$root.password"),
+        )
+      )
+    }
+  }
+}
+
+data class Content(val map: Map<String, String?>) {
+  val uploadDir: String by map
+
+  companion object {
+    private const val root = "ktor.content"
+    fun initFrom(config: ApplicationConfig): Content {
+      return Content(
+        mapOf(
+          "uploadDir" to config.getPropertyByKey("$root.uploadDir")
         )
       )
     }
