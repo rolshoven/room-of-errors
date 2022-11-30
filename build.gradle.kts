@@ -22,6 +22,7 @@ object Versions {
   const val hikari = "5.0.1"
   const val h2 = "2.1.214"
   const val jooq = "3.17.5"
+  const val flyway = "9.8.2"
 }
 
 repositories {
@@ -90,6 +91,7 @@ kotlin {
         implementation("com.zaxxer:HikariCP:${Versions.hikari}")
         implementation("com.h2database:h2:${Versions.h2}")
         implementation("org.jooq:jooq:${Versions.jooq}")
+        implementation("org.flywaydb:flyway-core:${Versions.flyway}")
 
       }
     }
@@ -134,7 +136,7 @@ flyway {
   password = dbPassword
   schemas = arrayOf(dbSchema)
   locations = arrayOf(
-    "filesystem:${project.kotlin.sourceSets["jvmMain"].resources.srcDirs.first()}/db"
+    "filesystem:${project.kotlin.sourceSets["jvmMain"].resources.srcDirs.first()}/db/migration"
   )
   cleanDisabled = false
 }

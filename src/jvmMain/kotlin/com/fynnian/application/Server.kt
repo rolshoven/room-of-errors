@@ -3,6 +3,7 @@ package com.fynnian.application
 import com.fynnian.application.common.AppPaths
 import com.fynnian.application.config.AppConfig
 import com.fynnian.application.config.DI
+import com.fynnian.application.config.FlywayConfig
 import com.fynnian.application.config.Profile
 import com.fynnian.application.room.roomApi
 import com.fynnian.application.room.roomManagementApi
@@ -29,6 +30,7 @@ fun main(args: Array<String>): Unit = EngineMain.main(args)
 fun Application.module() {
 
   val config = AppConfig.initFrom(environment.config)
+  FlywayConfig(config.dataSource)
   val dependencies = DI(config)
 
   installExceptionHandling()

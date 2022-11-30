@@ -2,6 +2,9 @@ package com.fynnian.application.config
 
 import io.ktor.server.config.*
 import org.jooq.SQLDialect
+import org.slf4j.LoggerFactory
+import java.nio.file.Files
+import java.nio.file.Paths
 
 enum class Profile {
   DEV,
@@ -39,6 +42,7 @@ data class AppConfig(
 
 data class DataSource(val map: Map<String, String?>) {
   val driver: String by map
+  val schema: String by map
   val url: String by map
   val user: String by map
   val password: String by map
@@ -55,6 +59,7 @@ data class DataSource(val map: Map<String, String?>) {
       return DataSource(
         mapOf(
           "driver" to config.getPropertyByKey("$root.driver"),
+          "schema" to config.getPropertyByKey("$root.schema"),
           "url" to config.getPropertyByKey("$root.url"),
           "user" to config.getPropertyByKey("$root.user"),
           "password" to config.getPropertyByKey("$root.password"),
@@ -67,6 +72,11 @@ data class DataSource(val map: Map<String, String?>) {
 data class Content(val map: Map<String, String?>) {
   val uploadDir: String by map
 
+  init {
+    val createdDir = Files.createDirectories(Paths.get(uploadDir))
+    log.info("Create directory for image uploads $createdDir")
+  }
+
   companion object {
     private const val root = "ktor.content"
     fun initFrom(config: ApplicationConfig): Content {
@@ -76,6 +86,10 @@ data class Content(val map: Map<String, String?>) {
         )
       )
     }
+
+    @JvmStatic
+    @Suppress("JAVA_CLASS_ON_COMPANION")
+    private val log = LoggerFactory.getLogger(javaClass.enclosingClass)
   }
 }
 
