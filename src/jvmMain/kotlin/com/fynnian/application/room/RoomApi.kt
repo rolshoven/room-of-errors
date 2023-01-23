@@ -1,11 +1,8 @@
 package com.fynnian.application.room
 
 import com.fynnian.application.APIException
-import com.fynnian.application.common.AppPaths
-import com.fynnian.application.common.checkRequestIds
+import com.fynnian.application.common.*
 import com.fynnian.application.common.room.Room
-import com.fynnian.application.common.getRoomCodeParam
-import com.fynnian.application.common.getUUIDParam
 import com.fynnian.application.common.room.Answer
 import com.fynnian.application.config.DI
 import io.ktor.http.*
@@ -16,6 +13,7 @@ import io.ktor.server.routing.*
 
 private const val roomCodeParam = "roomCode"
 private const val answerIdParam = "answerId"
+private const val userId = "userId"
 
 fun Route.roomApi(dependencies: DI) {
   route(AppPaths.API_ROOMS.path) {
@@ -38,8 +36,10 @@ fun Route.roomApi(dependencies: DI) {
         // list answers
         get {
           val code = call.getRoomCodeParam(roomCodeParam)
+          val userId = call.getUUIDQueryParam(userId)
+
           dependencies.answersRepository
-            .getAnswersForRoom(code)
+            .getAnswersOfUserForRoom(code, userId)
             .also { call.respond(it) }
         }
         route("/{$answerIdParam}") {

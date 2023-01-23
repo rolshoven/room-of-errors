@@ -27,3 +27,13 @@ fun ApplicationCall.checkRequestIds(path: Uuid, payload: Uuid) = checkRequestIds
 fun ApplicationCall.checkRequestIds(path: String, payload: String) {
   if (path != payload) throw APIException.BadRequest("Path id $path doesn't match payload id $payload for resource")
 }
+
+fun ApplicationCall.getUUIDQueryParam(key: String): Uuid {
+  request.queryParameters[key]?.let {
+    try {
+      return uuidFrom(it)
+    } catch (e: Exception) {
+      throw APIException.BadRequest("Invalid UUID format: $it")
+    }
+  } ?: throw APIException.BadRequest("Missing required query parameter: $key")
+}

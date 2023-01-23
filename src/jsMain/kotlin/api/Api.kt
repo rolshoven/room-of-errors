@@ -58,8 +58,10 @@ class RoomApi : Api() {
     else null
   }
 
-  suspend fun getAnswers(code: String, user: User): List<Answer> {
-    val response = client.get("$basePath/$code/answers")
+  suspend fun getAnswers(roomCode: String, user: User): List<Answer> {
+    val response = client.get("$basePath/$roomCode/answers") {
+      parameter("userId", user.id)
+    }
     return if (response.status == HttpStatusCode.OK) response.body()
     else emptyList()
   }
