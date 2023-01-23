@@ -59,6 +59,7 @@ val ImageMarker = FC<ImageMarkerProps> { props ->
 //      left = (props.coordinates.horizontal - 12.5).px
       top = props.coordinates.vertical.pct
       left = props.coordinates.horizontal.pct
+      transform = translate((-50).pct, (-50).pct)
       color = NamedColor.black
       zIndex = integer(1)
     }
