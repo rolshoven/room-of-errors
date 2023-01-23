@@ -1,11 +1,13 @@
 plugins {
   val kotlin = "1.7.21"
+  val ktor = "2.2.2"
   val flyway = "9.8.2"
   val jooq = "8.0"
   kotlin("multiplatform") version kotlin
   kotlin("plugin.serialization") version kotlin
   id("org.flywaydb.flyway") version flyway
   id("nu.studer.jooq") version jooq
+  id("io.ktor.plugin") version ktor
   application
 }
 
@@ -13,10 +15,11 @@ group = "com.fynnian"
 version = "1.0-SNAPSHOT"
 
 object Versions {
+  // https://github.com/JetBrains/kotlin-wrappers
   const val wrapperBom = "1.0.0-pre.453"
   const val serializationJson = "1.4.1"
   const val coroutines = "1.6.4"
-  const val ktor = "2.0.3"
+  const val ktor = "2.2.2"
   const val logback = "1.2.11"
   const val multiplatformUUID = "0.6.0"
   const val hikari = "5.0.1"
