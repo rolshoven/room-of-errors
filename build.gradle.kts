@@ -1,5 +1,5 @@
 plugins {
-  val kotlin = "1.7.21"
+  val kotlin = "1.8.0"
   val ktor = "2.2.2"
   val flyway = "9.8.2"
   val jooq = "8.0"
@@ -51,7 +51,9 @@ kotlin {
     binaries.executable()
     browser {
       commonWebpackConfig {
-        cssSupport.enabled = true
+        cssSupport {
+          enabled.set(true)
+        }
         devServer?.open = false
         devServer?.port = 9090
 
@@ -217,11 +219,4 @@ tasks.getByName<JavaExec>("run") {
 // resolve gradle warning for depending task
 tasks.getByName("jsBrowserDevelopmentRun") {
   dependsOn(tasks.getByName("jsDevelopmentExecutableCompileSync"))
-}
-
-// workaround for hardcoded webpack version 4.9 that has a bug
-// https://stackoverflow.com/a/72731728/12381648
-rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
-  versions.webpackCli.version = "4.10.0"
-  versions.webpackDevServer.version = "4.0.0"
 }
