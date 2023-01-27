@@ -16,7 +16,7 @@ version = "1.0-SNAPSHOT"
 
 object Versions {
   // https://github.com/JetBrains/kotlin-wrappers
-  const val wrapperBom = "1.0.0-pre.453"
+  const val wrapperBom = "1.0.0-pre.485"
   const val serializationJson = "1.4.1"
   const val coroutines = "1.6.4"
   const val ktor = "2.2.2"

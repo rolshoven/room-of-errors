@@ -3,7 +3,6 @@ package components
 import api.RoomApi
 import com.fynnian.application.common.room.Answer
 import csstype.*
-import dom.html.HTMLTextAreaElement
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import mui.icons.material.Clear
@@ -15,9 +14,10 @@ import mui.material.styles.TypographyVariant
 import mui.system.sx
 import react.FC
 import react.Props
-import react.dom.html.InputType
 import react.dom.onChange
 import react.useState
+import web.html.HTMLTextAreaElement
+import web.html.InputType
 
 private val scope = MainScope()
 

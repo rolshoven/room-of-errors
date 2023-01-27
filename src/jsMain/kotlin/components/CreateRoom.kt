@@ -6,7 +6,6 @@ import com.fynnian.application.common.room.Room
 import com.fynnian.application.common.room.RoomImage
 import com.fynnian.application.common.room.RoomStatus
 import csstype.*
-import dom.html.HTMLTextAreaElement
 import js.core.jso
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -21,12 +20,13 @@ import org.w3c.dom.HTMLInputElement
 import react.FC
 import react.Props
 import react.ReactNode
-import react.dom.html.InputType
 import react.dom.html.ReactHTML.input
 import react.dom.html.ReactHTML.label
 import react.dom.onChange
 import react.useState
 import web.file.File
+import web.html.HTMLTextAreaElement
+import web.html.InputType
 import workarounds.component
 
 private val scope = MainScope()

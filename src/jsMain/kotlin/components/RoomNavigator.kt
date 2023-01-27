@@ -10,10 +10,10 @@ import org.w3c.dom.HTMLInputElement
 import react.FC
 import react.Props
 import react.ReactNode
-import react.dom.html.InputType
 import react.dom.onChange
 import react.router.useNavigate
 import react.useState
+import web.html.InputType
 
 external interface RoomNavigatorProps : Props {
   var title: String

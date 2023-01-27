@@ -1,12 +1,10 @@
 package components
 
-import browser.document
 import com.benasher44.uuid.Uuid
 import com.fynnian.application.common.room.Answer
 import com.fynnian.application.common.room.Coordinates
 import com.fynnian.application.common.room.RoomImage
 import csstype.*
-import dom.html.HTMLImageElement
 import emotion.react.css
 import mui.icons.material.Warning
 import mui.material.Box
@@ -16,6 +14,8 @@ import react.Props
 import react.PropsWithChildren
 import react.dom.events.MouseEventHandler
 import react.dom.html.ReactHTML.img
+import web.dom.document
+import web.html.HTMLImageElement
 
 external interface RoomImageProps : PropsWithChildren {
   var image: RoomImage

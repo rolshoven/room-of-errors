@@ -7,8 +7,6 @@ import com.fynnian.application.common.room.Coordinates
 import com.fynnian.application.common.room.Room
 import components.*
 import csstype.*
-import dom.html.HTMLImageElement
-import dom.html.HTMLTextAreaElement
 import js.core.get
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -19,9 +17,11 @@ import mui.material.styles.TypographyVariant
 import mui.system.sx
 import react.*
 import react.dom.events.MouseEvent
-import react.dom.html.InputType
 import react.dom.onChange
 import react.router.useParams
+import web.html.HTMLImageElement
+import web.html.HTMLTextAreaElement
+import web.html.InputType
 
 private val scope = MainScope()
 

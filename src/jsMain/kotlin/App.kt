@@ -1,4 +1,3 @@
-import browser.document
 import com.fynnian.application.common.AppPaths
 import components.ThemeModule
 import components.UserStorage
@@ -14,6 +13,7 @@ import react.dom.client.createRoot
 import react.router.Route
 import react.router.Routes
 import react.router.dom.BrowserRouter
+import web.dom.document
 
 fun main() {
   createRoot(
