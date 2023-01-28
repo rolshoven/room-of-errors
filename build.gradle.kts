@@ -187,7 +187,7 @@ jooq {
           }
           target.apply {
             packageName = "com.fynnian.application.jooq"
-            directory = "build/generated-src/jooq/main"
+            directory = "build/generated-src/jooq/jvmMain"
           }
           strategy.name = "org.jooq.codegen.DefaultGeneratorStrategy"
         }
