@@ -4,6 +4,7 @@ import com.benasher44.uuid.Uuid
 import com.fynnian.application.common.AppPaths
 import com.fynnian.application.common.room.Answer
 import com.fynnian.application.common.room.Room
+import com.fynnian.application.common.room.RoomDetails
 import com.fynnian.application.common.user.User
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -88,7 +89,7 @@ class RoomManagementApi : Api() {
     listOf(AppPaths.API_ROOT, AppPaths.API_ROOMS, AppPaths.API_ROOMS_MANAGEMENT).joinToString("") { it.path }
 
 
-  suspend fun getRooms(): List<Room> {
+  suspend fun getRooms(): List<RoomDetails> {
     val response = client.get(basePath)
     return if (response.status == HttpStatusCode.OK) response.body()
     else emptyList()

@@ -1,13 +1,11 @@
 package pages
 
 import api.RoomManagementApi
-import com.fynnian.application.common.room.Room
+import com.fynnian.application.common.room.RoomDetails
 import components.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import mui.material.Box
-import mui.material.Button
-import mui.material.ButtonVariant
 import react.FC
 import react.Props
 import react.useEffect
@@ -18,7 +16,7 @@ private val scope = MainScope()
 val Management = FC<Props> {
 
   val api = RoomManagementApi()
-  var rooms by useState<List<Room>>(mutableListOf())
+  var rooms by useState<List<RoomDetails>>(mutableListOf())
   var loading by useState(true)
 
   useEffect {

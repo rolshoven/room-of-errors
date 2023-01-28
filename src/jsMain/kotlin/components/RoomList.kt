@@ -1,7 +1,7 @@
 package components
 
 import com.fynnian.application.common.AppPaths
-import com.fynnian.application.common.room.Room
+import com.fynnian.application.common.room.RoomDetails
 import csstype.FlexDirection
 import csstype.rem
 import mui.icons.material.Launch
@@ -15,7 +15,7 @@ import react.Props
 import react.router.useNavigate
 
 external interface RoomListProps : Props {
-  var rooms: List<Room>
+  var rooms: List<RoomDetails>
 }
 
 val RoomList = FC<RoomListProps> {props ->
@@ -32,7 +32,7 @@ val RoomList = FC<RoomListProps> {props ->
 }
 
 external interface RoomListItemProp : Props {
-  var room: Room
+  var room: RoomDetails
 }
 
 val RoomListItem = FC<RoomListItemProp> { props ->
@@ -51,6 +51,14 @@ val RoomListItem = FC<RoomListItemProp> { props ->
     Typography {
       variant = TypographyVariant.body1
       + room.title
+    }
+    Typography {
+      variant = TypographyVariant.body1
+      + "participants: ${room.participants}"
+    }
+    Typography {
+      variant = TypographyVariant.body1
+      + "total answers: ${room.answers}"
     }
     IconButton {
       onClick = { navigate(AppPaths.ROOM.path + "/${room.code}")}

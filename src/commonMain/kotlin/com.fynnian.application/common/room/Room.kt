@@ -15,6 +15,18 @@ data class Room(
   val images: List<RoomImage>
 )
 @Serializable
+data class RoomDetails(
+  val code: String,
+  val roomStatus: RoomStatus,
+  val title: String,
+  val description: String,
+  val question: String,
+  val timeLimitMinutes: Int,
+  val images: List<RoomImage>,
+  val participants: Int,
+  val answers: Int
+)
+@Serializable
 data class RoomImage(
   @Serializable(with = UuidSerializer::class)
   val id: Uuid,

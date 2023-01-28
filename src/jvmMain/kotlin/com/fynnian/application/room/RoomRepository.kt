@@ -3,13 +3,15 @@ package com.fynnian.application.room
 import com.fynnian.application.APIException
 import com.fynnian.application.common.Repository
 import com.fynnian.application.common.room.Room
+import com.fynnian.application.common.room.RoomDetails
 import com.fynnian.application.common.room.RoomImage
 import com.fynnian.application.config.DataSource
-import com.fynnian.application.jooq.Tables.ROOMS
-import com.fynnian.application.jooq.Tables.ROOM_IMAGES
+import com.fynnian.application.jooq.Tables.*
 import com.fynnian.application.jooq.tables.records.RoomImagesRecord
 import com.fynnian.application.jooq.tables.records.RoomsRecord
+import org.jooq.impl.DSL.countDistinct
 import java.time.OffsetDateTime
+import java.util.stream.Collectors.*
 import com.fynnian.application.common.room.RoomStatus as RoomStatusDomain
 import com.fynnian.application.jooq.enums.RoomStatus as RoomStatusJooq
 
@@ -27,6 +29,59 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         .fetchGroups(ROOMS, ROOM_IMAGES)
         .map { (room, images) ->
           room.toDomain().copy(images = images.map { it.toDomain() })
+        }
+    }
+  }
+
+
+  fun getRoomsForManagement(code: String? = null): List<RoomDetails> {
+    return jooq {
+
+      val participants =
+        select(countDistinct(ANSWERS.USER_ID))
+          .from(ANSWERS)
+          .where(ANSWERS.ROOM_CODE.eq(ROOMS.CODE))
+          .groupBy(ANSWERS.USER_ID)
+          .asField<Int>("participants")
+      val answers =
+        selectCount()
+          .from(ANSWERS)
+          .where(ANSWERS.ROOM_CODE.eq(ROOMS.CODE))
+          .asField<Int>("answers")
+
+      select(
+        ROOMS.asterisk(),
+        ROOM_IMAGES.asterisk(),
+        participants,
+        answers
+      )
+        .from(ROOMS)
+        .leftJoin(ROOM_IMAGES).on(ROOM_IMAGES.ROOM_CODE.eq(ROOMS.CODE))
+        .let {
+          if (code != null) it.where(ROOMS.CODE.eq(code))
+          else it
+        }
+        .collect(
+          groupingBy(
+            { r ->
+              val room = r.into(ROOMS)
+              RoomDetails(
+                code = room.code,
+                roomStatus = room.status.toDomain(),
+                title = room.title,
+                description = room.description,
+                question = room.question,
+                timeLimitMinutes = room.timeLimitMinutes,
+                images = emptyList(),
+                participants = r.get(participants),
+                answers = r.get(answers)
+              )
+            },
+            mapping({ r -> r.into(ROOM_IMAGES) }, toList())
+          )
+        )
+        .map { (room, images) ->
+          room.copy(images = images.map { it.toDomain() })
         }
     }
   }

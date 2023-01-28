@@ -27,7 +27,7 @@ fun Route.roomManagementApi(dependencies: DI) {
       // list rooms
       get {
         dependencies.roomRepository
-          .getRooms()
+          .getRoomsForManagement()
           .also { call.respond(it) }
       }
       // room by id
