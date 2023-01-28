@@ -26,6 +26,7 @@ object Versions {
   const val h2 = "2.1.214"
   const val jooq = "3.17.5"
   const val flyway = "9.8.2"
+  const val poi = "5.2.3"
 }
 
 repositories {
@@ -97,6 +98,10 @@ kotlin {
         implementation("com.h2database:h2:${Versions.h2}")
         implementation("org.jooq:jooq:${Versions.jooq}")
         implementation("org.flywaydb:flyway-core:${Versions.flyway}")
+
+        // generate excel files
+        implementation("org.apache.poi:poi:${Versions.poi}")
+        implementation("org.apache.poi:poi-ooxml:${Versions.poi}")
 
       }
     }

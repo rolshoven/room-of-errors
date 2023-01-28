@@ -9,6 +9,7 @@ import com.fynnian.application.config.DataSource
 import com.fynnian.application.jooq.Tables.*
 import com.fynnian.application.jooq.tables.records.RoomImagesRecord
 import com.fynnian.application.jooq.tables.records.RoomsRecord
+import org.jooq.impl.DSL.count
 import org.jooq.impl.DSL.countDistinct
 import java.time.OffsetDateTime
 import java.util.stream.Collectors.*
@@ -37,17 +38,8 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
   fun getRoomsForManagement(code: String? = null): List<RoomDetails> {
     return jooq {
 
-      val participants =
-        select(countDistinct(ANSWERS.USER_ID))
-          .from(ANSWERS)
-          .where(ANSWERS.ROOM_CODE.eq(ROOMS.CODE))
-          .groupBy(ANSWERS.USER_ID)
-          .asField<Int>("participants")
-      val answers =
-        selectCount()
-          .from(ANSWERS)
-          .where(ANSWERS.ROOM_CODE.eq(ROOMS.CODE))
-          .asField<Int>("answers")
+      val participants = countDistinct(ANSWERS.USER_ID).`as`("participants")
+      val answers = count(ANSWERS.ID).`as`("answers")
 
       select(
         ROOMS.asterisk(),
@@ -57,10 +49,12 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
       )
         .from(ROOMS)
         .leftJoin(ROOM_IMAGES).on(ROOM_IMAGES.ROOM_CODE.eq(ROOMS.CODE))
+        .leftJoin(ANSWERS).on(ANSWERS.ROOM_CODE.eq(ROOMS.CODE))
         .let {
           if (code != null) it.where(ROOMS.CODE.eq(code))
           else it
         }
+        .groupBy(ROOMS.CODE)
         .collect(
           groupingBy(
             { r ->
@@ -80,9 +74,7 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
             mapping({ r -> r.into(ROOM_IMAGES) }, toList())
           )
         )
-        .map { (room, images) ->
-          room.copy(images = images.map { it.toDomain() })
-        }
+        .map { (room, images) -> room.copy(images = images.map { it.toDomain() }) }
     }
   }
 

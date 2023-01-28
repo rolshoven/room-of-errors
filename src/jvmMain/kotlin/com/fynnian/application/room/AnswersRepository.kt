@@ -12,6 +12,16 @@ import java.time.OffsetDateTime
 
 class AnswersRepository(dataSource: DataSource) : Repository(dataSource) {
 
+  fun getAnswersOfRoom(roomCode: String): List<Answer> {
+    return jooq {
+      select(ANSWERS.asterisk())
+        .from(ANSWERS)
+        .where(ANSWERS.ROOM_CODE.eq(roomCode))
+        .orderBy(ANSWERS.USER_ID, ANSWERS.ANSWER_NUMBER)
+        .map { it.into(ANSWERS).toDomain() }
+    }
+  }
+
   fun getAnswersOfUserForRoom(roomCode: String, userId: Uuid): List<Answer> {
     return jooq {
       select(ANSWERS.asterisk())

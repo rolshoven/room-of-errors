@@ -2,8 +2,8 @@ package com.fynnian.application.room
 
 import com.fynnian.application.APIException
 import com.fynnian.application.common.*
-import com.fynnian.application.common.room.Room
 import com.fynnian.application.common.room.Answer
+import com.fynnian.application.common.room.Room
 import com.fynnian.application.config.DI
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -107,10 +107,24 @@ fun Route.roomApi(dependencies: DI) {
             .also { call.response.status(HttpStatusCode.OK) }
         }
 
-        // answers - with filter, for user
+        get("/export") {
+          val code = call.getRoomCodeParam(roomCodeParam)
+          val excel = dependencies.roomExportService.excelExportRoom(code)
 
+          call.response.header(
+            HttpHeaders.ContentDisposition,
+            ContentDisposition.Attachment.withParameters(
+              listOf(
+                HeaderValueParam(ContentDisposition.Parameters.FileNameAsterisk, "room-export-$code.xlsx"),
+                HeaderValueParam(ContentDisposition.Parameters.FileName, "room-export-$code.xlsx")
+              )
+            ).toString()
+          )
+          call.respondOutputStream {
+            excel.write(this)
+          }
+        }
       }
-
     }
   }
 }
