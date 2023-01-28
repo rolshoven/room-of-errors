@@ -45,7 +45,7 @@ val RoomListItem = FC<RoomListItemProp> { props ->
       gap = 1.rem
     }
     Typography {
-      variant = TypographyVariant.subtitle1
+      variant = TypographyVariant.body1
       + room.code
     }
     Typography {
@@ -55,6 +55,9 @@ val RoomListItem = FC<RoomListItemProp> { props ->
     IconButton {
       onClick = { navigate(AppPaths.ROOM.path + "/${room.code}")}
       Launch { }
+    }
+    RoomQRCodeDialog {
+      roomCode = room.code
     }
   }
 }
