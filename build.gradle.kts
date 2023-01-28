@@ -115,6 +115,9 @@ kotlin {
         implementation(kotlinw("emotion"))
         implementation(kotlinw("mui"))
         implementation(kotlinw("mui-icons"))
+
+        // https://github.com/zpao/qrcode.react
+        implementation(npm("qrcode.react", "3.1.0"))
       }
     }
     val jsTest by getting {
