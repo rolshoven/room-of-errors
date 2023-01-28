@@ -118,6 +118,8 @@ kotlin {
 
         // https://github.com/zpao/qrcode.react
         implementation(npm("qrcode.react", "3.1.0"))
+        // https://github.com/bubkoo/html-to-image
+        implementation(npm("html-to-image", "1.11.4"))
       }
     }
     val jsTest by getting {
