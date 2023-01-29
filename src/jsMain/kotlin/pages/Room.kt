@@ -10,6 +10,7 @@ import csstype.*
 import js.core.get
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import mui.icons.material.Clear
 import mui.icons.material.Save
 import mui.material.*
 import mui.material.Size
@@ -116,74 +117,68 @@ val RoomPage = FC<Props> {
               coordinates = it.coordinates
             }
           }
-
           cord?.let {
             ImageMarker {
               coordinates = it
-            }
-            Box {
-              sx {
-                position = Position.absolute
-                top = it.vertical.pct
-                left = it.horizontal.pct
-                overflow = Overflow.hidden
-                zIndex = integer(1)
-                after {
-                  content = Content()
-                  position = Position.absolute
-                  top = 0.px
-                  margin = (-10).px
-                  width = 20.px
-                  height = 20.px
-                  transform = rotate(45.deg)
-                  backgroundColor = NamedColor.white
-                }
-              }
-              Paper {
-                //elevation = 1
-                variant = PaperVariant.outlined
-                sx {
-                  padding = 0.5.rem
-                }
-                TextField {
-                  id = "answer"
-                  name = "answer"
-                  type = InputType.text
-                  placeholder = "your anwser"
-                  multiline = true
-                  value = currentAnswer
-                  onChange = {
-                    val e = it.target as HTMLTextAreaElement
-                    setCurrentAnswer(e.value)
-                  }
-                }
-                IconButton {
-                  size = Size.medium
-                  disabled = currentAnswer.isBlank()
-                  onClick = {
-                    addAnswer(
-                      Answer(
-                        id = uuid4(),
-                        no = answers.maxOfOrNull { it.no }?.plus(1) ?: 1,
-                        imageId = room.images.first().id,
-                        userId = user!!.id,
-                        roomCode = roomCode,
-                        coordinates = cord,
-                        answer = currentAnswer
-                      )
-                    )
-                    setCurrentAnswer("")
-                    setCord(null)
-                  }
-                  Save {}
-                }
-              }
+              selected = true
             }
           }
         }
         Typography {
           variant = TypographyVariant.body1
-          +(cord?.let { "clicked ${cord.horizontal} | ${cord.vertical}" } ?: "click on the image")
+          +  "mark a point with a click on the image"
+        }
+        Box {
+          sx {
+            padding = 0.5.rem
+            display = Display.flex
+            alignItems = AlignItems.center
+          }
+          TextField {
+            id = "answer"
+            name = "answer"
+            type = InputType.text
+            placeholder = if (cord == null) "mark a spot with an error" else "your answer"
+            multiline = true
+            minRows = 2
+            fullWidth = true
+            disabled = cord == null
+            value = currentAnswer
+            onChange = {
+              val e = it.target as HTMLTextAreaElement
+              setCurrentAnswer(e.value)
+            }
+          }
+          IconButton {
+            Save()
+            size = Size.medium
+            color = IconButtonColor.primary
+            disabled = currentAnswer.isBlank()
+            onClick = {
+              addAnswer(
+                Answer(
+                  id = uuid4(),
+                  no = answers.maxOfOrNull { it.no }?.plus(1) ?: 1,
+                  imageId = room.images.first().id,
+                  userId = user!!.id,
+                  roomCode = roomCode,
+                  coordinates = cord ?: Coordinates(0.0, 0.0),
+                  answer = currentAnswer
+                )
+              )
+              setCurrentAnswer("")
+              setCord(null)
+            }
+          }
+          IconButton {
+            Clear()
+            color = IconButtonColor.primary
+            disabled = cord == null
+            onClick = {
+              setCurrentAnswer("")
+              setCord(null)
+            }
+          }
         }
         AnswerList {
           this.answers = answers

@@ -48,6 +48,7 @@ fun Uuid.toMarkerId() = "marker-${this}"
 external interface ImageMarkerProps : Props {
   var coordinates: Coordinates
   var id: Uuid?
+  var selected: Boolean?
 }
 
 val ImageMarker = FC<ImageMarkerProps> { props ->
@@ -60,7 +61,7 @@ val ImageMarker = FC<ImageMarkerProps> { props ->
       top = props.coordinates.vertical.pct
       left = props.coordinates.horizontal.pct
       transform = translate((-50).pct, (-50).pct)
-      color = NamedColor.black
+      color = if (props.selected == true) NamedColor.blue else NamedColor.black
       zIndex = integer(1)
     }
   }
