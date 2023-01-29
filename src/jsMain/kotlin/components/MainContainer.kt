@@ -1,16 +1,11 @@
 package components
 
-import csstype.NumberType
-import csstype.number
-import mui.material.CircularProgress
 import mui.material.Container
 import mui.material.Grid
-import mui.system.Breakpoint
-import react.dom.html.ReactHTML.main
 import mui.system.responsive
-import mui.system.sx
 import react.FC
 import react.PropsWithChildren
+import react.dom.html.ReactHTML.main
 import workarounds.md
 import workarounds.xs
 

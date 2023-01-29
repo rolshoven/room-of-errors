@@ -6,13 +6,19 @@ import mui.material.GridProps
 // https://github.com/JetBrains/kotlin-wrappers/issues/1856
 // https://github.com/karakum-team/kotlin-mui-showcase/blob/main/src/main/kotlin/team/karakum/common/MissedWrappers.kt
 
+
+inline var GridProps.sm: Int
+  get() = asDynamic().sm
+  set(value) {
+    asDynamic().sm = value
+  }
 inline var GridProps.xs: Int
-  get() = TODO("Prop is write-only!")
+  get() = asDynamic().xs
   set(value) {
     asDynamic().xs = value
   }
 inline var GridProps.md: Int
-  get() = TODO("Prop is write-only!")
+  get() = asDynamic().md
   set(value) {
     asDynamic().md = value
   }
