@@ -1,11 +1,14 @@
 package components
 
+import api.RoomManagementApi
 import com.fynnian.application.common.AppPaths
 import com.fynnian.application.common.room.RoomDetails
 import csstype.FlexDirection
 import csstype.rem
+import mui.icons.material.FileDownload
 import mui.icons.material.Launch
 import mui.material.IconButton
+import mui.material.Link
 import mui.material.ListItem
 import mui.material.Typography
 import mui.material.styles.TypographyVariant
@@ -13,6 +16,8 @@ import mui.system.sx
 import react.FC
 import react.Props
 import react.router.useNavigate
+import web.dom.document
+import web.html.HTML
 
 external interface RoomListProps : Props {
   var rooms: List<RoomDetails>
@@ -66,6 +71,21 @@ val RoomListItem = FC<RoomListItemProp> { props ->
     }
     RoomQRCodeDialog {
       roomCode = room.code
+    }
+    IconButton {
+      onClick = {
+        document.createElement(HTML.a)
+          .apply {
+            href = RoomManagementApi.roomExportUrl(room.code)
+            download = "room-export-${room.code}.xlsx"
+          }
+          .also {
+            document.body.appendChild(it)
+            it.click()
+            document.body.removeChild(it)
+          }
+      }
+      FileDownload()
     }
   }
 }

@@ -85,9 +85,11 @@ class RoomApi : Api() {
 }
 
 class RoomManagementApi : Api() {
-  private val basePath: String =
-    listOf(AppPaths.API_ROOT, AppPaths.API_ROOMS, AppPaths.API_ROOMS_MANAGEMENT).joinToString("") { it.path }
-
+  companion object {
+    val basePath: String =
+      listOf(AppPaths.API_ROOT, AppPaths.API_ROOMS, AppPaths.API_ROOMS_MANAGEMENT).joinToString("") { it.path }
+    val roomExportUrl = { roomCode: String -> "$basePath/$roomCode/export" }
+  }
 
   suspend fun getRooms(): List<RoomDetails> {
     val response = client.get(basePath)
