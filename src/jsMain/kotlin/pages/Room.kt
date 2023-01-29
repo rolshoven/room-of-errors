@@ -124,9 +124,14 @@ val RoomPage = FC<Props> {
             }
           }
         }
-        Typography {
-          variant = TypographyVariant.body1
-          +  "mark a point with a click on the image"
+        Box {
+          sx {
+            padding = 0.5.rem
+          }
+          Typography {
+            variant = TypographyVariant.body1
+            +  "mark a spot with an error with a click on the image"
+          }
         }
         Box {
           sx {
