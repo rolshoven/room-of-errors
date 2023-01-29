@@ -7,14 +7,12 @@ import csstype.FlexDirection
 import csstype.rem
 import mui.icons.material.FileDownload
 import mui.icons.material.Launch
-import mui.material.IconButton
-import mui.material.Link
-import mui.material.ListItem
-import mui.material.Typography
+import mui.material.*
 import mui.material.styles.TypographyVariant
 import mui.system.sx
 import react.FC
 import react.Props
+import react.dom.aria.ariaLabel
 import react.router.useNavigate
 import web.dom.document
 import web.html.HTML
@@ -66,13 +64,19 @@ val RoomListItem = FC<RoomListItemProp> { props ->
       + "total answers: ${room.answers}"
     }
     IconButton {
+      Launch()
+      color = IconButtonColor.primary
+      ariaLabel = "go to room ${room.code}"
       onClick = { navigate(AppPaths.ROOM.path + "/${room.code}")}
-      Launch { }
     }
     RoomQRCodeDialog {
       roomCode = room.code
     }
-    IconButton {
+    Button {
+      + "Excel Export"
+      FileDownload()
+      variant = ButtonVariant.text
+      ariaLabel = "Excel Export Room"
       onClick = {
         document.createElement(HTML.a)
           .apply {
@@ -85,7 +89,6 @@ val RoomListItem = FC<RoomListItemProp> { props ->
             document.body.removeChild(it)
           }
       }
-      FileDownload()
     }
   }
 }

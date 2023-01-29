@@ -9,6 +9,7 @@ import mui.material.styles.TypographyVariant
 import mui.system.sx
 import react.FC
 import react.Props
+import react.dom.aria.ariaLabel
 import react.useState
 import web.dom.document
 import web.html.HTML
@@ -60,8 +61,10 @@ val RoomQRCodeDialog = FC<RoomQRCodeDialogProps> { props ->
   }
 
   IconButton {
-    onClick = { open = true }
     QrCode()
+    color = IconButtonColor.primary
+    ariaLabel = "Show QrCode"
+    onClick = { open = true }
   }
   Dialog {
     this.open = open
@@ -98,9 +101,10 @@ val RoomQRCodeDialog = FC<RoomQRCodeDialogProps> { props ->
         +"Save Code"
       }
       IconButton {
-        color = IconButtonColor.primary
-        onClick = { onClose() }
         Clear()
+        color = IconButtonColor.primary
+        ariaLabel = "Close dialog"
+        onClick = { onClose() }
       }
     }
   }
