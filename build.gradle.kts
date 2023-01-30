@@ -214,7 +214,10 @@ tasks.named<nu.studer.gradle.jooq.JooqGenerate>("generateJooq") {
 
 // include JS artifacts on production builds JAR we generate
 tasks.getByName<Jar>("jvmJar") {
-  if (project.hasProperty("isProduction") || project.gradle.startParameter.taskNames.contains("installDist")) {
+  if (project.hasProperty("isProduction")
+    || project.gradle.startParameter.taskNames.contains("installDist")
+    || project.gradle.startParameter.taskNames.contains("distTar")
+    || project.gradle.startParameter.taskNames.contains("distZip")) {
     val webpackTask =
       tasks.getByName<org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack>("jsBrowserProductionWebpack")
     dependsOn(webpackTask) // make sure JS gets compiled first
