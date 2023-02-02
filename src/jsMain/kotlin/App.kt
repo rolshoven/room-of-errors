@@ -1,7 +1,6 @@
 import com.fynnian.application.common.AppPaths
 import components.ThemeModule
 import components.UserStorage
-import mui.material.useMediaQuery
 import pages.Landingpage
 import pages.Management
 import pages.RoomPage
@@ -24,7 +23,6 @@ fun main() {
 }
 
 private val App = FC<Props> {
-  val mobileMode = useMediaQuery("(max-width:960px)")
   ThemeModule {
     UserStorage {
         Routing()
