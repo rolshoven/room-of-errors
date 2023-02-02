@@ -37,7 +37,7 @@ val RoomNavigator = FC<RoomNavigatorProps> { props ->
         sx {
           textAlign = TextAlign.center
         }
-        + props.title
+        +props.title
       }
       Spacer {
         size = SpacerPropsSize.SMALL

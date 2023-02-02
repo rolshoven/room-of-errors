@@ -2,6 +2,7 @@ package components
 
 import api.RoomManagementApi
 import com.fynnian.application.common.AppPaths
+import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.RoomDetails
 import csstype.FlexDirection
 import csstype.rem
@@ -14,6 +15,7 @@ import react.FC
 import react.Props
 import react.dom.aria.ariaLabel
 import react.router.useNavigate
+import react.useContext
 import web.dom.document
 import web.html.HTML
 
@@ -21,11 +23,8 @@ external interface RoomListProps : Props {
   var rooms: List<RoomDetails>
 }
 
-val RoomList = FC<RoomListProps> {props ->
-  mui.material.List {
-    sx {
-
-    }
+val RoomList = FC<RoomListProps> { props ->
+  List {
     props.rooms.map {
       RoomListItem {
         room = it
@@ -41,6 +40,7 @@ external interface RoomListItemProp : Props {
 val RoomListItem = FC<RoomListItemProp> { props ->
   val room = props.room
   val navigate = useNavigate()
+  val (language) = useContext(LanguageContext)
 
   ListItem {
     sx {
@@ -49,31 +49,39 @@ val RoomListItem = FC<RoomListItemProp> { props ->
     }
     Typography {
       variant = TypographyVariant.body1
-      + room.code
+      +room.code
     }
     Typography {
       variant = TypographyVariant.body1
-      + room.title
+      +room.title
     }
     Typography {
       variant = TypographyVariant.body1
-      + "participants: ${room.participants}"
+      +I18n.get(
+        language,
+        I18n.TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_PARTICIPANTS,
+        I18n.TemplateProperty("participants", room.participants.toString())
+      )
     }
     Typography {
       variant = TypographyVariant.body1
-      + "total answers: ${room.answers}"
+      +I18n.get(
+        language,
+        I18n.TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_TOTAL_ANSWERS,
+        I18n.TemplateProperty("answers", room.answers.toString())
+      )
     }
     IconButton {
       Launch()
       color = IconButtonColor.primary
       ariaLabel = "go to room ${room.code}"
-      onClick = { navigate(AppPaths.ROOM.path + "/${room.code}")}
+      onClick = { navigate(AppPaths.ROOM.path + "/${room.code}") }
     }
     RoomQRCodeDialog {
       roomCode = room.code
     }
     Button {
-      + "Excel Export"
+      +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_BUTTON_EXCEL_EXPORT)
       FileDownload()
       variant = ButtonVariant.text
       ariaLabel = "Excel Export Room"
@@ -81,7 +89,11 @@ val RoomListItem = FC<RoomListItemProp> { props ->
         document.createElement(HTML.a)
           .apply {
             href = RoomManagementApi.roomExportUrl(room.code)
-            download = "room-export-${room.code}.xlsx"
+            download = I18n.get(
+              language,
+              I18n.TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_EXCEL_EXPORT_FILE_NAME,
+              I18n.TemplateProperty("roomCode", room.code)
+            )
           }
           .also {
             document.body.appendChild(it)

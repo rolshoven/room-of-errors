@@ -1,5 +1,6 @@
 package components
 
+import com.fynnian.application.common.I18n
 import csstype.*
 import kotlinx.browser.window
 import mui.icons.material.Clear
@@ -10,6 +11,7 @@ import mui.system.sx
 import react.FC
 import react.Props
 import react.dom.aria.ariaLabel
+import react.useContext
 import react.useState
 import web.dom.document
 import web.html.HTML
@@ -23,6 +25,8 @@ external interface RoomQRCodeDialogProps : Props {
 }
 
 val RoomQRCodeDialog = FC<RoomQRCodeDialogProps> { props ->
+  val (language) = useContext(LanguageContext)
+
   var open: Boolean by useState(false)
   var showSaveMessage: Boolean by useState(false)
   var error: Boolean by useState(false)
@@ -87,10 +91,10 @@ val RoomQRCodeDialog = FC<RoomQRCodeDialogProps> { props ->
         Alert {
           if (error) {
             severity = AlertColor.error
-            +"Could not generate and download image"
+            +I18n.get(language, I18n.TranslationKey.ROOM_QRCODE_ALERT_DOWNLOAD_ERROR)
           } else {
             severity = AlertColor.info
-            +"Successfully generate and downloaded image"
+            +I18n.get(language, I18n.TranslationKey.ROOM_QRCODE_ALERT_DOWNLOAD_SUCCESS)
           }
         }
       }
@@ -98,7 +102,7 @@ val RoomQRCodeDialog = FC<RoomQRCodeDialogProps> { props ->
     DialogActions {
       Button {
         onClick = { saveCode() }
-        +"Save Code"
+        +I18n.get(language, I18n.TranslationKey.ROOM_QRCODE_BUTTON_DOWNLOAD)
       }
       IconButton {
         Clear()
@@ -115,6 +119,7 @@ external interface RoomQRCodeProps : Props {
 }
 
 val RoomQRCode = FC<RoomQRCodeProps> { props ->
+  val (language) = useContext(LanguageContext)
   val url = window.location.origin + "/room/${props.roomCode}"
 
   Box {
@@ -137,7 +142,7 @@ val RoomQRCode = FC<RoomQRCodeProps> { props ->
         textAlign = TextAlign.center
       }
       variant = TypographyVariant.subtitle1
-      +"ROOM CODE"
+      +I18n.get(language, I18n.TranslationKey.ROOM_QRCODE_IMAGE_LABEL)
     }
     Typography {
       sx {

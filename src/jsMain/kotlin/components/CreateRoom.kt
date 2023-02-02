@@ -2,6 +2,7 @@ package components
 
 import api.RoomManagementApi
 import com.benasher44.uuid.uuid4
+import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.Room
 import com.fynnian.application.common.room.RoomImage
 import com.fynnian.application.common.room.RoomStatus
@@ -17,13 +18,10 @@ import mui.material.styles.TypographyVariant
 import mui.system.responsive
 import mui.system.sx
 import org.w3c.dom.HTMLInputElement
-import react.FC
-import react.Props
-import react.ReactNode
+import react.*
 import react.dom.html.ReactHTML.input
 import react.dom.html.ReactHTML.label
 import react.dom.onChange
-import react.useState
 import web.file.File
 import web.html.HTMLTextAreaElement
 import web.html.InputType
@@ -38,6 +36,9 @@ external interface CreateRoomDialogProps : Props {
 val CreateRoomDialog = FC<CreateRoomDialogProps> { props ->
 
   val api = RoomManagementApi()
+
+  val (language) = useContext(LanguageContext)
+
   var generatedCode: String by useState(genRoomCode())
   var open: Boolean by useState(false)
   var roomTitle: String by useState("")
@@ -81,7 +82,7 @@ val CreateRoomDialog = FC<CreateRoomDialogProps> { props ->
   Button {
     variant = ButtonVariant.outlined
     onClick = { open = true }
-    +"Create Room"
+    +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_DIALOG_BUTTON)
   }
   Dialog {
     this.open = open
@@ -89,7 +90,7 @@ val CreateRoomDialog = FC<CreateRoomDialogProps> { props ->
     fullWidth = true
 
     DialogTitle {
-      +"Create a new Room"
+      +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_DIALOG_TITLE)
     }
 
     DialogContent {
@@ -110,7 +111,7 @@ val CreateRoomDialog = FC<CreateRoomDialogProps> { props ->
           id = "roomCode"
           name = "roomCode"
           type = InputType.text
-          label = ReactNode("ROOM CODE")
+          label = ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_CODE_LABEL))
           value = generatedCode
           inputProps = jso {
             this as InputBaseProps
@@ -133,7 +134,7 @@ val CreateRoomDialog = FC<CreateRoomDialogProps> { props ->
           name = "title"
           type = InputType.text
           required = true
-          label = ReactNode("Room Title")
+          label = ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TITLE_LABEL))
           placeholder = "my room"
           value = roomTitle
           onChange = {
@@ -149,7 +150,7 @@ val CreateRoomDialog = FC<CreateRoomDialogProps> { props ->
           type = InputType.text
           required = true
           multiline = true
-          label = ReactNode("Description")
+          label = ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_DESCRIPTION_LABEL))
           placeholder = "..."
           value = description
           onChange = {
@@ -165,7 +166,7 @@ val CreateRoomDialog = FC<CreateRoomDialogProps> { props ->
           type = InputType.text
           required = true
           multiline = true
-          label = ReactNode("Question")
+          label = ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_QUESTION_LABEL))
           placeholder = "..."
           value = question
           onChange = {
@@ -180,7 +181,7 @@ val CreateRoomDialog = FC<CreateRoomDialogProps> { props ->
           name = "imageTitle"
           type = InputType.text
           required = true
-          label = ReactNode("Image Title")
+          label = ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL))
           placeholder = "room 1"
           value = imageTitle
           onChange = {
@@ -201,7 +202,7 @@ val CreateRoomDialog = FC<CreateRoomDialogProps> { props ->
         Button {
           variant = ButtonVariant.contained
           component = label
-          +"upload room png image"
+          +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL)
           input {
             hidden = true
             accept = "image/png"
@@ -219,7 +220,10 @@ val CreateRoomDialog = FC<CreateRoomDialogProps> { props ->
           }
           Typography {
             variant = TypographyVariant.subtitle1
-            +(file?.name ?: "No file - require png image")
+            +(file?.name ?: I18n.get(
+              language,
+              I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE
+            ))
           }
           IconButton {
             color = IconButtonColor.primary

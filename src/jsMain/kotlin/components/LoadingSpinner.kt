@@ -1,5 +1,6 @@
 package components
 
+import com.fynnian.application.common.I18n
 import csstype.AlignItems
 import csstype.Display
 import csstype.FlexDirection
@@ -10,8 +11,11 @@ import mui.material.styles.TypographyVariant
 import mui.system.sx
 import react.FC
 import react.Props
+import react.useContext
 
 val LoadingSpinner = FC<Props> {
+  val (language) = useContext(LanguageContext)
+
   Box {
     sx {
       display = Display.flex
@@ -27,7 +31,7 @@ val LoadingSpinner = FC<Props> {
     }
     Typography {
       variant = TypographyVariant.body1
-      +"Loading Data"
+      +I18n.get(language, I18n.TranslationKey.LOADING)
     }
   }
 }

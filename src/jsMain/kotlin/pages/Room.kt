@@ -2,6 +2,7 @@ package pages
 
 import api.RoomApi
 import com.benasher44.uuid.uuid4
+import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.Answer
 import com.fynnian.application.common.room.Coordinates
 import com.fynnian.application.common.room.Room
@@ -30,11 +31,13 @@ val RoomPage = FC<Props> {
 
   val api = RoomApi()
 
+  val user = useContext(UserContext)
+  val (language) = useContext(LanguageContext)
+
   val roomCodeParam = useParams()["id"] ?: ""
   val (roomCode, setRoomCode) = useState("")
   val (room, setRoom) = useState<Room>()
   val (loading, setLoading) = useState(true)
-  val user = useContext(UserContext)
   val (cord, setCord) = useState<Coordinates>()
   var answers by useState<List<Answer>>(mutableListOf())
   val (currentAnswer, setCurrentAnswer) = useState("")
@@ -94,7 +97,11 @@ val RoomPage = FC<Props> {
     } else {
       if (room == null) {
         RoomNavigator {
-          title = "There is no room with code $roomCodeParam "
+          title = I18n.get(
+            language,
+            I18n.TranslationKey.ROOM_NAVIGATOR_TITLE_INVALID_CODE,
+            I18n.TemplateProperty("roomCode", roomCodeParam)
+          )
           preNavigation = { setLoading(true) }
         }
       } else {
@@ -130,7 +137,7 @@ val RoomPage = FC<Props> {
           }
           Typography {
             variant = TypographyVariant.body1
-            +  "mark a spot with an error with a click on the image"
+            +I18n.get(language, I18n.TranslationKey.ROOM_IMAGE_HELP_TEXT)
           }
         }
         Box {
@@ -143,7 +150,9 @@ val RoomPage = FC<Props> {
             id = "answer"
             name = "answer"
             type = InputType.text
-            placeholder = if (cord == null) "mark a spot with an error" else "your answer"
+            placeholder =
+              if (cord == null) I18n.get(language, I18n.TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER_DISABLED)
+              else I18n.get(language, I18n.TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER)
             multiline = true
             minRows = 2
             fullWidth = true
