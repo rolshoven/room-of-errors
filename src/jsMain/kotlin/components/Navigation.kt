@@ -3,7 +3,10 @@ package components
 import com.fynnian.application.common.AppPaths
 import csstype.*
 import mui.icons.material.House
-import mui.material.*
+import mui.material.AppBar
+import mui.material.AppBarPosition
+import mui.material.Box
+import mui.material.Button
 import mui.system.sx
 import react.FC
 import react.PropsWithChildren
@@ -38,7 +41,13 @@ val Navigation = FC<PropsWithChildren> { props ->
           }
         }
       }
-      ThemeSwitch()
+      Box {
+        sx {
+          gap = 1.rem
+        }
+        ThemeSwitch()
+        LanguageSwitch()
+      }
     }
   }
   + props.children

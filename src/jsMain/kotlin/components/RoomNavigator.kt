@@ -1,18 +1,16 @@
 package components
 
 import com.fynnian.application.common.AppPaths
+import com.fynnian.application.common.I18n
 import csstype.TextAlign
 import mui.material.*
 import mui.material.styles.TypographyVariant
 import mui.system.responsive
 import mui.system.sx
 import org.w3c.dom.HTMLInputElement
-import react.FC
-import react.Props
-import react.ReactNode
+import react.*
 import react.dom.onChange
 import react.router.useNavigate
-import react.useState
 import web.html.InputType
 
 external interface RoomNavigatorProps : Props {
@@ -21,6 +19,8 @@ external interface RoomNavigatorProps : Props {
 }
 
 val RoomNavigator = FC<RoomNavigatorProps> { props ->
+  val (language) = useContext(LanguageContext)
+
   val (roomId, setRoomId) = useState("")
   val navigate = useNavigate()
 
@@ -46,8 +46,8 @@ val RoomNavigator = FC<RoomNavigatorProps> { props ->
         id = "roomId"
         name = "roomId"
         type = InputType.text
-        label = ReactNode("please enter an 8 char room code")
-        placeholder = "abcd1234"
+        label = ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_NAVIGATOR_INPUT_LABEL))
+        placeholder = I18n.get(language, I18n.TranslationKey.ROOM_NAVIGATOR_INPUT_PLACEHOLDER)
         value = roomId
         onChange = {
           val e = it.target as HTMLInputElement
@@ -60,7 +60,7 @@ val RoomNavigator = FC<RoomNavigatorProps> { props ->
         onClick = {
           navigate(AppPaths.ROOM.path + "/$roomId")
         }
-        +"Go to room"
+        +I18n.get(language, I18n.TranslationKey.ROOM_NAVIGATOR_BUTTON)
       }
     }
   }

@@ -1,4 +1,5 @@
 import com.fynnian.application.common.AppPaths
+import components.I18nProvider
 import components.ThemeModule
 import components.UserStorage
 import pages.Landingpage
@@ -23,9 +24,11 @@ fun main() {
 }
 
 private val App = FC<Props> {
-  ThemeModule {
-    UserStorage {
+  I18nProvider {
+    ThemeModule {
+      UserStorage {
         Routing()
+      }
     }
   }
 }
