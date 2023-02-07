@@ -31,7 +31,7 @@ val LoadingSpinner = FC<Props> {
     }
     Typography {
       variant = TypographyVariant.body1
-      +I18n.get(language, I18n.TranslationKey.LOADING)
+      +I18n.get(language, I18n.TranslationKey.LOADING_SPINNER)
     }
   }
 }

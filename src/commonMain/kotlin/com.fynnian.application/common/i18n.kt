@@ -8,7 +8,7 @@ object I18n {
 
   private val localization: Localizations = mapOf(
     Language.DE to mapOf(
-      TranslationKey.LOADING to "Lade Daten",
+      TranslationKey.LOADING_SPINNER to "Lade Daten",
 
       TranslationKey.ROOM_NAVIGATOR_TITLE_WELCOME to "Wilkommen im Room of Horrors",
       TranslationKey.ROOM_NAVIGATOR_TITLE_INVALID_CODE to "Es gibt keinen Raum mit Code {roomCode}",
@@ -43,7 +43,7 @@ object I18n {
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE to "Keine Datei - Benötig ein PNG Bild",
     ),
     Language.EN to mapOf(
-      TranslationKey.LOADING to "Loading Data",
+      TranslationKey.LOADING_SPINNER to "Loading Data",
 
       TranslationKey.ROOM_NAVIGATOR_TITLE_WELCOME to "welcome to the room of horrors",
       TranslationKey.ROOM_NAVIGATOR_TITLE_INVALID_CODE to "There is no room with code {roomCode}",
@@ -89,7 +89,7 @@ object I18n {
   val availableLanguages = listOf(Language.DE, Language.EN)
 
   enum class TranslationKey {
-    LOADING,
+    LOADING_SPINNER,
 
     ROOM_NAVIGATOR_TITLE_INVALID_CODE,
     ROOM_NAVIGATOR_TITLE_WELCOME,
