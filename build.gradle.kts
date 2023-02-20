@@ -16,6 +16,7 @@ version = "1.0-SNAPSHOT"
 
 object Versions {
   // https://github.com/JetBrains/kotlin-wrappers
+  const val kotlin = "1.8.0"
   const val wrapperBom = "1.0.0-pre.485"
   const val serializationJson = "1.4.1"
   const val coroutines = "1.6.4"
@@ -27,6 +28,8 @@ object Versions {
   const val jooq = "3.17.5"
   const val flyway = "9.8.2"
   const val poi = "5.2.3"
+
+  const val assertj = "3.24.2"
 }
 
 repositories {
@@ -106,7 +109,11 @@ kotlin {
       }
     }
     val jvmTest by getting {
-
+      dependencies {
+        implementation("org.jetbrains.kotlin:kotlin-test:${Versions.kotlin}")
+        implementation("io.ktor:ktor-server-test-host:${Versions.ktor}")
+        implementation("org.assertj:assertj-core:${Versions.assertj}")
+      }
     }
     val jsMain by getting {
       dependencies {

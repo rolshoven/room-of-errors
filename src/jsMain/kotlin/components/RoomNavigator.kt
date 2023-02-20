@@ -1,7 +1,8 @@
 package components
 
-import com.fynnian.application.common.AppPaths
 import com.fynnian.application.common.I18n
+import com.fynnian.application.common.URLS
+import com.fynnian.application.common.URLS.replaceParam
 import csstype.TextAlign
 import mui.material.*
 import mui.material.styles.TypographyVariant
@@ -58,7 +59,7 @@ val RoomNavigator = FC<RoomNavigatorProps> { props ->
         variant = ButtonVariant.outlined
         disabled = roomId.isBlank()
         onClick = {
-          navigate(AppPaths.ROOM.path + "/$roomId")
+          navigate(URLS.ROOM.replaceParam(URLS.ROOM_CODE_PARAM(roomId)))
         }
         +I18n.get(language, I18n.TranslationKey.ROOM_NAVIGATOR_BUTTON)
       }

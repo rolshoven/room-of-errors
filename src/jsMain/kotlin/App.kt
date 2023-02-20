@@ -1,4 +1,6 @@
-import com.fynnian.application.common.AppPaths
+import com.fynnian.application.common.URLS
+import com.fynnian.application.common.URLS.ROOM_CODE_PARAM
+import com.fynnian.application.common.URLS.replaceParam
 import components.I18nProvider
 import components.ThemeModule
 import components.UserStorage
@@ -41,11 +43,11 @@ private val Routing = FC<Props> {
         element = createElement(Landingpage)
       }
       Route {
-        path = AppPaths.ROOM.path + "/:id"
+        path = URLS.ROOM.replaceParam(ROOM_CODE_PARAM(":id"))
         element = createElement(RoomPage)
       }
       Route {
-        path = AppPaths.MANAGEMENT.path
+        path =  URLS.MANAGEMENT
         element = createElement(Management)
       }
     }

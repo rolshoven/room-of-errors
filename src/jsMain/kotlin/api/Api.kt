@@ -1,7 +1,16 @@
 package api
 
 import com.benasher44.uuid.Uuid
-import com.fynnian.application.common.AppPaths
+import com.fynnian.application.common.URLS.ANSWER_ID_PARAM
+import com.fynnian.application.common.URLS.API_ROOMS_ANSWERS
+import com.fynnian.application.common.URLS.API_ROOMS_ANSWER_BY_ID
+import com.fynnian.application.common.URLS.API_ROOMS_BY_ID
+import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT
+import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_BY_ID
+import com.fynnian.application.common.URLS.API_USERS_BY_ID
+import com.fynnian.application.common.URLS.ROOM_CODE_PARAM
+import com.fynnian.application.common.URLS.USER_ID_PARAM
+import com.fynnian.application.common.URLS.replaceParam
 import com.fynnian.application.common.room.Answer
 import com.fynnian.application.common.room.Room
 import com.fynnian.application.common.room.RoomDetails
@@ -30,16 +39,14 @@ open class Api {
 
 class UserApi : Api() {
 
-  private val basePath: String = listOf(AppPaths.API_ROOT, AppPaths.API_USERS).joinToString("") { it.path }
-
   suspend fun getUser(id: Uuid): User? {
-    val response = client.get("$basePath/$id").call.response
+    val response = client.get(API_USERS_BY_ID.replaceParam(USER_ID_PARAM(id))).call.response
     return if (response.status == HttpStatusCode.OK) response.body<User>()
     else null
   }
 
   suspend fun upsertUser(user: User): User? {
-    val response = client.put(basePath + "/${user.id}") {
+    val response = client.put(API_USERS_BY_ID.replaceParam(USER_ID_PARAM(user.id))) {
       contentType(ContentType.Application.Json)
       setBody(user)
     }.call.response
@@ -51,16 +58,15 @@ class UserApi : Api() {
 }
 
 class RoomApi : Api() {
-  private val basePath: String = listOf(AppPaths.API_ROOT, AppPaths.API_ROOMS).joinToString("") { it.path }
 
   suspend fun getRoom(code: String): Room? {
-    val response = client.get("$basePath/$code").call.response
+    val response = client.get(API_ROOMS_BY_ID.replaceParam(ROOM_CODE_PARAM(code))).call.response
     return if (response.status == HttpStatusCode.OK) response.body()
     else null
   }
 
-  suspend fun getAnswers(roomCode: String, user: User): List<Answer> {
-    val response = client.get("$basePath/$roomCode/answers") {
+  suspend fun getAnswers(code: String, user: User): List<Answer> {
+    val response = client.get(API_ROOMS_ANSWERS.replaceParam(ROOM_CODE_PARAM(code))) {
       parameter("userId", user.id)
     }
     return if (response.status == HttpStatusCode.OK) response.body()
@@ -68,7 +74,12 @@ class RoomApi : Api() {
   }
 
   suspend fun upsertAnswer(code: String, answer: Answer): Answer? {
-    val response = client.put("$basePath/$code/answers/${answer.id}") {
+    val response = client.put(
+      API_ROOMS_ANSWER_BY_ID.replaceParam(
+        ROOM_CODE_PARAM(code),
+        ANSWER_ID_PARAM(answer.id)
+      )
+    ) {
       contentType(ContentType.Application.Json)
       setBody(answer)
     }
@@ -78,33 +89,33 @@ class RoomApi : Api() {
 
   //ToDo: better error handling
   suspend fun deleteAnswer(code: String, answerId: Uuid): HttpStatusCode {
-    val response = client.delete("$basePath/$code/answers/$answerId")
+    val response = client.delete(
+      API_ROOMS_ANSWER_BY_ID.replaceParam(
+        ROOM_CODE_PARAM(code),
+        ANSWER_ID_PARAM(answerId)
+      )
+    )
     return if (response.status == HttpStatusCode.OK) HttpStatusCode.OK
     else HttpStatusCode.NotFound
   }
 }
 
 class RoomManagementApi : Api() {
-  companion object {
-    val basePath: String =
-      listOf(AppPaths.API_ROOT, AppPaths.API_ROOMS, AppPaths.API_ROOMS_MANAGEMENT).joinToString("") { it.path }
-    val roomExportUrl = { roomCode: String -> "$basePath/$roomCode/export" }
-  }
 
   suspend fun getRooms(): List<RoomDetails> {
-    val response = client.get(basePath)
+    val response = client.get(API_ROOMS_MANAGEMENT)
     return if (response.status == HttpStatusCode.OK) response.body()
     else emptyList()
   }
 
   suspend fun getRoom(code: String): Room? {
-    val response = client.get("$basePath/$code")
+    val response = client.get(API_ROOMS_MANAGEMENT_BY_ID.replaceParam(ROOM_CODE_PARAM(code)))
     return if (response.status == HttpStatusCode.OK) response.body()
     else null
   }
 
   suspend fun upsertRoom(room: Room): Room? {
-    val response = client.put("$basePath/${room.code}") {
+    val response = client.put(API_ROOMS_MANAGEMENT_BY_ID.replaceParam(ROOM_CODE_PARAM(room.code))) {
       contentType(ContentType.Application.Json)
       setBody(room)
     }
@@ -115,7 +126,7 @@ class RoomManagementApi : Api() {
   //ToDo: Proper
   suspend fun createRoomWithUpload(room: Room, image: File): Room? {
     val imageByteArray = image.arrayBuffer().await().let { Int8Array(it).unsafeCast<ByteArray>() }
-    val response = client.put("$basePath/${room.code}") {
+    val response = client.put(API_ROOMS_MANAGEMENT_BY_ID.replaceParam(ROOM_CODE_PARAM(room.code))) {
       setBody(
         MultiPartFormDataContent(
           formData {
@@ -139,7 +150,7 @@ class RoomManagementApi : Api() {
   }
 
   suspend fun deleteRoom(code: String): HttpStatusCode {
-    val response = client.delete("$basePath/$code")
+    val response = client.delete(API_ROOMS_MANAGEMENT_BY_ID.replaceParam(ROOM_CODE_PARAM(code)))
     return if (response.status == HttpStatusCode.OK) HttpStatusCode.OK
     else HttpStatusCode.NotFound
   }

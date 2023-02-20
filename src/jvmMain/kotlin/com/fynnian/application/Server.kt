@@ -1,6 +1,6 @@
 package com.fynnian.application
 
-import com.fynnian.application.common.AppPaths
+import com.fynnian.application.common.URLS
 import com.fynnian.application.config.AppConfig
 import com.fynnian.application.config.DI
 import com.fynnian.application.config.FlywayConfig
@@ -55,10 +55,10 @@ fun Application.module() {
   }
   routing {
     // for all web pages serve the index html, react browser router handles the reset in the client
-    get(AppPaths.HOME.path) { call.serveIndexHTML() }
-    get(AppPaths.ROOM.path + "/*") { call.serveIndexHTML() }
-    get(AppPaths.MANAGEMENT.path) { call.serveIndexHTML() }
-    get(AppPaths.MANAGEMENT.path + "/*") { call.serveIndexHTML() }
+    get(URLS.HOME) { call.serveIndexHTML() }
+    get("/room/*") { call.serveIndexHTML() }
+    get(URLS.MANAGEMENT) { call.serveIndexHTML() }
+    get(URLS.MANAGEMENT + "/*") { call.serveIndexHTML() }
 
     // setup proxy for delivering the js file in dev mode from the webpack dev server
     if (config.profile == Profile.DEV) {
@@ -71,19 +71,17 @@ fun Application.module() {
         call.respondBytes(proxyCall.readBytes(), contentType)
       }
     } else {
-      static(AppPaths.STATIC_ROOT.path) {
+      static(URLS.STATIC_ROOT) {
         resources()
       }
     }
-    static(AppPaths.STATIC_IMAGES_ROOT.path) {
+    static(URLS.STATIC_IMAGES_ROOT) {
       staticRootFolder = File(config.content.uploadDir)
       files(".")
     }
-    route(AppPaths.API_ROOT.path) {
-      userApi(dependencies)
-      roomApi(dependencies)
-      roomManagementApi(dependencies)
-    }
+    userApi(dependencies)
+    roomApi(dependencies)
+    roomManagementApi(dependencies)
   }
 }
 

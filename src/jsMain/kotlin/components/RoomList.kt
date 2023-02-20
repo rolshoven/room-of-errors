@@ -1,8 +1,9 @@
 package components
 
-import api.RoomManagementApi
-import com.fynnian.application.common.AppPaths
 import com.fynnian.application.common.I18n
+import com.fynnian.application.common.URLS
+import com.fynnian.application.common.URLS.ROOM_CODE_PARAM
+import com.fynnian.application.common.URLS.replaceParam
 import com.fynnian.application.common.room.RoomDetails
 import csstype.FlexDirection
 import csstype.rem
@@ -75,7 +76,7 @@ val RoomListItem = FC<RoomListItemProp> { props ->
       Launch()
       color = IconButtonColor.primary
       ariaLabel = "go to room ${room.code}"
-      onClick = { navigate(AppPaths.ROOM.path + "/${room.code}") }
+      onClick = { navigate(URLS.ROOM.replaceParam(ROOM_CODE_PARAM(room.code))) }
     }
     RoomQRCodeDialog {
       roomCode = room.code
@@ -88,7 +89,7 @@ val RoomListItem = FC<RoomListItemProp> { props ->
       onClick = {
         document.createElement(HTML.a)
           .apply {
-            href = RoomManagementApi.roomExportUrl(room.code)
+            href = URLS.API_ROOMS_MANAGEMENT_EXCEL_EXPORT.replaceParam(ROOM_CODE_PARAM(room.code))
             download = I18n.get(
               language,
               I18n.TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_EXCEL_EXPORT_FILE_NAME,

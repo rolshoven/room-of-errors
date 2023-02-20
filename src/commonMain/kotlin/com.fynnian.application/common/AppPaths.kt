@@ -1,17 +1,33 @@
 package com.fynnian.application.common
 
-enum class AppPaths(val path: String) {
-  API_ROOT("/api"),
-  API_USERS("/users"),
-  API_ROOMS("/rooms"),
-  API_ROOMS_MANAGEMENT("/management"),
-  STATIC_ROOT("/static"),
-  STATIC_IMAGES_ROOT("/static/images"),
-  HOME("/"),
-  ROOM("/room"),
-  MANAGEMENT("/management")
-}
+import com.benasher44.uuid.Uuid
 
-enum class AppPathParams(val param: String) {
-  ID("id")
+object URLS {
+  const val API_ROOT = "/api"
+  const val API_USERS = "$API_ROOT/users"
+  const val API_USERS_BY_ID = "$API_ROOT/users/{id}"
+  const val API_ROOMS = "$API_ROOT/rooms"
+  const val API_ROOMS_BY_ID = "$API_ROOT/rooms/{code}"
+  const val API_ROOMS_ANSWERS = "$API_ROOT/rooms/{code}/answers"
+  const val API_ROOMS_ANSWER_BY_ID = "$API_ROOT/rooms/{code}/answers/{id}"
+  const val API_ROOMS_MANAGEMENT = "$API_ROOT/management/rooms"
+  const val API_ROOMS_MANAGEMENT_BY_ID = "$API_ROOT/management/rooms/{code}"
+  const val API_ROOMS_MANAGEMENT_EXCEL_EXPORT = "$API_ROOT/management/rooms/{code}/export"
+  const val STATIC_ROOT = "/static"
+  const val STATIC_IMAGES_ROOT = "/static/images"
+  const val STATIC_IMAGES_IMAGE = "/static/images/{imageName}"
+
+  const val HOME = "/"
+  const val ROOM = "/room/{code}"
+  const val MANAGEMENT = "/management"
+
+  fun String.replaceParam(vararg params: Param) =
+    params.fold(this) { u, param -> u.replace("{${param.key}}", param.value) }
+
+  data class Param(val key: String, val value: String)
+
+  val USER_ID_PARAM = { id: Uuid -> Param("id", id.toString()) }
+  val ROOM_CODE_PARAM = { code: String -> Param("code", code) }
+  val ANSWER_ID_PARAM = { id: Uuid -> Param("id", id.toString()) }
+  val IMAGE_NAME_PARAM = { fileName: String -> Param("imageName", fileName) }
 }

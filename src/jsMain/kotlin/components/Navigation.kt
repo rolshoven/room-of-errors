@@ -1,6 +1,6 @@
 package components
 
-import com.fynnian.application.common.AppPaths
+import com.fynnian.application.common.URLS
 import csstype.*
 import mui.icons.material.House
 import mui.material.AppBar
@@ -34,7 +34,7 @@ val Navigation = FC<PropsWithChildren> { props ->
       }
       Button {
         id = "home"
-        onClick = { navigate(AppPaths.HOME.path) }
+        onClick = { navigate(URLS.HOME) }
         House {
           sx {
             color = if(theme == Themes.Dark) NamedColor.white else NamedColor.black
