@@ -2,11 +2,12 @@ package api
 
 import com.benasher44.uuid.Uuid
 import com.fynnian.application.common.URLS.ANSWER_ID_PARAM
-import com.fynnian.application.common.URLS.API_ROOMS_ANSWERS
+import com.fynnian.application.common.URLS.API_ROOMS_USER_ANSWERS
 import com.fynnian.application.common.URLS.API_ROOMS_ANSWER_BY_ID
 import com.fynnian.application.common.URLS.API_ROOMS_BY_ID
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_BY_ID
+import com.fynnian.application.common.URLS.API_ROOMS_USER_STATUS
 import com.fynnian.application.common.URLS.API_USERS_BY_ID
 import com.fynnian.application.common.URLS.ROOM_CODE_PARAM
 import com.fynnian.application.common.URLS.USER_ID_PARAM
@@ -14,6 +15,7 @@ import com.fynnian.application.common.URLS.replaceParam
 import com.fynnian.application.common.room.Answer
 import com.fynnian.application.common.room.Room
 import com.fynnian.application.common.room.RoomDetails
+import com.fynnian.application.common.room.UsersRoomStatus
 import com.fynnian.application.common.user.User
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -65,10 +67,22 @@ class RoomApi : Api() {
     else null
   }
 
+  suspend fun getUsersRoomStatus(code: String, user: User): UsersRoomStatus? {
+    val response = client.get(
+      API_ROOMS_USER_STATUS.replaceParam(
+        ROOM_CODE_PARAM(code),
+        USER_ID_PARAM(user.id))
+    )
+    return if (response.status == HttpStatusCode.OK) response.body()
+    else null
+  }
+
   suspend fun getAnswers(code: String, user: User): List<Answer> {
-    val response = client.get(API_ROOMS_ANSWERS.replaceParam(ROOM_CODE_PARAM(code))) {
-      parameter("userId", user.id)
-    }
+    val response = client.get(
+      API_ROOMS_USER_ANSWERS.replaceParam(
+        ROOM_CODE_PARAM(code),
+        USER_ID_PARAM(user.id))
+    )
     return if (response.status == HttpStatusCode.OK) response.body()
     else emptyList()
   }

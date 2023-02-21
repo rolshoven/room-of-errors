@@ -6,6 +6,7 @@ import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.Answer
 import com.fynnian.application.common.room.Coordinates
 import com.fynnian.application.common.room.Room
+import com.fynnian.application.common.room.UsersRoomStatus
 import components.*
 import csstype.*
 import js.core.get
@@ -40,6 +41,7 @@ val RoomPage = FC<Props> {
   val (loading, setLoading) = useState(true)
   val (cord, setCord) = useState<Coordinates>()
   var answers by useState<List<Answer>>(mutableListOf())
+  var usersRoomStatus by useState<UsersRoomStatus>()
   val (currentAnswer, setCurrentAnswer) = useState("")
 
   // workaround for the missing router support in the wrapper
@@ -59,6 +61,7 @@ val RoomPage = FC<Props> {
           setRoom(it)
           setLoading(false)
         }
+        usersRoomStatus = api.getUsersRoomStatus(roomCode, user)
         answers = api.getAnswers(roomCode, user)
       }
     }

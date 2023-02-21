@@ -13,7 +13,6 @@ import io.ktor.server.routing.*
 fun Route.roomApi(dependencies: DI) {
   val roomCodeParam = "code"
   val answerIdParam = "id"
-  val userId = "userId"
 
   // room by id - public
   route(URLS.API_ROOMS_BY_ID) {
@@ -29,15 +28,47 @@ fun Route.roomApi(dependencies: DI) {
     }
   }
 
-  // answers - with filter, for user
-  route(URLS.API_ROOMS_ANSWERS) {
+  route(URLS.API_ROOMS_USER_STATUS) {
+    get {
+      val code = call.getRoomCodeParam()
+      val userId = call.getUserIdParam()
+
+      dependencies.usersRoomStatusRepository
+        .getUsersRoomStatus(userId, code)
+        .also { call.respond(it) }
+    }
+  }
+
+  route(URLS.API_ROOMS_USER_START) {
+    post {
+      val code = call.getRoomCodeParam()
+      val userId = call.getUserIdParam()
+
+      dependencies.usersRoomStatusRepository
+        .startRoom(userId, code)
+        .also { call.respond(it) }
+    }
+  }
+
+  route(URLS.API_ROOMS_USER_FINISH) {
+    post {
+      val code = call.getRoomCodeParam()
+      val userId = call.getUserIdParam()
+
+      dependencies.usersRoomStatusRepository
+        .finishRoom(userId, code)
+        .also { call.respond(it) }
+    }
+  }
+
+  route(URLS.API_ROOMS_USER_ANSWERS) {
     // list answers
     get {
       val code = call.getRoomCodeParam(roomCodeParam)
-      val userUUID = call.getUUIDQueryParam(userId)
+      val userId = call.getUserIdParam()
 
       dependencies.answersRepository
-        .getAnswersOfUserForRoom(code, userUUID)
+        .getAnswersOfUserForRoom(code, userId)
         .also { call.respond(it) }
     }
   }

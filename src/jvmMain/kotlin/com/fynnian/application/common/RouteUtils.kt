@@ -23,6 +23,10 @@ fun ApplicationCall.getRoomCodeParam(key: String): String {
   return getStringParam(key)
     .also { if (it.length != 8) throw APIException.BadRequest("The room code must be 8 characters") }
 }
+
+fun ApplicationCall.getRoomCodeParam(): String = getRoomCodeParam("code")
+fun ApplicationCall.getUserIdParam(): Uuid = getUUIDParam("id")
+
 fun ApplicationCall.checkRequestIds(path: Uuid, payload: Uuid) = checkRequestIds(path.toString(), payload.toString())
 fun ApplicationCall.checkRequestIds(path: String, payload: String) {
   if (path != payload) throw APIException.BadRequest("Path id $path doesn't match payload id $payload for resource")

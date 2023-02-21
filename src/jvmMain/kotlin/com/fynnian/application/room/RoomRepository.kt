@@ -133,6 +133,12 @@ fun RoomsRecord.toDomain() = Room(
   description = description,
   question = question,
   timeLimitMinutes = timeLimitMinutes,
+  startingText = startingText,
+  startingVideoTitle = startingVideoTitle,
+  startingVideoUrl = startingVideoUrl,
+  endingText = endingText,
+  endingVideoTitle = endingVideoTitle,
+  endingVideoUrl = endingVideoUrl,
   images = listOf()
 )
 
@@ -143,6 +149,12 @@ fun Room.toRecord() = RoomsRecord().also {
   it.description = description
   it.question = question
   it.timeLimitMinutes = timeLimitMinutes
+  it.startingText = startingText
+  it.startingVideoTitle = startingVideoTitle
+  it.startingVideoUrl = startingVideoUrl
+  it.endingText = endingText
+  it.endingVideoTitle = endingVideoTitle
+  it.endingVideoUrl = endingVideoUrl
 }
 
 fun RoomImage.toRecord(roomCode: String) = RoomImagesRecord().also {

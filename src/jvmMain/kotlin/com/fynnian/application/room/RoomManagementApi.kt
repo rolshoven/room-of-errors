@@ -92,6 +92,12 @@ fun Route.roomManagementApi(dependencies: DI) {
           description = fields["description"] ?: "",
           question = fields["question"] ?: throw APIException.BadRequest("question is required"),
           timeLimitMinutes = 0, // ToDo
+          startingText = null, // ToDo
+          startingVideoTitle = null, // ToDo
+          startingVideoUrl = null, // ToDo
+          endingText = null, // ToDo
+          endingVideoTitle = null, // ToDo
+          endingVideoUrl = null, // ToDo
           images = listOf(
             RoomImage(
               id = imageId ?: throw APIException.BadRequest("image is required"),
