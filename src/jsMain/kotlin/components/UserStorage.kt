@@ -7,7 +7,9 @@ import com.benasher44.uuid.uuidFrom
 import kotlinx.coroutines.*
 import com.fynnian.application.common.user.User
 import kotlinx.browser.localStorage
+import mui.material.*
 import react.*
+import react.router.useNavigate
 
 private const val userLocalStoreKey = "USER_ID"
 
@@ -21,7 +23,7 @@ fun setUserIdFromLocalStorage(id: Uuid): Uuid {
 
 private val scope = MainScope()
 
-val UserContext = createContext<User?>()
+val UserContext = createContext<StateInstance<User?>>()
 
 val UserStorage = FC<PropsWithChildren> { props ->
 
@@ -37,11 +39,28 @@ val UserStorage = FC<PropsWithChildren> { props ->
     }
   }
 
-  UserContext(user) {
+  UserContext(userState) {
     UserContext.Provider {
-      value = user
+      value = userState
       +props.children
     }
   }
+}
 
+val NewUserSessionButton = FC<Props> {
+
+  val api = UserApi()
+  val navigate = useNavigate()
+  val (user, setUser) = useContext(UserContext)
+
+  Button {
+    onClick = {
+      val newUserId = setUserIdFromLocalStorage(uuid4())
+      scope.launch {
+        api.upsertUser(User(newUserId, null))?.let { setUser(it) }
+      }
+      navigate(0)
+    }
+    +"New User Session"
+  }
 }
