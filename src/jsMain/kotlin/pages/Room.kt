@@ -3,10 +3,7 @@ package pages
 import api.RoomApi
 import com.benasher44.uuid.uuid4
 import com.fynnian.application.common.I18n
-import com.fynnian.application.common.room.Answer
-import com.fynnian.application.common.room.Coordinates
-import com.fynnian.application.common.room.Room
-import com.fynnian.application.common.room.UsersRoomStatus
+import com.fynnian.application.common.room.*
 import components.*
 import csstype.*
 import js.core.get
@@ -17,14 +14,20 @@ import mui.icons.material.Save
 import mui.material.*
 import mui.material.Size
 import mui.material.styles.TypographyVariant
+import mui.system.Breakpoint
+import mui.system.Breakpoints
+import mui.system.responsive
 import mui.system.sx
 import react.*
 import react.dom.events.MouseEvent
+import react.dom.html.ReactHTML.img
+import react.dom.html.ReactHTML.video
 import react.dom.onChange
 import react.router.useParams
 import web.html.HTMLImageElement
 import web.html.HTMLTextAreaElement
 import web.html.InputType
+import workarounds.controls
 
 private val scope = MainScope()
 
@@ -32,7 +35,7 @@ val RoomPage = FC<Props> {
 
   val api = RoomApi()
 
-  val user = useContext(UserContext)
+  val (user, setUser) = useContext(UserContext)
   val (language) = useContext(LanguageContext)
 
   val roomCodeParam = useParams()["id"] ?: ""
@@ -80,6 +83,11 @@ val RoomPage = FC<Props> {
       reloadAnswers()
     }
   }
+  fun startRoom() {
+    scope.launch {
+      usersRoomStatus = api.startRoom(roomCode, user!!)
+    }
+  }
 
   fun calculateCoordinates(event: MouseEvent<HTMLImageElement, *>): Coordinates {
     val image = event.target as HTMLImageElement
@@ -117,89 +125,129 @@ val RoomPage = FC<Props> {
         Spacer {
           size = SpacerPropsSize.SMALL
         }
-        RoomImage {
-          image = room.images.first()
-          onImageClick = { event -> setCord(calculateCoordinates(event)) }
-
-          answers.map {
-            ImageMarker {
-              id = it.id
-              coordinates = it.coordinates
+        if (usersRoomStatus?.participationStatus == UsersRoomParticipationStatus.NOT_STARTED) {
+          Card {
+            Spacer {
+              size = SpacerPropsSize.SMALL
             }
-          }
-          cord?.let {
-            ImageMarker {
-              coordinates = it
-              selected = true
-            }
-          }
-        }
-        Box {
-          sx {
-            padding = 0.5.rem
-          }
-          Typography {
-            variant = TypographyVariant.body1
-            +I18n.get(language, I18n.TranslationKey.ROOM_IMAGE_HELP_TEXT)
-          }
-        }
-        Box {
-          sx {
-            padding = 0.5.rem
-            display = Display.flex
-            alignItems = AlignItems.center
-          }
-          TextField {
-            id = "answer"
-            name = "answer"
-            type = InputType.text
-            placeholder =
-              if (cord == null) I18n.get(language, I18n.TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER_DISABLED)
-              else I18n.get(language, I18n.TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER)
-            multiline = true
-            minRows = 2
-            fullWidth = true
-            disabled = cord == null
-            value = currentAnswer
-            onChange = {
-              val e = it.target as HTMLTextAreaElement
-              setCurrentAnswer(e.value)
-            }
-          }
-          IconButton {
-            Save()
-            size = Size.medium
-            color = IconButtonColor.primary
-            disabled = currentAnswer.isBlank()
-            onClick = {
-              addAnswer(
-                Answer(
-                  id = uuid4(),
-                  no = answers.maxOfOrNull { it.no }?.plus(1) ?: 1,
-                  imageId = room.images.first().id,
-                  userId = user!!.id,
-                  roomCode = roomCode,
-                  coordinates = cord ?: Coordinates(0.0, 0.0),
-                  answer = currentAnswer
+            CardMedia {
+              component = video
+              src = "/static/images/toto.mp4"
+              sx {
+                maxHeight = responsive(
+                  Breakpoint.md to 500.px,
+                  Breakpoint.xs to 300.px
                 )
-              )
-              setCurrentAnswer("")
-              setCord(null)
+              }
+              controls = true
+            }
+            Spacer {
+              size = SpacerPropsSize.SMALL
+            }
+            CardContent {
+              sx {
+                textAlign = TextAlign.center
+              }
+              Typography {
+                variant = TypographyVariant.body1
+                +I18n.get(language, I18n.TranslationKey.ROOM_INTRO_TEXT)
+              }
+            }
+            CardActions {
+              Button {
+                sx {
+                  width = 100.pct
+                }
+                +I18n.get(language, I18n.TranslationKey.ROOM_INTRO_START_BUTTON)
+                onClick = { startRoom() }
+              }
             }
           }
-          IconButton {
-            Clear()
-            color = IconButtonColor.primary
-            disabled = cord == null
-            onClick = {
-              setCurrentAnswer("")
-              setCord(null)
+        } else {
+          RoomImage {
+            image = room.images.first()
+            onImageClick = { event -> setCord(calculateCoordinates(event)) }
+
+            answers.map {
+              ImageMarker {
+                id = it.id
+                coordinates = it.coordinates
+              }
+            }
+            cord?.let {
+              ImageMarker {
+                coordinates = it
+                selected = true
+              }
             }
           }
-        }
-        AnswerList {
-          this.answers = answers
-          this.reloadAnswers = reloadAnswers
+          Box {
+            sx {
+              padding = 0.5.rem
+            }
+            Typography {
+              variant = TypographyVariant.body1
+              +I18n.get(language, I18n.TranslationKey.ROOM_IMAGE_HELP_TEXT)
+            }
+          }
+          Box {
+            sx {
+              padding = 0.5.rem
+              display = Display.flex
+              alignItems = AlignItems.center
+            }
+            TextField {
+              id = "answer"
+              name = "answer"
+              type = InputType.text
+              placeholder =
+                if (cord == null) I18n.get(language, I18n.TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER_DISABLED)
+                else I18n.get(language, I18n.TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER)
+              multiline = true
+              minRows = 2
+              fullWidth = true
+              disabled = cord == null
+              value = currentAnswer
+              onChange = {
+                val e = it.target as HTMLTextAreaElement
+                setCurrentAnswer(e.value)
+              }
+            }
+            IconButton {
+              Save()
+              size = Size.medium
+              color = IconButtonColor.primary
+              disabled = currentAnswer.isBlank()
+              onClick = {
+                addAnswer(
+                  Answer(
+                    id = uuid4(),
+                    no = answers.maxOfOrNull { it.no }?.plus(1) ?: 1,
+                    imageId = room.images.first().id,
+                    userId = user!!.id,
+                    roomCode = roomCode,
+                    coordinates = cord ?: Coordinates(0.0, 0.0),
+                    answer = currentAnswer
+                  )
+                )
+                setCurrentAnswer("")
+                setCord(null)
+              }
+            }
+            IconButton {
+              Clear()
+              color = IconButtonColor.primary
+              disabled = cord == null
+              onClick = {
+                setCurrentAnswer("")
+                setCord(null)
+              }
+            }
+          }
+          AnswerList {
+            this.answers = answers
+            this.reloadAnswers = reloadAnswers
+          }
         }
       }
     }

@@ -7,6 +7,7 @@ import com.fynnian.application.common.URLS.API_ROOMS_ANSWER_BY_ID
 import com.fynnian.application.common.URLS.API_ROOMS_BY_ID
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_BY_ID
+import com.fynnian.application.common.URLS.API_ROOMS_USER_START
 import com.fynnian.application.common.URLS.API_ROOMS_USER_STATUS
 import com.fynnian.application.common.URLS.API_USERS_BY_ID
 import com.fynnian.application.common.URLS.ROOM_CODE_PARAM
@@ -70,6 +71,16 @@ class RoomApi : Api() {
   suspend fun getUsersRoomStatus(code: String, user: User): UsersRoomStatus? {
     val response = client.get(
       API_ROOMS_USER_STATUS.replaceParam(
+        ROOM_CODE_PARAM(code),
+        USER_ID_PARAM(user.id))
+    )
+    return if (response.status == HttpStatusCode.OK) response.body()
+    else null
+  }
+
+  suspend fun startRoom(code: String, user: User): UsersRoomStatus? {
+    val response = client.post(
+      API_ROOMS_USER_START.replaceParam(
         ROOM_CODE_PARAM(code),
         USER_ID_PARAM(user.id))
     )

@@ -18,6 +18,10 @@ object I18n {
 
       TranslationKey.ROOM_INFO_LABEL_NAME to "Raum Name: {roomTitle}",
       TranslationKey.ROOM_INFO_LABEL_ROOM_CODE to "Raum Code: {roomCode}",
+
+      TranslationKey.ROOM_INTRO_TEXT to "Wenn du bereit bist um mit dem Raum zu starten klicke auf 'beginnen'.",
+      TranslationKey.ROOM_INTRO_START_BUTTON to "Beginnen",
+
       TranslationKey.ROOM_IMAGE_HELP_TEXT to "Markiere die Fehler mit einem Klick auf das Bild",
       TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER to "Deine Antwort",
       TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER_DISABLED to "Bitte markier einen Fehler",
@@ -53,6 +57,10 @@ object I18n {
 
       TranslationKey.ROOM_INFO_LABEL_NAME to "Room name: {roomTitle}",
       TranslationKey.ROOM_INFO_LABEL_ROOM_CODE to "Room Code: {roomCode}",
+
+      TranslationKey.ROOM_INTRO_TEXT to "When you are ready to begin with the room click on the start button.",
+      TranslationKey.ROOM_INTRO_START_BUTTON to "Start",
+
       TranslationKey.ROOM_IMAGE_HELP_TEXT to "mark a spot with an error with a click on the image",
       TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER to "your answer",
       TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER_DISABLED to "mark a spot with an error",
@@ -99,6 +107,10 @@ object I18n {
 
     ROOM_INFO_LABEL_NAME,
     ROOM_INFO_LABEL_ROOM_CODE,
+
+    ROOM_INTRO_TEXT,
+    ROOM_INTRO_START_BUTTON,
+
     ROOM_IMAGE_HELP_TEXT,
     ROOM_ANSWER_INPUT_PLACEHOLDER,
     ROOM_ANSWER_INPUT_PLACEHOLDER_DISABLED,
