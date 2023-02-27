@@ -64,7 +64,13 @@ val CreateRoomDialog = FC<CreateRoomDialogProps> { props ->
           title = roomTitle,
           description = description,
           question = question,
-          timeLimitMinutes = 0, // ToDo
+          timeLimitMinutes = 0, // ToDo,
+          startingText = null,
+          startingVideoTitle = null,
+          startingVideoUrl = null,
+          endingText = null,
+          endingVideoTitle = null,
+          endingVideoUrl = null,
           images = listOf(
             RoomImage(
               id = uuid4(),
