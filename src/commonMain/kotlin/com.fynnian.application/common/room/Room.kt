@@ -13,12 +13,8 @@ data class Room(
   val description: String,
   val question: String,
   val timeLimitMinutes: Int,
-  val startingText: String?,
-  val startingVideoTitle: String?,
-  val startingVideoUrl: String?,
-  val endingText: String?,
-  val endingVideoTitle: String?,
-  val endingVideoUrl: String?,
+  val startingStatements: RoomStatements,
+  val endingStatements: RoomStatements,
   val images: List<RoomImage>
 ) {
   companion object {
@@ -28,6 +24,12 @@ data class Room(
   }
 }
 
+@Serializable
+data class RoomStatements(
+  val text: String?,
+  val videoTitle: String?,
+  val videoURl: String?
+)
 @Serializable
 data class RoomDetails(
   val code: String,

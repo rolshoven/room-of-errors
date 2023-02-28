@@ -61,6 +61,8 @@ object I18n {
       TranslationKey.ROOM_INTRO_TEXT to "When you are ready to begin with the room click on the start button.",
       TranslationKey.ROOM_INTRO_START_BUTTON to "Start",
 
+      TranslationKey.ROOM_OUTRO_TEXT to "Thanks for participating, the solution to the room will be available at a later date.",
+
       TranslationKey.ROOM_IMAGE_HELP_TEXT to "mark a spot with an error with a click on the image",
       TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER to "your answer",
       TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER_DISABLED to "mark a spot with an error",
@@ -110,6 +112,8 @@ object I18n {
 
     ROOM_INTRO_TEXT,
     ROOM_INTRO_START_BUTTON,
+
+    ROOM_OUTRO_TEXT,
 
     ROOM_IMAGE_HELP_TEXT,
     ROOM_ANSWER_INPUT_PLACEHOLDER,

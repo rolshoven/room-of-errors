@@ -9,6 +9,7 @@ import com.fynnian.application.common.checkRequestIds
 import com.fynnian.application.common.getRoomCodeParam
 import com.fynnian.application.common.room.Room
 import com.fynnian.application.common.room.RoomImage
+import com.fynnian.application.common.room.RoomStatements
 import com.fynnian.application.common.room.RoomStatus
 import com.fynnian.application.config.DI
 import io.ktor.http.*
@@ -92,12 +93,8 @@ fun Route.roomManagementApi(dependencies: DI) {
           description = fields["description"] ?: "",
           question = fields["question"] ?: throw APIException.BadRequest("question is required"),
           timeLimitMinutes = 0, // ToDo
-          startingText = null, // ToDo
-          startingVideoTitle = null, // ToDo
-          startingVideoUrl = null, // ToDo
-          endingText = null, // ToDo
-          endingVideoTitle = null, // ToDo
-          endingVideoUrl = null, // ToDo
+          startingStatements = RoomStatements(null, null, null),
+          endingStatements = RoomStatements(null, null, null),
           images = listOf(
             RoomImage(
               id = imageId ?: throw APIException.BadRequest("image is required"),

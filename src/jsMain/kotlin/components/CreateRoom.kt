@@ -5,6 +5,7 @@ import com.benasher44.uuid.uuid4
 import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.Room
 import com.fynnian.application.common.room.RoomImage
+import com.fynnian.application.common.room.RoomStatements
 import com.fynnian.application.common.room.RoomStatus
 import csstype.*
 import js.core.jso
@@ -65,12 +66,8 @@ val CreateRoomDialog = FC<CreateRoomDialogProps> { props ->
           description = description,
           question = question,
           timeLimitMinutes = 0, // ToDo,
-          startingText = null,
-          startingVideoTitle = null,
-          startingVideoUrl = null,
-          endingText = null,
-          endingVideoTitle = null,
-          endingVideoUrl = null,
+          startingStatements = RoomStatements(null, null, null),
+          endingStatements = RoomStatements(null, null, null),
           images = listOf(
             RoomImage(
               id = uuid4(),

@@ -9,25 +9,13 @@ import csstype.*
 import js.core.get
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import mui.icons.material.Clear
-import mui.icons.material.Save
 import mui.material.*
-import mui.material.Size
 import mui.material.styles.TypographyVariant
-import mui.system.Breakpoint
-import mui.system.Breakpoints
-import mui.system.responsive
 import mui.system.sx
 import react.*
 import react.dom.events.MouseEvent
-import react.dom.html.ReactHTML.img
-import react.dom.html.ReactHTML.video
-import react.dom.onChange
 import react.router.useParams
 import web.html.HTMLImageElement
-import web.html.HTMLTextAreaElement
-import web.html.InputType
-import workarounds.controls
 
 private val scope = MainScope()
 
@@ -42,10 +30,9 @@ val RoomPage = FC<Props> {
   val (roomCode, setRoomCode) = useState("")
   val (room, setRoom) = useState<Room>()
   val (loading, setLoading) = useState(true)
-  val (cord, setCord) = useState<Coordinates>()
+  var cord by useState<Coordinates>()
   var answers by useState<List<Answer>>(mutableListOf())
   var usersRoomStatus by useState<UsersRoomStatus>()
-  val (currentAnswer, setCurrentAnswer) = useState("")
 
   // workaround for the missing router support in the wrapper
   // check the stored code against the param to trigger rerender
@@ -70,19 +57,31 @@ val RoomPage = FC<Props> {
     }
   }
 
-  val reloadAnswers = {
+  val reloadAnswers: () -> Unit = {
     scope.launch {
       answers = api.getAnswers(roomCode, user!!)
     }
-    Unit
   }
 
-  fun addAnswer(answer: Answer) {
+  fun addAnswer(answer: String) {
     scope.launch {
-      api.upsertAnswer(roomCode, answer)
-      reloadAnswers()
+      api.upsertAnswer(
+        roomCode,
+        Answer(
+          id = uuid4(),
+          no = answers.maxOfOrNull { it.no }?.plus(1) ?: 1,
+          imageId = room!!.images.first().id,
+          userId = user!!.id,
+          roomCode = roomCode,
+          coordinates = cord ?: Coordinates(0.0, 0.0),
+          answer = answer
+        )
+      )
+      cord = null
+      answers = api.getAnswers(roomCode, user)
     }
   }
+
   fun startRoom() {
     scope.launch {
       usersRoomStatus = api.startRoom(roomCode, user!!)
@@ -104,7 +103,7 @@ val RoomPage = FC<Props> {
 
   MainContainer {
     if (loading) {
-      LoadingSpinner { }
+      LoadingSpinner()
     } else {
       if (room == null) {
         RoomNavigator {
@@ -125,128 +124,60 @@ val RoomPage = FC<Props> {
         Spacer {
           size = SpacerPropsSize.SMALL
         }
-        if (usersRoomStatus?.participationStatus == UsersRoomParticipationStatus.NOT_STARTED) {
-          Card {
-            Spacer {
-              size = SpacerPropsSize.SMALL
+        when (usersRoomStatus?.participationStatus) {
+          UsersRoomParticipationStatus.NOT_STARTED -> {
+            RoomStatement {
+              type = RoomStatementVariant.INTRO
+              cardAction = { startRoom() }
+              statement = room.startingStatements
             }
-            CardMedia {
-              component = video
-              src = "/static/images/toto.mp4"
-              sx {
-                maxHeight = responsive(
-                  Breakpoint.md to 500.px,
-                  Breakpoint.xs to 300.px
-                )
+          }
+
+          UsersRoomParticipationStatus.FINISHED -> {
+            RoomStatement {
+              type = RoomStatementVariant.OUTRO
+              cardAction = {}
+              statement = room.endingStatements
+            }
+          }
+
+          else -> {
+            RoomImage {
+              image = room.images.first()
+              onImageClick = { event -> cord = calculateCoordinates(event) }
+
+              answers.map {
+                ImageMarker {
+                  id = it.id
+                  coordinates = it.coordinates
+                }
               }
-              controls = true
+              cord?.let {
+                ImageMarker {
+                  coordinates = it
+                  selected = true
+                }
+              }
             }
-            Spacer {
-              size = SpacerPropsSize.SMALL
-            }
-            CardContent {
+            Box {
               sx {
-                textAlign = TextAlign.center
+                padding = 0.5.rem
               }
               Typography {
                 variant = TypographyVariant.body1
-                +I18n.get(language, I18n.TranslationKey.ROOM_INTRO_TEXT)
+                +I18n.get(language, I18n.TranslationKey.ROOM_IMAGE_HELP_TEXT)
               }
             }
-            CardActions {
-              Button {
-                sx {
-                  width = 100.pct
-                }
-                +I18n.get(language, I18n.TranslationKey.ROOM_INTRO_START_BUTTON)
-                onClick = { startRoom() }
-              }
+            CreateAnswer {
+              currentCoordinates = cord
+              currentAnswerCount = answers.size
+              createAnswer = ::addAnswer
+              resetCoordinates = { cord = null }
             }
-          }
-        } else {
-          RoomImage {
-            image = room.images.first()
-            onImageClick = { event -> setCord(calculateCoordinates(event)) }
-
-            answers.map {
-              ImageMarker {
-                id = it.id
-                coordinates = it.coordinates
-              }
+            AnswerList {
+              this.answers = answers
+              this.reloadAnswers = reloadAnswers
             }
-            cord?.let {
-              ImageMarker {
-                coordinates = it
-                selected = true
-              }
-            }
-          }
-          Box {
-            sx {
-              padding = 0.5.rem
-            }
-            Typography {
-              variant = TypographyVariant.body1
-              +I18n.get(language, I18n.TranslationKey.ROOM_IMAGE_HELP_TEXT)
-            }
-          }
-          Box {
-            sx {
-              padding = 0.5.rem
-              display = Display.flex
-              alignItems = AlignItems.center
-            }
-            TextField {
-              id = "answer"
-              name = "answer"
-              type = InputType.text
-              placeholder =
-                if (cord == null) I18n.get(language, I18n.TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER_DISABLED)
-                else I18n.get(language, I18n.TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER)
-              multiline = true
-              minRows = 2
-              fullWidth = true
-              disabled = cord == null
-              value = currentAnswer
-              onChange = {
-                val e = it.target as HTMLTextAreaElement
-                setCurrentAnswer(e.value)
-              }
-            }
-            IconButton {
-              Save()
-              size = Size.medium
-              color = IconButtonColor.primary
-              disabled = currentAnswer.isBlank()
-              onClick = {
-                addAnswer(
-                  Answer(
-                    id = uuid4(),
-                    no = answers.maxOfOrNull { it.no }?.plus(1) ?: 1,
-                    imageId = room.images.first().id,
-                    userId = user!!.id,
-                    roomCode = roomCode,
-                    coordinates = cord ?: Coordinates(0.0, 0.0),
-                    answer = currentAnswer
-                  )
-                )
-                setCurrentAnswer("")
-                setCord(null)
-              }
-            }
-            IconButton {
-              Clear()
-              color = IconButtonColor.primary
-              disabled = cord == null
-              onClick = {
-                setCurrentAnswer("")
-                setCord(null)
-              }
-            }
-          }
-          AnswerList {
-            this.answers = answers
-            this.reloadAnswers = reloadAnswers
           }
         }
       }

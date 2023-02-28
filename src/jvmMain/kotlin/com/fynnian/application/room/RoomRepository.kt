@@ -5,6 +5,7 @@ import com.fynnian.application.common.Repository
 import com.fynnian.application.common.room.Room
 import com.fynnian.application.common.room.RoomDetails
 import com.fynnian.application.common.room.RoomImage
+import com.fynnian.application.common.room.RoomStatements
 import com.fynnian.application.config.DataSource
 import com.fynnian.application.jooq.Tables.*
 import com.fynnian.application.jooq.tables.records.RoomImagesRecord
@@ -133,12 +134,8 @@ fun RoomsRecord.toDomain() = Room(
   description = description,
   question = question,
   timeLimitMinutes = timeLimitMinutes,
-  startingText = startingText,
-  startingVideoTitle = startingVideoTitle,
-  startingVideoUrl = startingVideoUrl,
-  endingText = endingText,
-  endingVideoTitle = endingVideoTitle,
-  endingVideoUrl = endingVideoUrl,
+  startingStatements = RoomStatements(startingText, startingVideoTitle, startingVideoUrl),
+  endingStatements = RoomStatements(endingText, endingVideoTitle, endingVideoUrl),
   images = listOf()
 )
 
@@ -149,12 +146,12 @@ fun Room.toRecord() = RoomsRecord().also {
   it.description = description
   it.question = question
   it.timeLimitMinutes = timeLimitMinutes
-  it.startingText = startingText
-  it.startingVideoTitle = startingVideoTitle
-  it.startingVideoUrl = startingVideoUrl
-  it.endingText = endingText
-  it.endingVideoTitle = endingVideoTitle
-  it.endingVideoUrl = endingVideoUrl
+  it.startingText = startingStatements.text
+  it.startingVideoTitle = startingStatements.videoTitle
+  it.startingVideoUrl = startingStatements.videoURl
+  it.endingText = endingStatements.text
+  it.endingVideoTitle = endingStatements.videoTitle
+  it.endingVideoUrl = endingStatements.videoURl
 }
 
 fun RoomImage.toRecord(roomCode: String) = RoomImagesRecord().also {
