@@ -10,7 +10,7 @@ object I18n {
     Language.DE to mapOf(
       TranslationKey.LOADING_SPINNER to "Lade Daten",
 
-      TranslationKey.ROOM_NAVIGATOR_TITLE_WELCOME to "Wilkommen im Room of Horrors",
+      TranslationKey.ROOM_NAVIGATOR_TITLE_WELCOME to "Willkommen im Room of Horrors",
       TranslationKey.ROOM_NAVIGATOR_TITLE_INVALID_CODE to "Es gibt keinen Raum mit Code {roomCode}",
       TranslationKey.ROOM_NAVIGATOR_INPUT_LABEL to "Bitte gib ein 8 stelligen Raum code ein",
       TranslationKey.ROOM_NAVIGATOR_INPUT_PLACEHOLDER to "abcd1234",
@@ -22,9 +22,11 @@ object I18n {
       TranslationKey.ROOM_INTRO_TEXT to "Wenn du bereit bist um mit dem Raum zu starten klicke auf 'beginnen'.",
       TranslationKey.ROOM_INTRO_START_BUTTON to "Beginnen",
 
+      TranslationKey.ROOM_OUTRO_TEXT to "Danke für das Mitmachen, die Lösung für den Raum wird zu einem späteren Zeitpunkt veröffentlicht.",
+
       TranslationKey.ROOM_IMAGE_HELP_TEXT to "Markiere die Fehler mit einem Klick auf das Bild",
       TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER to "Deine Antwort",
-      TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER_DISABLED to "Bitte markier einen Fehler",
+      TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER_DISABLED to "Bitte markiere einen Fehler",
 
       TranslationKey.ROOM_QRCODE_IMAGE_LABEL to "ROOM CODE",
       TranslationKey.ROOM_QRCODE_BUTTON_DOWNLOAD to "Bild Speichern",
@@ -44,7 +46,7 @@ object I18n {
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_QUESTION_LABEL to "Raum Frage",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL to "Bild Titel",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL to "Lade ein PNG Bild des Raumes hoch",
-      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE to "Keine Datei - Benötig ein PNG Bild",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE to "Keine Datei - Benötigt ein PNG Bild",
     ),
     Language.EN to mapOf(
       TranslationKey.LOADING_SPINNER to "Loading Data",
