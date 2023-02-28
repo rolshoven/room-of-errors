@@ -88,6 +88,12 @@ val RoomPage = FC<Props> {
     }
   }
 
+  fun finishRoom() {
+    scope.launch {
+      usersRoomStatus = api.finishRoom(roomCode, user!!)
+    }
+  }
+
   fun calculateCoordinates(event: MouseEvent<HTMLImageElement, *>): Coordinates {
     val image = event.target as HTMLImageElement
     // get te image position, the offset to add or subtract
@@ -121,11 +127,11 @@ val RoomPage = FC<Props> {
         RoomInfo {
           this.room = room
         }
-        Spacer {
-          size = SpacerPropsSize.SMALL
-        }
         when (usersRoomStatus?.participationStatus) {
           UsersRoomParticipationStatus.NOT_STARTED -> {
+            Spacer {
+              size = SpacerPropsSize.SMALL
+            }
             RoomStatement {
               type = RoomStatementVariant.INTRO
               cardAction = { startRoom() }
@@ -134,6 +140,9 @@ val RoomPage = FC<Props> {
           }
 
           UsersRoomParticipationStatus.FINISHED -> {
+            Spacer {
+              size = SpacerPropsSize.SMALL
+            }
             RoomStatement {
               type = RoomStatementVariant.OUTRO
               cardAction = {}
@@ -141,7 +150,13 @@ val RoomPage = FC<Props> {
             }
           }
 
-          else -> {
+          UsersRoomParticipationStatus.STARTED -> {
+            RoomFinishDialog {
+              finishingAction = { finishRoom() }
+            }
+            Spacer {
+              size = SpacerPropsSize.SMALL
+            }
             RoomImage {
               image = room.images.first()
               onImageClick = { event -> cord = calculateCoordinates(event) }
@@ -179,6 +194,8 @@ val RoomPage = FC<Props> {
               this.reloadAnswers = reloadAnswers
             }
           }
+
+          else -> {}
         }
       }
     }
