@@ -2,6 +2,9 @@ package com.fynnian.application
 
 import com.benasher44.uuid.Uuid
 import com.fynnian.application.common.APIErrorResponse
+import com.fynnian.application.common.APIValidationErrorResponse
+import com.fynnian.application.common.ErrorResponse
+import com.fynnian.application.common.I18n
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*
@@ -35,6 +38,12 @@ sealed class APIException(
     override val cause: Throwable? = null
   ) : APIException(message, cause, HttpStatusCode.InternalServerError)
 
+  data class ValidationError(
+    override val message: String = "Validation failed, see the errors field for details",
+    val errors: Map<String, I18n.TranslationKey>
+  ) : APIException(message, null, HttpStatusCode.BadRequest) {
+    override fun asResponse() = APIValidationErrorResponse(message, status.description, status.value, errors)
+  }
 
   data class RoomNotFound(
     val code: String
@@ -44,5 +53,5 @@ sealed class APIException(
     val id: Uuid
   ) : APIException("User with id '$id' not found", null, HttpStatusCode.NotFound)
 
-  fun asResponse() = APIErrorResponse(message, status.description, status.value)
+  open fun asResponse(): ErrorResponse = APIErrorResponse(message, status.description, status.value)
 }
