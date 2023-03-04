@@ -72,11 +72,11 @@ val RoomListItem = FC<RoomListItemProp> { props ->
         I18n.TemplateProperty("answers", room.answers.toString())
       )
     }
-    IconButton {
-      Launch()
-      color = IconButtonColor.primary
-      ariaLabel = "go to room ${room.code}"
-      onClick = { navigate(URLS.ROOM.replaceParam(ROOM_CODE_PARAM(room.code))) }
+    ToRoomManagementDetail {
+      code = room.code
+    }
+    ToRoom {
+      code = room.code
     }
     RoomQRCodeDialog {
       roomCode = room.code

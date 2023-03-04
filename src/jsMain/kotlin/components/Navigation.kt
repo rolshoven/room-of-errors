@@ -1,18 +1,14 @@
 package components
 
 import com.fynnian.application.common.URLS
+import com.fynnian.application.common.URLS.replaceParam
 import csstype.*
-import mui.icons.material.House
-import mui.material.AppBar
-import mui.material.AppBarPosition
-import mui.material.Box
-import mui.material.Button
+import mui.icons.material.*
+import mui.material.*
 import mui.system.sx
-import react.FC
-import react.PropsWithChildren
+import react.*
 import react.dom.html.ReactHTML.nav
 import react.router.useNavigate
-import react.useContext
 
 
 val Navigation = FC<PropsWithChildren> { props ->
@@ -37,7 +33,7 @@ val Navigation = FC<PropsWithChildren> { props ->
         onClick = { navigate(URLS.HOME) }
         House {
           sx {
-            color = if(theme == Themes.Dark) NamedColor.white else NamedColor.black
+            color = if (theme == Themes.Dark) NamedColor.white else NamedColor.black
           }
         }
       }
@@ -45,10 +41,61 @@ val Navigation = FC<PropsWithChildren> { props ->
         sx {
           gap = 1.rem
         }
+        NewUserSessionButton() // ToDo: check with data or after finishing room
         ThemeSwitch()
         LanguageSwitch()
       }
     }
   }
-  + props.children
+  +props.children
+}
+
+
+external interface ToPageProps : Props {
+  var text: String?
+  var url: String
+
+  var alternativeIcon: SvgIconComponent?
+}
+
+val ToPage = FC<ToPageProps> { props ->
+  val navigate = useNavigate()
+
+  if (props.text != null)
+    Button {
+      endIcon = createElement(Launch)
+      onClick = { navigate(props.url) }
+      +props.text!!
+    }
+  else
+    IconButton {
+      props.alternativeIcon?.let{ it() } ?: Launch()
+      color = IconButtonColor.primary
+      onClick = { navigate(props.url) }
+    }
+}
+
+val ToManagementPage = FC<Props> {
+  ToPage {
+    text = "Back to Overview Page"
+    url = URLS.MANAGEMENT
+  }
+}
+
+external interface ToRoomProps : Props {
+  var code: String
+}
+
+val ToRoom = FC<ToRoomProps> { props ->
+  ToPage {
+    url = URLS.ROOM.replaceParam(URLS.ROOM_CODE_PARAM(props.code))
+    alternativeIcon = MeetingRoom
+  }
+}
+
+val ToRoomManagementDetail = FC<ToRoomProps> { props ->
+  ToPage {
+    url = URLS.MANAGEMENT_ROOM_DETAIL.replaceParam(URLS.ROOM_CODE_PARAM(props.code))
+    alternativeIcon = Settings
+  }
 }
