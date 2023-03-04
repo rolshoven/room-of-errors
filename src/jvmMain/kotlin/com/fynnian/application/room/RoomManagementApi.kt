@@ -1,15 +1,14 @@
 package com.fynnian.application.room
 
-import com.benasher44.uuid.Uuid
 import com.benasher44.uuid.uuid4
 import com.fynnian.application.APIException
+import com.fynnian.application.common.I18n
 import com.fynnian.application.common.URLS
 import com.fynnian.application.common.URLS.replaceParam
 import com.fynnian.application.common.checkRequestIds
 import com.fynnian.application.common.getRoomCodeParam
-import com.fynnian.application.common.room.Room
+import com.fynnian.application.common.room.RoomCreation
 import com.fynnian.application.common.room.RoomImage
-import com.fynnian.application.common.room.RoomStatements
 import com.fynnian.application.common.room.RoomStatus
 import com.fynnian.application.config.DI
 import io.ktor.http.*
@@ -43,73 +42,17 @@ fun Route.roomManagementApi(dependencies: DI) {
         ?.also { call.respond(it) }
         ?: throw APIException.NotFound("Room with code $code not found")
     }
-    // create / update
-    // with web url
-    contentType(ContentType.Application.Json) {
-      put {
-        val code = call.getRoomCodeParam(codeParam)
-        val room = call.receive<Room>()
+    // create room
+    post {
+      val code = call.getRoomCodeParam()
+      val room = call.receive<RoomCreation>()
 
-        call.checkRequestIds(code, room.code)
-        dependencies.roomRepository
-          .upsertRoom(room)
-          .also { call.respond(it) }
-      }
+      call.checkRequestIds(code, room.code)
+      dependencies.roomRepository
+        .createRoom(room)
+        .also { call.respond(it) }
     }
-    // with file
-    contentType(ContentType.MultiPart.FormData) {
-      put {
-        val code = call.getRoomCodeParam(codeParam)
-        val fields = mutableMapOf<String, String>()
-        var imageId: Uuid? = null
-        var imageFileName = ""
 
-        call.receiveMultipart().forEachPart { part ->
-          when (part) {
-            is PartData.FormItem -> {
-              if (part.name == "code") call.checkRequestIds(code, part.value)
-              fields[part.name ?: ""] = part.value
-            }
-
-            is PartData.FileItem -> {
-              val fileType = part.contentType
-              if (fileType?.contentSubtype != "png") APIException.BadRequest("only PNG allowed")
-
-              imageId = uuid4()
-              imageFileName = imageId.toString() + "." + fileType!!.contentSubtype
-              val fileBytes = part.streamProvider().readBytes()
-              File("${dependencies.config.content.uploadDir}/$imageFileName").absoluteFile.writeBytes(fileBytes)
-            }
-
-            else -> {}
-          }
-          part.dispose()
-        }
-
-        val newRoom = Room(
-          code = fields["code"] ?: throw APIException.BadRequest("code is required"),
-          roomStatus = RoomStatus.OPEN,
-          title = fields["title"] ?: throw APIException.BadRequest("title is required"),
-          description = fields["description"] ?: "",
-          question = fields["question"] ?: throw APIException.BadRequest("question is required"),
-          timeLimitMinutes = 0, // ToDo
-          startingStatements = RoomStatements(null, null, null),
-          endingStatements = RoomStatements(null, null, null),
-          images = listOf(
-            RoomImage(
-              id = imageId ?: throw APIException.BadRequest("image is required"),
-              title = fields["imageTitle"] ?: throw APIException.BadRequest("imageTitle is required"),
-              url = URLS.STATIC_IMAGES_IMAGE.replaceParam(URLS.IMAGE_NAME_PARAM(imageFileName))
-            )
-          )
-        )
-
-        // ToDo: handle updating of new image, allow it?
-        dependencies.roomRepository
-          .upsertRoom(newRoom)
-          .also { call.respond(it) }
-      }
-    }
     // delete
     delete {
       val code = call.getRoomCodeParam(codeParam)
@@ -118,6 +61,87 @@ fun Route.roomManagementApi(dependencies: DI) {
         .deleteRoom(code)
         .also { call.response.status(HttpStatusCode.OK) }
     }
+  }
+
+  route(URLS.API_ROOMS_MANAGEMENT_ROOM_IMAGE) {
+
+    // get images of room
+    get {
+      val code = call.getRoomCodeParam()
+
+      dependencies.roomRepository
+        .getRoomImages(code)
+        .also { call.respond(it) }
+    }
+
+    // upload new image file
+    contentType(ContentType.MultiPart.FormData) {
+      post {
+        val code = call.getRoomCodeParam()
+        val fields = mutableMapOf<String, String>()
+        val imageId = uuid4()
+
+        call.receiveMultipart().forEachPart { part ->
+          when (part) {
+            is PartData.FormItem -> {
+              fields[part.name ?: ""] = part.value
+            }
+
+            is PartData.FileItem -> {
+              val fileType = part.contentType
+              if (fileType?.contentSubtype != "png") APIException.BadRequest("only PNG allowed")
+
+              fields["imageFileName"] = imageId.toString() + "." + fileType!!.contentSubtype
+              File("${dependencies.config.content.uploadDir}/${fields["imageFileName"]}")
+                .absoluteFile.writeBytes(part.streamProvider().readBytes())
+            }
+
+            else -> {}
+          }
+          part.dispose()
+        }
+
+        val newImage = RoomImage(
+          id = imageId,
+          title = fields[RoomImage.TITLE_FORM_PARAM] ?: throw APIException.BadRequest("title is required"),
+          url = fields["imageFileName"]
+            ?.let { URLS.STATIC_IMAGES_IMAGE.replaceParam(URLS.IMAGE_NAME_PARAM(it)) }
+            ?: throw APIException.BadRequest("image file is required.")
+        )
+
+        dependencies.roomRepository
+          .upsertRoomImage(newImage, code)
+          .also { call.respond(it) }
+      }
+    }
+  }
+
+  post(URLS.API_ROOMS_MANAGEMENT_ROOM_OPEN) {
+    val code = call.getRoomCodeParam()
+
+    dependencies.roomRepository.getRooms(code)
+      .firstOrNull()
+      ?.let {
+        val missingData = mutableMapOf<String, I18n.TranslationKey>()
+        if (it.images.isEmpty())
+          missingData["images"] = I18n.TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_IMAGE_VALIDATION_ERROR
+        if (missingData.isEmpty().not())
+          throw APIException.ValidationError("Can not open room, required data is missing.", missingData)
+        it
+      }
+      ?.let { dependencies.roomRepository.updateStatus(it.code, RoomStatus.OPEN.toRecord()) }
+      ?.let { call.respond(it) }
+      ?: throw APIException.RoomNotFound(code)
+  }
+
+  post(URLS.API_ROOMS_MANAGEMENT_ROOM_CLOSE) {
+    val code = call.getRoomCodeParam()
+
+    dependencies.roomRepository.getRooms(code)
+      .firstOrNull()
+      ?.let { dependencies.roomRepository.updateStatus(it.code, RoomStatus.CLOSED.toRecord()) }
+      ?.let { call.respond(it) }
+      ?: throw APIException.RoomNotFound(code)
   }
 
   get(URLS.API_ROOMS_MANAGEMENT_EXCEL_EXPORT) {
@@ -138,3 +162,72 @@ fun Route.roomManagementApi(dependencies: DI) {
     }
   }
 }
+
+// ToDo: remove - keep old create code
+//    // create / update
+//    // with web url
+//    contentType(ContentType.Application.Json) {
+//      put {
+//        val code = call.getRoomCodeParam(codeParam)
+//        val room = call.receive<Room>()
+//
+//        call.checkRequestIds(code, room.code)
+//        dependencies.roomRepository
+//          .upsertRoom(room)
+//          .also { call.respond(it) }
+//      }
+//    }
+//    // with file
+//    contentType(ContentType.MultiPart.FormData) {
+//      put {
+//        val code = call.getRoomCodeParam(codeParam)
+//        val fields = mutableMapOf<String, String>()
+//        var imageId: Uuid? = null
+//        var imageFileName = ""
+//
+//        call.receiveMultipart().forEachPart { part ->
+//          when (part) {
+//            is PartData.FormItem -> {
+//              if (part.name == "code") call.checkRequestIds(code, part.value)
+//              fields[part.name ?: ""] = part.value
+//            }
+//
+//            is PartData.FileItem -> {
+//              val fileType = part.contentType
+//              if (fileType?.contentSubtype != "png") APIException.BadRequest("only PNG allowed")
+//
+//              imageId = uuid4()
+//              imageFileName = imageId.toString() + "." + fileType!!.contentSubtype
+//              val fileBytes = part.streamProvider().readBytes()
+//              File("${dependencies.config.content.uploadDir}/$imageFileName").absoluteFile.writeBytes(fileBytes)
+//            }
+//
+//            else -> {}
+//          }
+//          part.dispose()
+//        }
+//
+//        val newRoom = Room(
+//          code = fields["code"] ?: throw APIException.BadRequest("code is required"),
+//          roomStatus = RoomStatus.OPEN,
+//          title = fields["title"] ?: throw APIException.BadRequest("title is required"),
+//          description = fields["description"] ?: "",
+//          question = fields["question"] ?: throw APIException.BadRequest("question is required"),
+//          timeLimitMinutes = 0, // ToDo
+//          startingStatements = RoomStatements(null, null, null),
+//          endingStatements = RoomStatements(null, null, null),
+//          images = listOf(
+//            RoomImage(
+//              id = imageId ?: throw APIException.BadRequest("image is required"),
+//              title = fields["imageTitle"] ?: throw APIException.BadRequest("imageTitle is required"),
+//              url = URLS.STATIC_IMAGES_IMAGE.replaceParam(URLS.IMAGE_NAME_PARAM(imageFileName))
+//            )
+//          )
+//        )
+//
+//        // ToDo: handle updating of new image, allow it?
+//        dependencies.roomRepository
+//          .upsertRoom(newRoom)
+//          .also { call.respond(it) }
+//      }
+//    }

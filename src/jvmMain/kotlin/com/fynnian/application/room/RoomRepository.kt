@@ -2,12 +2,10 @@ package com.fynnian.application.room
 
 import com.fynnian.application.APIException
 import com.fynnian.application.common.Repository
-import com.fynnian.application.common.room.Room
-import com.fynnian.application.common.room.RoomDetails
-import com.fynnian.application.common.room.RoomImage
-import com.fynnian.application.common.room.RoomStatements
+import com.fynnian.application.common.room.*
 import com.fynnian.application.config.DataSource
 import com.fynnian.application.jooq.Tables.*
+import com.fynnian.application.jooq.enums.RoomStatus
 import com.fynnian.application.jooq.tables.records.RoomImagesRecord
 import com.fynnian.application.jooq.tables.records.RoomsRecord
 import org.jooq.impl.DSL.count
@@ -30,11 +28,18 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         }
         .fetchGroups(ROOMS, ROOM_IMAGES)
         .map { (room, images) ->
-          room.toDomain().copy(images = images.map { it.toDomain() })
+          room.toDomain().copy(images = images.filterNot { it.id == null }.map { it.toDomain() })
         }
     }
   }
 
+  fun getRoomImages(code: String): List<RoomImage> {
+    return jooq {
+      selectFrom(ROOM_IMAGES)
+        .where(ROOM_IMAGES.ROOM_CODE.eq(code))
+        .fetch { it.toDomain() }
+    }
+  }
 
   fun getRoomsForManagement(code: String? = null): List<RoomDetails> {
     return jooq {
@@ -55,7 +60,7 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
           if (code != null) it.where(ROOMS.CODE.eq(code))
           else it
         }
-        .groupBy(ROOMS.CODE)
+        .groupBy(ROOMS.CODE, ROOM_IMAGES.ID)
         .collect(
           groupingBy(
             { r ->
@@ -72,10 +77,31 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
                 answers = r.get(answers)
               )
             },
-            mapping({ r -> r.into(ROOM_IMAGES) }, toList())
+            filtering(
+              { it.get(ROOM_IMAGES.ID) != null },
+              mapping({ r -> r.into(ROOM_IMAGES).toDomain() }, toList())
+            )
           )
         )
-        .map { (room, images) -> room.copy(images = images.map { it.toDomain() }) }
+        .map { (room, images) -> room.copy(images = images) }
+    }
+  }
+
+  fun createRoom(roomCreation: RoomCreation): Room {
+    return jooq {
+      selectFrom(ROOMS)
+        .where(ROOMS.CODE.eq(roomCreation.code))
+        .fetchOne()
+        ?.also { throw APIException.BadRequest("Room with code ${it.code} already exists.") }
+
+      insertInto(ROOMS)
+        .set(ROOMS.CODE, roomCreation.code)
+        .set(ROOMS.TITLE, roomCreation.title)
+        .set(ROOMS.STATUS, RoomStatus.closed)
+        .returning()
+        .fetchOne()
+        ?.toDomain()
+        ?: throw APIException.ServerError("Could not create a new room")
     }
   }
 
@@ -124,6 +150,18 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         .firstOrNull()
         ?: throw APIException.NotFound("Room with code $code not found")
     }
+  }
+
+  fun updateStatus(code: String, status: RoomStatus): RoomDetails {
+    jooq {
+      update(ROOMS)
+        .set(ROOMS.STATUS, status)
+        .where(ROOMS.CODE.eq(code))
+        .returning()
+        .fetchOne()
+        ?: throw APIException.ServerError("Could not change the room status of room $code to $status")
+    }
+    return getRoomsForManagement(code).first()
   }
 }
 
