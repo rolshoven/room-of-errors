@@ -40,11 +40,11 @@ val RoomInfo = FC<RoomInfoProps> { props ->
     }
     Typography {
       variant = TypographyVariant.body1
-      +props.room.description
+      +(props.room.description ?: "")
     }
     Typography {
       variant = TypographyVariant.body1
-      +props.room.question
+      +(props.room.question ?: "")
     }
   }
 }

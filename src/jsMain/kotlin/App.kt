@@ -6,6 +6,7 @@ import components.ThemeModule
 import components.UserStorage
 import pages.Landingpage
 import pages.Management
+import pages.RoomManagementDetail
 import pages.RoomPage
 import react.FC
 import react.Props
@@ -49,6 +50,10 @@ private val Routing = FC<Props> {
       Route {
         path =  URLS.MANAGEMENT
         element = createElement(Management)
+      }
+      Route {
+        path = URLS.MANAGEMENT_ROOM_DETAIL.replaceParam(ROOM_CODE_PARAM(":id"))
+        element = createElement(RoomManagementDetail)
       }
     }
   }
