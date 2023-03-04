@@ -52,6 +52,8 @@ object I18n {
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL to "Bild Titel",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL to "Lade ein PNG Bild des Raumes hoch",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE to "Keine Datei - Benötigt ein PNG Bild",
+
+      TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_IMAGE_VALIDATION_ERROR to "Der Raum hat kein Bild, kann nicht geöffnet werden.",
     ),
     Language.EN to mapOf(
       TranslationKey.LOADING_SPINNER to "Loading Data",
@@ -98,6 +100,9 @@ object I18n {
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL to "Image Title",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL to "upload room png image",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE to "No file - require png image",
+
+      TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_IMAGE_VALIDATION_ERROR to "Room has no files, can not open room",
+
     ),
     Language.FR to mapOf(
 
@@ -152,9 +157,12 @@ object I18n {
     ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TITLE_LABEL,
     ROOM_MANAGEMENT_CREATE_ROOM_ROOM_DESCRIPTION_LABEL,
     ROOM_MANAGEMENT_CREATE_ROOM_ROOM_QUESTION_LABEL,
+
     ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL,
     ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL,
     ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE,
+
+    ROOM_MANAGEMENT_OPEN_ROOM_IMAGE_VALIDATION_ERROR,
   }
 
   data class TemplateProperty(private val key: String, val value: String) {
