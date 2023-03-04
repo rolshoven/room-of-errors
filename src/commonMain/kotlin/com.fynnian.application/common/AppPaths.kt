@@ -13,8 +13,15 @@ object URLS {
   const val API_ROOMS_USER_FINISH = "$API_ROOT/rooms/{code}/users/{id}/finish-room"
   const val API_ROOMS_USER_ANSWERS = "$API_ROOT/rooms/{code}/users/{id}/answers"
   const val API_ROOMS_ANSWER_BY_ID = "$API_ROOT/rooms/{code}/answers/{id}"
+
   const val API_ROOMS_MANAGEMENT = "$API_ROOT/management/rooms"
   const val API_ROOMS_MANAGEMENT_BY_ID = "$API_ROOT/management/rooms/{code}"
+  const val API_ROOMS_MANAGEMENT_ROOM_OPEN = "$API_ROOT/management/rooms/{code}/open-room"
+  const val API_ROOMS_MANAGEMENT_ROOM_CLOSE = "$API_ROOT/management/rooms/{code}/open-room"
+
+  const val API_ROOMS_MANAGEMENT_ROOM_IMAGE = "$API_ROOT/management/rooms/{code}/image"
+  const val API_ROOMS_MANAGEMENT_ROOM_IMAGE_BY_ID = "$API_ROOT/management/rooms/{code}/image/{id}"
+
   const val API_ROOMS_MANAGEMENT_EXCEL_EXPORT = "$API_ROOT/management/rooms/{code}/export"
   const val STATIC_ROOT = "/static"
   const val STATIC_IMAGES_ROOT = "/static/images"
@@ -23,6 +30,7 @@ object URLS {
   const val HOME = "/"
   const val ROOM = "/room/{code}"
   const val MANAGEMENT = "/management"
+  const val MANAGEMENT_ROOM_DETAIL = "/management/room/{code}"
 
   fun String.replaceParam(vararg params: Param) =
     params.fold(this) { u, param -> u.replace("{${param.key}}", param.value) }
