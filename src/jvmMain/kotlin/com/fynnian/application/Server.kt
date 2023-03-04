@@ -56,9 +56,9 @@ fun Application.module() {
   routing {
     // for all web pages serve the index html, react browser router handles the reset in the client
     get(URLS.HOME) { call.serveIndexHTML() }
-    get("/room/*") { call.serveIndexHTML() }
+    get("/room/{...}") { call.serveIndexHTML() }
     get(URLS.MANAGEMENT) { call.serveIndexHTML() }
-    get(URLS.MANAGEMENT + "/*") { call.serveIndexHTML() }
+    get(URLS.MANAGEMENT + "/{...}") { call.serveIndexHTML() }
 
     // setup proxy for delivering the js file in dev mode from the webpack dev server
     if (config.profile == Profile.DEV) {
