@@ -76,7 +76,11 @@ fun Application.module() {
       }
     }
     static(URLS.STATIC_IMAGES_ROOT) {
-      staticRootFolder = File(config.content.uploadDir)
+      staticRootFolder = File(config.content.imageUploadDir)
+      files(".")
+    }
+    static(URLS.STATIC_VIDEOS_ROOT) {
+      staticRootFolder = File(config.content.videoUploadDir)
       files(".")
     }
     userApi(dependencies)

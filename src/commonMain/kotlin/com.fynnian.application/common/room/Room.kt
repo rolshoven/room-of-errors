@@ -57,6 +57,9 @@ data class RoomImage(
   val url: String,
   val title: String,
 ) {
+
+  fun getFileName() = url.substringAfterLast("/")
+
   companion object {
     const val TITLE_FORM_PARAM = "title"
     const val FILE_FORM_PARAM = "image"

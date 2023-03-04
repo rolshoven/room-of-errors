@@ -1,5 +1,6 @@
 package com.fynnian.application.room
 
+import com.benasher44.uuid.Uuid
 import com.fynnian.application.APIException
 import com.fynnian.application.common.Repository
 import com.fynnian.application.common.room.*
@@ -163,6 +164,20 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
     }
     return getRoomsForManagement(code).first()
   }
+
+  fun getImage(imageId: Uuid): RoomImage {
+    return jooq {
+      selectFrom(ROOM_IMAGES)
+        .where(ROOM_IMAGES.ID.eq(imageId))
+        .fetchOne { it.toDomain() }
+        ?: throw APIException.NotFound("There is no image with id $imageId")
+    }
+  }
+  fun deleteImage(imageId: Uuid) {
+    jooq {
+      delete(ROOM_IMAGES).where(ROOM_IMAGES.ID.eq(imageId)).execute()
+    }
+  }
 }
 
 fun RoomsRecord.toDomain() = Room(
@@ -196,7 +211,7 @@ fun RoomImage.toRecord(roomCode: String) = RoomImagesRecord().also {
   it.id = id
   it.title = title
   it.url = url
-  it.file = false
+  it.file = true // ToDo: currently only file upload, no web url
   it.roomCode = roomCode
 }
 

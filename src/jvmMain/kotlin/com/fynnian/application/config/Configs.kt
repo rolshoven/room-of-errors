@@ -71,10 +71,16 @@ data class DataSource(val map: Map<String, String?>) {
 
 data class Content(val map: Map<String, String?>) {
   val uploadDir: String by map
+  val imageUploadDir: String by map
+  val videoUploadDir: String by map
 
   init {
-    val createdDir = Files.createDirectories(Paths.get(uploadDir))
-    log.info("Create directory for image uploads $createdDir")
+    val baseUploadDir = Files.createDirectories(Paths.get(uploadDir))
+    val imageUploadDir = Files.createDirectories(Paths.get(imageUploadDir))
+    val videoUploadDir = Files.createDirectories(Paths.get(videoUploadDir))
+    log.info("Create base directory for uploads $baseUploadDir")
+    log.info("Create directory for image uploads $imageUploadDir")
+    log.info("Create directory for videos uploads $videoUploadDir")
   }
 
   companion object {
@@ -82,14 +88,15 @@ data class Content(val map: Map<String, String?>) {
     fun initFrom(config: ApplicationConfig): Content {
       return Content(
         mapOf(
-          "uploadDir" to config.getPropertyByKey("$root.uploadDir")
+          "uploadDir" to config.getPropertyByKey("$root.uploadDir"),
+          "imageUploadDir" to config.getPropertyByKey("$root.uploadDir") + "/images",
+          "videoUploadDir" to config.getPropertyByKey("$root.uploadDir") + "/videos"
         )
       )
     }
 
     @JvmStatic
-    @Suppress("JAVA_CLASS_ON_COMPANION")
-    private val log = LoggerFactory.getLogger(javaClass.enclosingClass)
+    private val log = LoggerFactory.getLogger(AppConfig::class.java)
   }
 }
 

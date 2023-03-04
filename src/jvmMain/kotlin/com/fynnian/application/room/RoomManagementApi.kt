@@ -2,10 +2,8 @@ package com.fynnian.application.room
 
 import com.benasher44.uuid.uuid4
 import com.fynnian.application.APIException
-import com.fynnian.application.common.I18n
-import com.fynnian.application.common.URLS
+import com.fynnian.application.common.*
 import com.fynnian.application.common.URLS.replaceParam
-import com.fynnian.application.common.checkRequestIds
 import com.fynnian.application.common.getRoomCodeParam
 import com.fynnian.application.common.room.RoomCreation
 import com.fynnian.application.common.room.RoomImage
@@ -17,10 +15,12 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.slf4j.LoggerFactory
 import java.io.File
 
 // ToDo: Secure endpoints
 fun Route.roomManagementApi(dependencies: DI) {
+  val log = LoggerFactory.getLogger("RoomManagementApi")
   val codeParam = "code"
 
   route(URLS.API_ROOMS_MANAGEMENT) {
@@ -92,7 +92,7 @@ fun Route.roomManagementApi(dependencies: DI) {
               if (fileType?.contentSubtype != "png") APIException.BadRequest("only PNG allowed")
 
               fields["imageFileName"] = imageId.toString() + "." + fileType!!.contentSubtype
-              File("${dependencies.config.content.uploadDir}/${fields["imageFileName"]}")
+              File("${dependencies.config.content.imageUploadDir}/${fields["imageFileName"]}")
                 .absoluteFile.writeBytes(part.streamProvider().readBytes())
             }
 
@@ -113,6 +113,24 @@ fun Route.roomManagementApi(dependencies: DI) {
           .upsertRoomImage(newImage, code)
           .also { call.respond(it) }
       }
+    }
+  }
+
+  route(URLS.API_ROOMS_MANAGEMENT_ROOM_IMAGE_BY_ID) {
+    delete {
+      val imageId = call.getImageIdParam()
+
+      val image = dependencies.roomRepository.getImage(imageId)
+      File("${dependencies.config.content.imageUploadDir}/${image.getFileName()}")
+        .also {
+          if (it.delete().not()) {
+            log.error("could not delete file $it")
+            throw APIException.ServerError("Error while trying to delete to room image $imageId")
+          }
+        }
+      dependencies.roomRepository.deleteImage(imageId)
+
+      call.response.status(HttpStatusCode.OK)
     }
   }
 

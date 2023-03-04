@@ -26,6 +26,8 @@ object URLS {
   const val STATIC_ROOT = "/static"
   const val STATIC_IMAGES_ROOT = "/static/images"
   const val STATIC_IMAGES_IMAGE = "/static/images/{imageName}"
+  const val STATIC_VIDEOS_ROOT = "/static/videos"
+  const val STATIC_VIDEOS_VIDEO = "/static/videos/{videoName}"
 
   const val HOME = "/"
   const val ROOM = "/room/{code}"
@@ -40,5 +42,6 @@ object URLS {
   val USER_ID_PARAM = { id: Uuid -> Param("id", id.toString()) }
   val ROOM_CODE_PARAM = { code: String -> Param("code", code) }
   val ANSWER_ID_PARAM = { id: Uuid -> Param("id", id.toString()) }
+  val IMAGE_ID_PARAM = { id: Uuid -> Param("id", id.toString()) }
   val IMAGE_NAME_PARAM = { fileName: String -> Param("imageName", fileName) }
 }
