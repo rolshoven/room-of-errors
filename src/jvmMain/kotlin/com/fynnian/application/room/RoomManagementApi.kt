@@ -51,6 +51,16 @@ fun Route.roomManagementApi(dependencies: DI) {
         .also { call.respond(it) }
     }
 
+    patch {
+      val code = call.getRoomCodeParam()
+      val room = call.receive<RoomPatch>()
+
+      call.checkRequestIds(code, room.code)
+      dependencies.roomRepository
+        .patchRoom(room)
+        .also { call.respond(it) }
+    }
+
     // delete
     delete {
       val code = call.getRoomCodeParam(codeParam)

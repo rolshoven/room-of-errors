@@ -22,7 +22,6 @@ import com.fynnian.application.common.URLS.USER_ID_PARAM
 import com.fynnian.application.common.URLS.replaceParam
 import com.fynnian.application.common.room.*
 import com.fynnian.application.common.user.User
-import components.RoomStatement
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -172,11 +171,11 @@ class RoomManagementApi : Api() {
     }
   }
 
-  suspend fun upsertRoom(room: Room): Room? {
+  suspend fun patchRoom(patch: RoomPatch): Room? {
     return processSimpleCall {
-      put(API_ROOMS_MANAGEMENT_BY_ID.replaceParam(ROOM_CODE_PARAM(room.code))) {
+      patch(API_ROOMS_MANAGEMENT_BY_ID.replaceParam(ROOM_CODE_PARAM(patch.code))) {
         contentType(ContentType.Application.Json)
-        setBody(room)
+        setBody(patch)
       }
     }
   }

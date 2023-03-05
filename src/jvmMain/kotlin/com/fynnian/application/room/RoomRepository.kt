@@ -9,8 +9,7 @@ import com.fynnian.application.jooq.Tables.*
 import com.fynnian.application.jooq.enums.RoomStatus
 import com.fynnian.application.jooq.tables.records.RoomImagesRecord
 import com.fynnian.application.jooq.tables.records.RoomsRecord
-import org.jooq.impl.DSL.count
-import org.jooq.impl.DSL.countDistinct
+import org.jooq.impl.DSL.*
 import java.time.OffsetDateTime
 import java.util.stream.Collectors.*
 import com.fynnian.application.common.room.RoomStatus as RoomStatusDomain
@@ -110,23 +109,20 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
     }
   }
 
-  fun upsertRoom(room: Room): Room {
+  fun patchRoom(room: RoomPatch): Room {
     return jooq {
-      val modifiedRoom = update(ROOMS)
-        .set(room.toRecord())
+
+      update(ROOMS)
+        .set(ROOMS.TITLE, room.title)
+        .set(ROOMS.DESCRIPTION, room.description)
+        .set(ROOMS.QUESTION, room.question)
+        .set(ROOMS.TIME_LIMIT_MINUTES, room.timeLimitMinutes)
         .where(ROOMS.CODE.eq(room.code))
         .returning()
         .fetchOne()
-        ?.map { it.into(ROOMS).toDomain() }
-        ?: insertInto(ROOMS)
-          .set(room.toRecord())
-          .returning()
-          .map { it.into(ROOMS).toDomain() }
-          .first()
+        ?: APIException.RoomNotFound(room.code)
 
-      val images = room.images.map { upsertRoomImage(it, room.code) }
-
-      modifiedRoom.copy(images = images)
+      getRoom(room.code)
     }
   }
 

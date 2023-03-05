@@ -12,6 +12,15 @@ data class RoomCreation(
 )
 
 @Serializable
+data class RoomPatch(
+  val code: String,
+  val title: String,
+  val description: String?,
+  val question: String?,
+  val timeLimitMinutes: Int?
+)
+
+@Serializable
 data class Room(
   val code: String,
   val roomStatus: RoomStatus,

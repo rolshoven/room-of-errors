@@ -2,10 +2,7 @@ package pages
 
 import api.RoomManagementApi
 import com.benasher44.uuid.Uuid
-import com.fynnian.application.common.room.Room
-import com.fynnian.application.common.room.RoomImage
-import com.fynnian.application.common.room.RoomStatementVariant
-import com.fynnian.application.common.room.RoomStatements
+import com.fynnian.application.common.room.*
 import components.*
 import csstype.*
 import js.core.get
@@ -34,6 +31,14 @@ val RoomManagementDetail = FC<Props> {
   val (outro, setOutro) = useState<RoomStatements>()
   val (loading, setLoading) = useState(true)
 
+  val setRoomStates: (room: Room?) -> Unit = {
+    setRoom(it)
+    setImages(it?.images ?: emptyList())
+    setIntro(it?.startingStatements)
+    setOutro(it?.endingStatements)
+    setLoading(false)
+  }
+
   useEffect {
     if (roomCodeParam != roomCode) {
       setRoomCode(roomCodeParam)
@@ -44,17 +49,12 @@ val RoomManagementDetail = FC<Props> {
   useEffect {
     scope.launch {
       if (loading && roomCode.isNotBlank()) {
-        api.getRoom(roomCode).let {
-          setRoom(it)
-          setImages(it?.images ?: emptyList())
-          setIntro(it?.startingStatements)
-          setOutro(it?.endingStatements)
-          setLoading(false)
-        }
+        setRoomStates(api.getRoom(roomCode))
       }
     }
   }
 
+  val patchRoom: (patch: RoomPatch) -> Unit = { scope.launch { setRoomStates(api.patchRoom(it)) } }
   val reloadImages: () -> Unit = { scope.launch { setImages(api.getRoomImages(roomCode)) } }
 
   fun deleteImage(code: String, imageId: Uuid) {
@@ -76,19 +76,20 @@ val RoomManagementDetail = FC<Props> {
       Spacer {
         size = SpacerPropsSize.SMALL
       }
-      RoomInfo {
+      RoomManagementRoomInfo {
         this.room = room
+        this.editRoomAction = patchRoom
+        ToRoom {
+          code = room.code
+        }
+        RoomQRCodeDialog {
+          this.roomCode = room.code
+        }
+        RoomExcelExport {
+          code = room.code
+        }
+        ToManagementPage()
       }
-      ToRoom {
-        code = room.code
-      }
-      RoomQRCodeDialog {
-        this.roomCode = room.code
-      }
-      RoomExcelExport {
-        code = room.code
-      }
-      ToManagementPage()
       Spacer { size = SpacerPropsSize.SMALL }
       Box {
         Typography {
