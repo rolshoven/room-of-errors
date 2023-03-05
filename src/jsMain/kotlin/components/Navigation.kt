@@ -77,7 +77,7 @@ val ToPage = FC<ToPageProps> { props ->
 
 val ToManagementPage = FC<Props> {
   ToPage {
-    text = "Back to Overview Page"
+    text = "Back to Management Page" // ToDo: i18n
     url = URLS.MANAGEMENT
   }
 }
