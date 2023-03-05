@@ -4,10 +4,10 @@ import api.RoomManagementApi
 import com.benasher44.uuid.Uuid
 import com.fynnian.application.common.room.Room
 import com.fynnian.application.common.room.RoomImage
+import com.fynnian.application.common.room.RoomStatementVariant
+import com.fynnian.application.common.room.RoomStatements
 import components.*
-import csstype.Display
-import csstype.FlexDirection
-import csstype.rem
+import csstype.*
 import js.core.get
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -17,7 +17,6 @@ import mui.material.styles.TypographyVariant
 import mui.system.sx
 import react.*
 import react.dom.html.ReactHTML.img
-import react.router.useNavigate
 import react.router.useParams
 
 private val scope = MainScope()
@@ -31,6 +30,8 @@ val RoomManagementDetail = FC<Props> {
   val (roomCode, setRoomCode) = useState("")
   val (room, setRoom) = useState<Room>()
   val (images, setImages) = useState<List<RoomImage>>(emptyList())
+  val (intro, setIntro) = useState<RoomStatements>()
+  val (outro, setOutro) = useState<RoomStatements>()
   val (loading, setLoading) = useState(true)
 
   useEffect {
@@ -46,6 +47,8 @@ val RoomManagementDetail = FC<Props> {
         api.getRoom(roomCode).let {
           setRoom(it)
           setImages(it?.images ?: emptyList())
+          setIntro(it?.startingStatements)
+          setOutro(it?.endingStatements)
           setLoading(false)
         }
       }
@@ -64,7 +67,11 @@ val RoomManagementDetail = FC<Props> {
     if (loading) {
       LoadingSpinner()
     } else if (room == null) {
-      Box { Typography { variant = TypographyVariant.body1; +"not found" } }
+      Box {
+        Spacer { size = SpacerPropsSize.SMALL}
+        Typography { variant = TypographyVariant.body1; + "There is no room with code $roomCode" } }
+        ToManagementPage()
+    // ToDo: i18n
     } else {
       Spacer {
         size = SpacerPropsSize.SMALL
@@ -73,14 +80,54 @@ val RoomManagementDetail = FC<Props> {
       RoomInfo {
         this.room = room
       }
+      ToRoom {
+        code = room.code
+      }
+      RoomQRCodeDialog {
+        this.roomCode = room.code
+      }
       Box {
+        Typography {
+          variant = TypographyVariant.h5
+          + "Room Intro & Outro" // ToDo: i18n
+        }
+        Spacer { size = SpacerPropsSize.VERY_SMALL }
+        Box {
+          sx {
+            display = Display.flex
+            flexDirection = FlexDirection.row
+            flexWrap = FlexWrap.wrap
+            justifyContent = JustifyContent.spaceEvenly
+            alignContent = AlignContent.stretch
+            gap = 1.rem
+          }
+          RoomManagementStatement {
+            variant = RoomStatementVariant.INTRO
+            code = room.code
+            statement = intro!!
+            setStatement = setIntro
+          }
+          RoomManagementStatement {
+            variant = RoomStatementVariant.OUTRO
+            code = room.code
+            statement = outro!!
+            setStatement = setOutro
+          }
+        }
+      }
+      Box {
+        Typography {
+          variant = TypographyVariant.h5
+          + "Images" // ToDo: i18n
+        }
+        Spacer { size = SpacerPropsSize.VERY_SMALL }
         Box {
           sx {
             display = Display.flex
             flexDirection = FlexDirection.row
           }
-          if (room.images.isEmpty()) Typography {
-            +"No Images yet"
+          if (images.isEmpty()) Typography {
+            +"No Images yet" // ToDo: i18n
           }
           images.map { image ->
             Card {
@@ -110,26 +157,6 @@ val RoomManagementDetail = FC<Props> {
         CreateRoomImageDialog {
           this.code = room.code
           this.reloadImages = reloadImages
-        }
-      }
-      ListItem {
-        sx {
-          flexDirection = FlexDirection.row
-          gap = 1.rem
-        }
-        Typography {
-          variant = TypographyVariant.body1
-          +room.code
-        }
-        Typography {
-          variant = TypographyVariant.body1
-          +room.title
-        }
-        ToRoom {
-          code = room.code
-        }
-        RoomQRCodeDialog {
-          this.roomCode = room!!.code
         }
       }
     }

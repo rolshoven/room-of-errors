@@ -1,6 +1,7 @@
 package components
 
 import com.fynnian.application.common.I18n
+import com.fynnian.application.common.room.RoomStatementVariant
 import com.fynnian.application.common.room.RoomStatements
 import csstype.TextAlign
 import csstype.pct
@@ -15,11 +16,6 @@ import react.Props
 import react.dom.html.ReactHTML
 import react.useContext
 import workarounds.controls
-
-enum class RoomStatementVariant {
-  INTRO,
-  OUTRO
-}
 
 external interface RoomStatementProps : Props {
   var type: RoomStatementVariant

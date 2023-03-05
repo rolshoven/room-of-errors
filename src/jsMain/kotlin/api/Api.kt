@@ -10,6 +10,8 @@ import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_BY_ID
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_IMAGE
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_IMAGE_BY_ID
+import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_INTRO
+import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_OUTRO
 import com.fynnian.application.common.URLS.API_ROOMS_USER_FINISH
 import com.fynnian.application.common.URLS.API_ROOMS_USER_START
 import com.fynnian.application.common.URLS.API_ROOMS_USER_STATUS
@@ -20,6 +22,7 @@ import com.fynnian.application.common.URLS.USER_ID_PARAM
 import com.fynnian.application.common.URLS.replaceParam
 import com.fynnian.application.common.room.*
 import com.fynnian.application.common.user.User
+import components.RoomStatement
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -208,6 +211,37 @@ class RoomManagementApi : Api() {
               append(RoomImage.FILE_FORM_PARAM, imageByteArray, Headers.build {
                 append(HttpHeaders.ContentType, "image/png")
                 append(HttpHeaders.ContentDisposition, "filename=\"${imageTitle}.png\"")
+              })
+            },
+            boundary = "WebAppBoundary"
+          )
+        )
+      }
+    }
+  }
+
+  suspend fun addRoomStatementWithUpload(
+    variant: RoomStatementVariant,
+    roomCode: String,
+    text: String?,
+    videoTitle: String,
+    video: File
+  ): Room? {
+    return processSimpleCall {
+      val url = when (variant) {
+        RoomStatementVariant.INTRO -> API_ROOMS_MANAGEMENT_ROOM_INTRO
+        RoomStatementVariant.OUTRO -> API_ROOMS_MANAGEMENT_ROOM_OUTRO
+      }
+      val videoByteArray = video.arrayBuffer().await().let { Int8Array(it).unsafeCast<ByteArray>() }
+      post(url.replaceParam(ROOM_CODE_PARAM(roomCode))) {
+        setBody(
+          MultiPartFormDataContent(
+            formData {
+              text?.let { append(RoomStatements.TEXT_FORM_PARAM, it) }
+              append(RoomStatements.VIDEO_TITLE_FORM_PARAM, videoTitle)
+              append(RoomStatements.VIDEO_FORM_PARAM, videoByteArray, Headers.build {
+                append(HttpHeaders.ContentType, video.type)
+                append(HttpHeaders.ContentDisposition, "filename=\"${videoTitle}.${video.type}\"")
               })
             },
             boundary = "WebAppBoundary"
