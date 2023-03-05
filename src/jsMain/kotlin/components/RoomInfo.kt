@@ -2,49 +2,59 @@ package components
 
 import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.Room
+import com.fynnian.application.common.room.RoomPatch
+import csstype.px
 import csstype.rem
-import mui.material.Box
-import mui.material.Typography
+import js.core.jso
+import mui.icons.material.Close
+import mui.icons.material.Edit
+import mui.icons.material.Save
+import mui.material.*
 import mui.material.styles.TypographyVariant
 import mui.system.sx
-import react.FC
-import react.Props
-import react.useContext
+import org.w3c.dom.HTMLInputElement
+import react.*
+import react.dom.onChange
+import web.html.HTMLTextAreaElement
+import web.html.InputType
 
-external interface RoomInfoProps : Props {
+external interface RoomInfoProps : PropsWithChildren {
   var room: Room
 }
 
 val RoomInfo = FC<RoomInfoProps> { props ->
   val (language) = useContext(LanguageContext)
 
-  Box {
+  Card {
     sx {
       padding = 0.5.rem
     }
-    Typography {
-      variant = TypographyVariant.body1
-      +I18n.get(
-        language,
-        I18n.TranslationKey.ROOM_INFO_LABEL_NAME,
-        I18n.TemplateProperty.RoomTitle(props.room.title)
+    CardHeader {
+      title = ReactNode(
+        I18n.get(
+          language,
+          I18n.TranslationKey.ROOM_INFO_LABEL_NAME,
+          I18n.TemplateProperty.RoomCode(props.room.code),
+          I18n.TemplateProperty.RoomTitle(props.room.title)
+        )
       )
+      titleTypographyProps = jso {
+        variant = TypographyVariant.body1
+      }
     }
-    Typography {
-      variant = TypographyVariant.body1
-      +I18n.get(
-        language,
-        I18n.TranslationKey.ROOM_INFO_LABEL_ROOM_CODE,
-        I18n.TemplateProperty.RoomCode(props.room.code)
-      )
+    if (!props.room.description.isNullOrBlank() && !props.room.question.isNullOrBlank()) CardContent {
+      Typography {
+        variant = TypographyVariant.body1
+        +(props.room.description ?: "")
+      }
+      Spacer { size = SpacerPropsSize.SMALL }
+      Typography {
+        variant = TypographyVariant.body1
+        +(props.room.question ?: "")
+      }
     }
-    Typography {
-      variant = TypographyVariant.body1
-      +(props.room.description ?: "")
-    }
-    Typography {
-      variant = TypographyVariant.body1
-      +(props.room.question ?: "")
+    if (props.children != null) CardActions {
+      +props.children
     }
   }
 }

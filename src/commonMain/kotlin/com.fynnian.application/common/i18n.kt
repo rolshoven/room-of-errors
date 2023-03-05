@@ -16,12 +16,12 @@ object I18n {
       TranslationKey.ROOM_NAVIGATOR_INPUT_PLACEHOLDER to "abcd1234",
       TranslationKey.ROOM_NAVIGATOR_BUTTON to "Zum Raum",
 
-      TranslationKey.ROOM_INFO_LABEL_NAME to "Raum Name: {roomTitle}",
-      TranslationKey.ROOM_INFO_LABEL_ROOM_CODE to "Raum Code: {roomCode}",
+      TranslationKey.ROOM_INFO_LABEL_NAME to "Raum: {roomCode} - {roomTitle}",
 
       TranslationKey.ROOM_INTRO_TEXT to "Wenn du bereit bist um mit dem Raum zu starten klicke auf 'beginnen'.",
       TranslationKey.ROOM_INTRO_START_BUTTON to "Beginnen",
 
+      TranslationKey.ROOM_OUTRO_TITLE to "Raum Abgeschlossen",
       TranslationKey.ROOM_OUTRO_TEXT to "Danke für das Mitmachen, die Lösung für den Raum wird zu einem späteren Zeitpunkt veröffentlicht.",
 
       TranslationKey.ROOM_FINISH_DIALOG_BUTTON to "Raum Abschliessen",
@@ -64,12 +64,12 @@ object I18n {
       TranslationKey.ROOM_NAVIGATOR_INPUT_PLACEHOLDER to "abcd1234",
       TranslationKey.ROOM_NAVIGATOR_BUTTON to "Go to room",
 
-      TranslationKey.ROOM_INFO_LABEL_NAME to "Room name: {roomTitle}",
-      TranslationKey.ROOM_INFO_LABEL_ROOM_CODE to "Room Code: {roomCode}",
+      TranslationKey.ROOM_INFO_LABEL_NAME to "Room: {roomCode} - {roomTitle}",
 
       TranslationKey.ROOM_INTRO_TEXT to "When you are ready to begin with the room click on the start button.",
       TranslationKey.ROOM_INTRO_START_BUTTON to "Start",
 
+      TranslationKey.ROOM_OUTRO_TITLE to "Room Completed",
       TranslationKey.ROOM_OUTRO_TEXT to "Thanks for participating, the solution to the room will be available at a later date.",
 
       TranslationKey.ROOM_FINISH_DIALOG_BUTTON to "Finish Room",
@@ -125,11 +125,11 @@ object I18n {
     ROOM_NAVIGATOR_BUTTON,
 
     ROOM_INFO_LABEL_NAME,
-    ROOM_INFO_LABEL_ROOM_CODE,
 
     ROOM_INTRO_TEXT,
     ROOM_INTRO_START_BUTTON,
 
+    ROOM_OUTRO_TITLE,
     ROOM_OUTRO_TEXT,
 
     ROOM_FINISH_DIALOG_BUTTON,

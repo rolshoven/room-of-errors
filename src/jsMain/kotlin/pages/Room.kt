@@ -126,6 +126,10 @@ val RoomPage = FC<Props> {
         }
         RoomInfo {
           this.room = room
+          if (usersRoomStatus?.participationStatus == UsersRoomParticipationStatus.STARTED)
+            RoomFinishDialog {
+              finishingAction = { finishRoom() }
+            }
         }
         when (usersRoomStatus?.participationStatus) {
           UsersRoomParticipationStatus.NOT_STARTED -> {
@@ -151,9 +155,6 @@ val RoomPage = FC<Props> {
           }
 
           UsersRoomParticipationStatus.STARTED -> {
-            RoomFinishDialog {
-              finishingAction = { finishRoom() }
-            }
             Spacer {
               size = SpacerPropsSize.SMALL
             }

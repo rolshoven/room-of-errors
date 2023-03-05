@@ -24,6 +24,7 @@ val RoomFinishDialog = FC<RoomFinishDialogProps> { props ->
 
   Box {
     sx {
+      width = 100.pct
       padding = 0.5.rem
     }
     if (showConfirmation) {

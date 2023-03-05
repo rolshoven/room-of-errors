@@ -49,8 +49,9 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
       title = ReactNode(
         I18n.get(
           language,
-          I18n.TranslationKey.ROOM_INFO_LABEL_ROOM_CODE,
-          I18n.TemplateProperty.RoomCode(props.room.code)
+          I18n.TranslationKey.ROOM_INFO_LABEL_NAME,
+          I18n.TemplateProperty.RoomCode(props.room.code),
+          I18n.TemplateProperty.RoomTitle(props.room.title)
         )
       )
       titleTypographyProps = jso {

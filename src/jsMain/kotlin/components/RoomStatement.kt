@@ -6,6 +6,7 @@ import com.fynnian.application.common.room.RoomStatements
 import csstype.TextAlign
 import csstype.pct
 import csstype.px
+import js.core.jso
 import mui.material.*
 import mui.material.styles.TypographyVariant
 import mui.system.Breakpoint
@@ -13,6 +14,7 @@ import mui.system.responsive
 import mui.system.sx
 import react.FC
 import react.Props
+import react.ReactNode
 import react.dom.html.ReactHTML
 import react.useContext
 import workarounds.controls
@@ -27,6 +29,12 @@ val RoomStatement = FC<RoomStatementProps> { props ->
   val (language) = useContext(LanguageContext)
 
   Card {
+    if (props.type == RoomStatementVariant.OUTRO) CardHeader {
+      title = ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_OUTRO_TITLE))
+      titleTypographyProps = jso {
+        variant = TypographyVariant.body1
+      }
+    }
     if (props.statement.videoURl != null) {
       Spacer {
         size = SpacerPropsSize.SMALL
