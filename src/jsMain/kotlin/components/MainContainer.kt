@@ -1,8 +1,10 @@
 package components
 
+import csstype.vh
 import mui.material.Container
 import mui.material.Grid
 import mui.system.responsive
+import mui.system.sx
 import react.FC
 import react.PropsWithChildren
 import react.dom.html.ReactHTML.main
@@ -14,6 +16,10 @@ val MainContainer = FC<PropsWithChildren> { props ->
     maxWidth = "lg"
     component = main
     disableGutters = true
+
+    sx {
+      minHeight = 90.vh
+    }
 
     Navigation()
 

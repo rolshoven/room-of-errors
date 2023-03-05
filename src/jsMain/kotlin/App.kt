@@ -1,6 +1,7 @@
 import com.fynnian.application.common.URLS
 import com.fynnian.application.common.URLS.ROOM_CODE_PARAM
 import com.fynnian.application.common.URLS.replaceParam
+import components.Footer
 import components.I18nProvider
 import components.ThemeModule
 import components.UserStorage
@@ -19,11 +20,7 @@ import react.router.dom.BrowserRouter
 import web.dom.document
 
 fun main() {
-  createRoot(
-    document.createElement("div").also {
-      document.body.appendChild(it)
-    }
-  ).render(App.create())
+  createRoot(document.body).render(App.create())
 }
 
 private val App = FC<Props> {
@@ -31,6 +28,7 @@ private val App = FC<Props> {
     ThemeModule {
       UserStorage {
         Routing()
+        Footer()
       }
     }
   }
