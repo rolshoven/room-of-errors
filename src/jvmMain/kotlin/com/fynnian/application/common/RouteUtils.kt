@@ -3,8 +3,38 @@ package com.fynnian.application.common
 import com.benasher44.uuid.Uuid
 import com.benasher44.uuid.uuidFrom
 import com.fynnian.application.APIException
+import io.ktor.http.*
+import io.ktor.http.content.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
+import java.io.InputStream
 
+suspend fun ApplicationCall.processMultipartForm(
+  acceptedTypes: Set<ContentType>,
+  fileHandler: (fileStream: InputStream, contentType: ContentType) -> String
+): MutableMap<String, String> {
+
+  val fields = mutableMapOf<String, String>()
+
+  receiveMultipart().forEachPart { part ->
+    when (part) {
+      is PartData.FormItem -> { fields[part.name ?: ""] = part.value }
+
+      is PartData.FileItem -> {
+        val fileType = part.contentType
+        if (acceptedTypes.contains(fileType).not())
+          throw APIException.BadRequest("Invalid type $fileType for field ${part.name} - allowed types are: $acceptedTypes")
+
+        fields[part.name ?: ""] = fileHandler(part.streamProvider(), fileType!!)
+      }
+
+      else -> {}
+    }
+    part.dispose()
+  }
+
+  return fields
+}
 fun ApplicationCall.getUUIDParam(key: String): Uuid {
   parameters[key]?.let {
     try {

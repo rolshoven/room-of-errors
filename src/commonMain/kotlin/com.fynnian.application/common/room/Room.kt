@@ -35,7 +35,21 @@ data class RoomStatements(
   val text: String?,
   val videoTitle: String?,
   val videoURl: String?
-)
+) {
+  fun getFileName() = videoURl?.substringAfterLast("/")
+
+  companion object {
+    const val TEXT_FORM_PARAM = "text"
+    const val VIDEO_TITLE_FORM_PARAM = "title"
+    const val VIDEO_FORM_PARAM = "video"
+  }
+}
+
+enum class RoomStatementVariant {
+  INTRO,
+  OUTRO
+}
+
 
 @Serializable
 data class RoomDetails(

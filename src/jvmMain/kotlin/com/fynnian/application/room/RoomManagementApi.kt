@@ -5,9 +5,7 @@ import com.fynnian.application.APIException
 import com.fynnian.application.common.*
 import com.fynnian.application.common.URLS.replaceParam
 import com.fynnian.application.common.getRoomCodeParam
-import com.fynnian.application.common.room.RoomCreation
-import com.fynnian.application.common.room.RoomImage
-import com.fynnian.application.common.room.RoomStatus
+import com.fynnian.application.common.room.*
 import com.fynnian.application.config.DI
 import io.ktor.http.*
 import io.ktor.http.content.*
@@ -160,6 +158,28 @@ fun Route.roomManagementApi(dependencies: DI) {
       ?.let { dependencies.roomRepository.updateStatus(it.code, RoomStatus.CLOSED.toRecord()) }
       ?.let { call.respond(it) }
       ?: throw APIException.RoomNotFound(code)
+  }
+
+  route(URLS.API_ROOMS_MANAGEMENT_ROOM_INTRO) {
+    contentType(ContentType.MultiPart.FormData) {
+      post {
+        val code = call.getRoomCodeParam()
+        dependencies.roomManagementService
+          .handleRoomStatementCall(code, RoomStatementVariant.INTRO, call)
+          .also { call.respond(it) }
+      }
+    }
+  }
+
+  route(URLS.API_ROOMS_MANAGEMENT_ROOM_OUTRO) {
+    contentType(ContentType.MultiPart.FormData) {
+      post {
+        val code = call.getRoomCodeParam()
+        dependencies.roomManagementService
+          .handleRoomStatementCall(code, RoomStatementVariant.OUTRO, call)
+          .also { call.respond(it) }
+      }
+    }
   }
 
   get(URLS.API_ROOMS_MANAGEMENT_EXCEL_EXPORT) {

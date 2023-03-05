@@ -34,6 +34,10 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
     }
   }
 
+  fun getRoom(code: String): Room {
+    return getRooms(code).firstOrNull() ?: throw APIException.RoomNotFound(code)
+  }
+
   fun getRoomImages(code: String): List<RoomImage> {
     return jooq {
       selectFrom(ROOM_IMAGES)
@@ -173,10 +177,35 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         ?: throw APIException.NotFound("There is no image with id $imageId")
     }
   }
+
   fun deleteImage(imageId: Uuid) {
     jooq {
       delete(ROOM_IMAGES).where(ROOM_IMAGES.ID.eq(imageId)).execute()
     }
+  }
+
+  fun upsertRoomStatement(code: String, statement: RoomStatements, variant: RoomStatementVariant): Room {
+    jooq {
+      update(ROOMS)
+        .let {
+          when (variant) {
+            RoomStatementVariant.INTRO ->
+              it.set(ROOMS.STARTING_TEXT, statement.text)
+                .set(ROOMS.STARTING_VIDEO_TITLE, statement.videoTitle)
+                .set(ROOMS.STARTING_VIDEO_URL, statement.videoURl)
+
+            RoomStatementVariant.OUTRO ->
+              it.set(ROOMS.ENDING_TEXT, statement.text)
+                .set(ROOMS.ENDING_VIDEO_TITLE, statement.videoTitle)
+                .set(ROOMS.ENDING_VIDEO_URL, statement.videoURl)
+          }
+        }
+        .where(ROOMS.CODE.eq(code))
+        .returning()
+        .fetchOne()
+        ?: throw APIException.ServerError("could not update data for $variant")
+    }
+    return getRoom(code)
   }
 }
 

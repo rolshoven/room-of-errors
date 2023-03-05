@@ -17,10 +17,12 @@ object URLS {
   const val API_ROOMS_MANAGEMENT = "$API_ROOT/management/rooms"
   const val API_ROOMS_MANAGEMENT_BY_ID = "$API_ROOT/management/rooms/{code}"
   const val API_ROOMS_MANAGEMENT_ROOM_OPEN = "$API_ROOT/management/rooms/{code}/open-room"
-  const val API_ROOMS_MANAGEMENT_ROOM_CLOSE = "$API_ROOT/management/rooms/{code}/open-room"
+  const val API_ROOMS_MANAGEMENT_ROOM_CLOSE = "$API_ROOT/management/rooms/{code}/close-room"
 
   const val API_ROOMS_MANAGEMENT_ROOM_IMAGE = "$API_ROOT/management/rooms/{code}/image"
   const val API_ROOMS_MANAGEMENT_ROOM_IMAGE_BY_ID = "$API_ROOT/management/rooms/{code}/image/{id}"
+  const val API_ROOMS_MANAGEMENT_ROOM_INTRO = "$API_ROOT/management/rooms/{code}/intro"
+  const val API_ROOMS_MANAGEMENT_ROOM_OUTRO = "$API_ROOT/management/rooms/{code}/outro"
 
   const val API_ROOMS_MANAGEMENT_EXCEL_EXPORT = "$API_ROOT/management/rooms/{code}/export"
   const val STATIC_ROOT = "/static"
@@ -44,4 +46,5 @@ object URLS {
   val ANSWER_ID_PARAM = { id: Uuid -> Param("id", id.toString()) }
   val IMAGE_ID_PARAM = { id: Uuid -> Param("id", id.toString()) }
   val IMAGE_NAME_PARAM = { fileName: String -> Param("imageName", fileName) }
+  val VIDEO_NAME_PARAM = { fileName: String -> Param("videoName", fileName) }
 }
