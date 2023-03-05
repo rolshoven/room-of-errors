@@ -27,7 +27,7 @@ val RoomInfo = FC<RoomInfoProps> { props ->
       +I18n.get(
         language,
         I18n.TranslationKey.ROOM_INFO_LABEL_NAME,
-        I18n.TemplateProperty("roomTitle", props.room.title)
+        I18n.TemplateProperty.RoomTitle(props.room.title)
       )
     }
     Typography {
@@ -35,7 +35,7 @@ val RoomInfo = FC<RoomInfoProps> { props ->
       +I18n.get(
         language,
         I18n.TranslationKey.ROOM_INFO_LABEL_ROOM_CODE,
-        I18n.TemplateProperty("roomCode", props.room.code)
+        I18n.TemplateProperty.RoomCode(props.room.code)
       )
     }
     Typography {

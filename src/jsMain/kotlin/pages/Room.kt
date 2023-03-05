@@ -116,7 +116,7 @@ val RoomPage = FC<Props> {
           title = I18n.get(
             language,
             I18n.TranslationKey.ROOM_NAVIGATOR_TITLE_INVALID_CODE,
-            I18n.TemplateProperty("roomCode", roomCodeParam)
+            I18n.TemplateProperty.RoomCode(roomCodeParam)
           )
           preNavigation = { setLoading(true) }
         }

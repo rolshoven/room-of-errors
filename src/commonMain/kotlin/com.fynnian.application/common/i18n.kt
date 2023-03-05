@@ -46,7 +46,7 @@ object I18n {
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_DIALOG_BUTTON to "Neuer Raum",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_DIALOG_TITLE to "Neuer Raum erstellen",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_CODE_LABEL to "Raum CODE",
-      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TITLE_LABEL to "Raum Titel" ,
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TITLE_LABEL to "Raum Titel",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_DESCRIPTION_LABEL to "Raum Beschreibung",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_QUESTION_LABEL to "Raum Frage",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL to "Bild Titel",
@@ -94,7 +94,7 @@ object I18n {
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_DIALOG_BUTTON to "Create Room",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_DIALOG_TITLE to "Create a new Room",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_CODE_LABEL to "ROOM CODE",
-      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TITLE_LABEL to "Room Title" ,
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TITLE_LABEL to "Room Title",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_DESCRIPTION_LABEL to "Room Description",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_QUESTION_LABEL to "Room Question",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL to "Image Title",
@@ -103,7 +103,7 @@ object I18n {
 
       TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_IMAGE_VALIDATION_ERROR to "Room has no files, can not open room",
 
-    ),
+      ),
     Language.FR to mapOf(
 
     ),
@@ -165,15 +165,20 @@ object I18n {
     ROOM_MANAGEMENT_OPEN_ROOM_IMAGE_VALIDATION_ERROR,
   }
 
-  data class TemplateProperty(private val key: String, val value: String) {
+  sealed class TemplateProperty(key: String, open val value: String) {
     val propertyKey = "{$key}"
+
+    data class RoomCode(override val value: String) : TemplateProperty("roomCode", value)
+    data class RoomTitle(override val value: String) : TemplateProperty("roomTitle", value)
+    data class Participants(override val value: String) : TemplateProperty("participants", value)
+    data class Answers(override val value: String) : TemplateProperty("answers", value)
   }
 
   fun get(language: Language, key: TranslationKey) = localization[language]!![key] ?: ""
   fun get(language: Language, key: TranslationKey, vararg values: TemplateProperty): String {
     return get(language, key).let { text ->
-        values.fold(text) { acc: String, value: TemplateProperty -> acc.replace(value.propertyKey, value.value) }
-      }
+      values.fold(text) { acc: String, value: TemplateProperty -> acc.replace(value.propertyKey, value.value) }
+    }
   }
 }
 

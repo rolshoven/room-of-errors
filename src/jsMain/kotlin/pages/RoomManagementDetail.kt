@@ -76,7 +76,6 @@ val RoomManagementDetail = FC<Props> {
       Spacer {
         size = SpacerPropsSize.SMALL
       }
-      ToManagementPage()
       RoomInfo {
         this.room = room
       }
@@ -86,6 +85,11 @@ val RoomManagementDetail = FC<Props> {
       RoomQRCodeDialog {
         this.roomCode = room.code
       }
+      RoomExcelExport {
+        code = room.code
+      }
+      ToManagementPage()
+      Spacer { size = SpacerPropsSize.SMALL }
       Box {
         Typography {
           variant = TypographyVariant.h5
@@ -115,48 +119,35 @@ val RoomManagementDetail = FC<Props> {
           }
         }
       }
+      Spacer { size = SpacerPropsSize.SMALL }
       Box {
         Typography {
           variant = TypographyVariant.h5
-          + "Images" // ToDo: i18n
+          + "Room Angles / Views" // ToDo: i18n
+        }
+        Spacer { size = SpacerPropsSize.VERY_SMALL }
+        CreateRoomImageDialog {
+          this.code = room.code
+          this.reloadImages = reloadImages
         }
         Spacer { size = SpacerPropsSize.VERY_SMALL }
         Box {
           sx {
             display = Display.flex
             flexDirection = FlexDirection.row
+            flexWrap = FlexWrap.wrap
+            justifyContent = JustifyContent.left
+            gap = 1.rem
           }
           if (images.isEmpty()) Typography {
-            +"No Images yet" // ToDo: i18n
+            +"No Angles / Views yet" // ToDo: i18n
           }
           images.map { image ->
-            Card {
-              sx {
-                maxWidth = 10.rem
-              }
-              CardMedia {
-                component = img
-                src = image.url
-              }
-              CardContent {
-                Typography {
-                  variant = TypographyVariant.body1
-                  +image.title
-                }
-              }
-              CardActions {
-                IconButton {
-                  Delete()
-                  color = IconButtonColor.primary
-                  onClick = { deleteImage(room.code, image.id) }
-                }
-              }
+            RoomManagementRoomImage {
+              this.image = image
+              this.deleteImageAction = { deleteImage(room.code, image.id) }
             }
           }
-        }
-        CreateRoomImageDialog {
-          this.code = room.code
-          this.reloadImages = reloadImages
         }
       }
     }

@@ -61,7 +61,7 @@ val RoomListItem = FC<RoomListItemProp> { props ->
       +I18n.get(
         language,
         I18n.TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_PARTICIPANTS,
-        I18n.TemplateProperty("participants", room.participants.toString())
+        I18n.TemplateProperty.Participants(room.participants.toString())
       )
     }
     Typography {
@@ -69,7 +69,7 @@ val RoomListItem = FC<RoomListItemProp> { props ->
       +I18n.get(
         language,
         I18n.TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_TOTAL_ANSWERS,
-        I18n.TemplateProperty("answers", room.answers.toString())
+        I18n.TemplateProperty.Answers(room.answers.toString())
       )
     }
     ToRoomManagementDetail {
@@ -81,27 +81,8 @@ val RoomListItem = FC<RoomListItemProp> { props ->
     RoomQRCodeDialog {
       roomCode = room.code
     }
-    Button {
-      +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_BUTTON_EXCEL_EXPORT)
-      FileDownload()
-      variant = ButtonVariant.text
-      ariaLabel = "Excel Export Room"
-      onClick = {
-        document.createElement(HTML.a)
-          .apply {
-            href = URLS.API_ROOMS_MANAGEMENT_EXCEL_EXPORT.replaceParam(ROOM_CODE_PARAM(room.code))
-            download = I18n.get(
-              language,
-              I18n.TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_EXCEL_EXPORT_FILE_NAME,
-              I18n.TemplateProperty("roomCode", room.code)
-            )
-          }
-          .also {
-            document.body.appendChild(it)
-            it.click()
-            document.body.removeChild(it)
-          }
-      }
+    RoomExcelExport {
+      code = room.code
     }
   }
 }
