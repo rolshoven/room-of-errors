@@ -30,6 +30,10 @@ object I18n {
       TranslationKey.ROOM_FINISH_DIALOG_CONFIRMATION_BUTTON_NO to "Nein",
 
       TranslationKey.ROOM_IMAGE_HELP_TEXT to "Markiere die Fehler mit einem Klick auf das Bild",
+
+      TranslationKey.ROOM_ANSWER_ANSWERS_TOTAL to "Total {answers} Antworten",
+      TranslationKey.ROOM_ANSWER_ANSWERS_COUNT_PER_IMAGE to "Bild {number}: {answers} Antworten",
+
       TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER to "Deine Antwort",
       TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER_DISABLED to "Bitte markiere einen Fehler",
 
@@ -78,6 +82,10 @@ object I18n {
       TranslationKey.ROOM_FINISH_DIALOG_CONFIRMATION_BUTTON_NO to "No",
 
       TranslationKey.ROOM_IMAGE_HELP_TEXT to "mark a spot with an error with a click on the image",
+
+      TranslationKey.ROOM_ANSWER_ANSWERS_TOTAL to "Total {answers} answers",
+      TranslationKey.ROOM_ANSWER_ANSWERS_COUNT_PER_IMAGE to "Image {number}: {answers} answers",
+
       TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER to "your answer",
       TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER_DISABLED to "mark a spot with an error",
 
@@ -138,6 +146,10 @@ object I18n {
     ROOM_FINISH_DIALOG_CONFIRMATION_BUTTON_NO,
 
     ROOM_IMAGE_HELP_TEXT,
+
+    ROOM_ANSWER_ANSWERS_TOTAL,
+    ROOM_ANSWER_ANSWERS_COUNT_PER_IMAGE,
+
     ROOM_ANSWER_INPUT_PLACEHOLDER,
     ROOM_ANSWER_INPUT_PLACEHOLDER_DISABLED,
 
@@ -172,6 +184,7 @@ object I18n {
     data class RoomTitle(override val value: String) : TemplateProperty("roomTitle", value)
     data class Participants(override val value: String) : TemplateProperty("participants", value)
     data class Answers(override val value: String) : TemplateProperty("answers", value)
+    data class Number(val number: kotlin.Number) : TemplateProperty("number", number.toString())
   }
 
   fun get(language: Language, key: TranslationKey) = localization[language]!![key] ?: ""

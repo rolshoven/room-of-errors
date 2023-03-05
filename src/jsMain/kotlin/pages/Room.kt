@@ -7,8 +7,11 @@ import com.fynnian.application.common.room.*
 import components.*
 import csstype.*
 import js.core.get
+import js.core.jso
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import mui.icons.material.KeyboardArrowLeft
+import mui.icons.material.KeyboardArrowRight
 import mui.material.*
 import mui.material.styles.TypographyVariant
 import mui.system.sx
@@ -33,6 +36,7 @@ val RoomPage = FC<Props> {
   var cord by useState<Coordinates>()
   var answers by useState<List<Answer>>(mutableListOf())
   var usersRoomStatus by useState<UsersRoomStatus>()
+  val (currentImage, setCurrentImage) = useState(0)
 
   // workaround for the missing router support in the wrapper
   // check the stored code against the param to trigger rerender
@@ -70,7 +74,7 @@ val RoomPage = FC<Props> {
         Answer(
           id = uuid4(),
           no = answers.maxOfOrNull { it.no }?.plus(1) ?: 1,
-          imageId = room!!.images.first().id,
+          imageId = room!!.images[currentImage].id,
           userId = user!!.id,
           roomCode = roomCode,
           coordinates = cord ?: Coordinates(0.0, 0.0),
@@ -155,14 +159,17 @@ val RoomPage = FC<Props> {
           }
 
           UsersRoomParticipationStatus.STARTED -> {
+            if (room.images.isEmpty()) return@MainContainer // ToDo: resolve, not needed, missing check for rooom status
+            val selectedImage = room.images[currentImage]
+            val answersForCurrentImage = answers.filter { it.imageId == selectedImage.id }
             Spacer {
               size = SpacerPropsSize.SMALL
             }
             RoomImage {
-              image = room.images.first()
+              image = selectedImage
               onImageClick = { event -> cord = calculateCoordinates(event) }
 
-              answers.map {
+              answersForCurrentImage.map {
                 ImageMarker {
                   id = it.id
                   coordinates = it.coordinates
@@ -174,6 +181,27 @@ val RoomPage = FC<Props> {
                   selected = true
                 }
               }
+            }
+            if (room.images.size > 1) MobileStepper {
+              steps = room.images.size
+              position = MobileStepperPosition.static
+              activeStep = currentImage
+              nextButton = createElement(
+                Button, jso {
+                  size = "small".asDynamic()
+                  onClick = { setCurrentImage(currentImage + 1) }
+                  disabled = currentImage == room.images.size - 1
+                },
+                createElement(KeyboardArrowRight)
+              )
+              backButton = createElement(
+                Button, jso {
+                  size = "small".asDynamic()
+                  onClick = { setCurrentImage(currentImage - 1) }
+                  disabled = currentImage == 0
+                },
+                createElement(KeyboardArrowLeft)
+              )
             }
             Box {
               sx {
@@ -190,8 +218,32 @@ val RoomPage = FC<Props> {
               createAnswer = ::addAnswer
               resetCoordinates = { cord = null }
             }
+            Box {
+              sx {
+                padding = 0.5.rem
+              }
+              Typography {
+                variant = TypographyVariant.body1
+                +I18n.get(
+                  language,
+                  I18n.TranslationKey.ROOM_ANSWER_ANSWERS_TOTAL,
+                  I18n.TemplateProperty.Answers(answers.size.toString())
+                )
+              }
+              if (room.images.size > 1) room.images.mapIndexed { i, image ->
+                Typography {
+                  variant = TypographyVariant.body1
+                  +I18n.get(
+                    language,
+                    I18n.TranslationKey.ROOM_ANSWER_ANSWERS_COUNT_PER_IMAGE,
+                    I18n.TemplateProperty.Number(i + 1),
+                    I18n.TemplateProperty.Answers(answers.filter { it.imageId == image.id }.size.toString())
+                  )
+                }
+              }
+            }
             AnswerList {
-              this.answers = answers
+              this.answers = answersForCurrentImage
               this.reloadAnswers = reloadAnswers
             }
           }
