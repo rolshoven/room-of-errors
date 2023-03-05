@@ -12,6 +12,7 @@ external interface SpacerProps : Props {
 }
 
 enum class SpacerPropsSize(val height: Height) {
+  VERY_SMALL(0.5.rem),
   SMALL(1.rem),
   MEDIUM(2.rem),
   LARGE(4.rem)
