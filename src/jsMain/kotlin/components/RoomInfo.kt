@@ -42,7 +42,7 @@ val RoomInfo = FC<RoomInfoProps> { props ->
         variant = TypographyVariant.body1
       }
     }
-    if (!props.room.description.isNullOrBlank() && !props.room.question.isNullOrBlank()) CardContent {
+    if (!props.room.description.isNullOrBlank() || !props.room.question.isNullOrBlank()) CardContent {
       Typography {
         variant = TypographyVariant.body1
         +(props.room.description ?: "")
