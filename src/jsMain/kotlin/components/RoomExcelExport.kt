@@ -2,6 +2,7 @@ package components
 
 import com.fynnian.application.common.I18n
 import com.fynnian.application.common.URLS
+import com.fynnian.application.common.URLS.addQuerParams
 import com.fynnian.application.common.URLS.replaceParam
 import mui.icons.material.FileDownload
 import mui.material.Button
@@ -29,7 +30,9 @@ val RoomExcelExport = FC<RoomExcelExportProps> { props ->
     onClick = {
       document.createElement(HTML.a)
         .apply {
-          href = URLS.API_ROOMS_MANAGEMENT_EXCEL_EXPORT.replaceParam(URLS.ROOM_CODE_PARAM(props.code))
+          href = URLS.API_ROOMS_MANAGEMENT_EXCEL_EXPORT
+            .replaceParam(URLS.ROOM_CODE_PARAM(props.code))
+            .addQuerParams(URLS.LANGUAGE_PARAM(language))
           download = I18n.get(
             language,
             I18n.TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_EXCEL_EXPORT_FILE_NAME,

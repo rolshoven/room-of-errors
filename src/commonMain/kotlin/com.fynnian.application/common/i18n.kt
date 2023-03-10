@@ -52,12 +52,25 @@ object I18n {
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_CODE_LABEL to "Raum CODE",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TITLE_LABEL to "Raum Titel",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_DESCRIPTION_LABEL to "Raum Beschreibung",
-      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_QUESTION_LABEL to "Raum Frage",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_QUESTION_LABEL to "Einstiegs Frage",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL to "Bild Titel",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL to "Lade ein PNG Bild des Raumes hoch",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE to "Keine Datei - Benötigt ein PNG Bild",
 
       TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_IMAGE_VALIDATION_ERROR to "Der Raum hat kein Bild, kann nicht geöffnet werden.",
+
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_ROOM_CODE to "Raum Code",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_TITLE to "Titel",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_DESCRIPTION to "Raum Beschreibung",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_QUESTION to "Display question",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_IMAGES to "Anzahl an Bildern",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_PARTICIPANTS to "Teilnehmer",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_TOTAL_ANSWERS to "Antworten Total",
+
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_USER_NO to "userNr",
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_ANSWER_NO to "antwortNr",
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_ANSWER to "antwort",
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_IMAGE_NO to "bildNr",
     ),
     Language.EN to mapOf(
       TranslationKey.LOADING_SPINNER to "Loading Data",
@@ -111,6 +124,18 @@ object I18n {
 
       TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_IMAGE_VALIDATION_ERROR to "Room has no files, can not open room",
 
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_ROOM_CODE to "Room Code",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_TITLE to "Title",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_DESCRIPTION to "Room description",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_QUESTION to "Display question",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_IMAGES to "Number of images",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_PARTICIPANTS to "Participants",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_TOTAL_ANSWERS to "Total answers",
+
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_USER_NO to "userNo",
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_ANSWER_NO to "answerNo",
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_ANSWER to "answer",
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_IMAGE_NO to "imageNo",
       ),
     Language.FR to mapOf(
 
@@ -175,6 +200,21 @@ object I18n {
     ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE,
 
     ROOM_MANAGEMENT_OPEN_ROOM_IMAGE_VALIDATION_ERROR,
+
+
+    ROOM_EXCEL_EXPORT_INFO_CARD_ROOM_CODE,
+    ROOM_EXCEL_EXPORT_INFO_CARD_TITLE,
+    ROOM_EXCEL_EXPORT_INFO_CARD_DESCRIPTION,
+    ROOM_EXCEL_EXPORT_INFO_CARD_QUESTION,
+    ROOM_EXCEL_EXPORT_INFO_CARD_IMAGES,
+    ROOM_EXCEL_EXPORT_INFO_CARD_PARTICIPANTS,
+    ROOM_EXCEL_EXPORT_INFO_CARD_TOTAL_ANSWERS,
+
+    ROOM_EXCEL_EXPORT_HEADER_USER_NO,
+    ROOM_EXCEL_EXPORT_HEADER_ANSWER_NO,
+    ROOM_EXCEL_EXPORT_HEADER_ANSWER,
+    ROOM_EXCEL_EXPORT_HEADER_IMAGE_NO,
+
   }
 
   sealed class TemplateProperty(key: String, open val value: String) {

@@ -35,6 +35,7 @@ suspend fun ApplicationCall.processMultipartForm(
 
   return fields
 }
+
 fun ApplicationCall.getUUIDParam(key: String): Uuid {
   parameters[key]?.let {
     try {
@@ -45,12 +46,18 @@ fun ApplicationCall.getUUIDParam(key: String): Uuid {
   } ?: throw APIException.BadRequest("Missing required path parameter: $key")
 }
 
-fun ApplicationCall.getStringParam(key: String): String {
+fun ApplicationCall.getPathParam(key: String): String {
   return parameters[key] ?: throw APIException.BadRequest("Missing required path parameter: $key")
 }
 
+fun ApplicationCall.getRequiredQueryParam(key: String): String =
+  getQueryParam(key) ?: throw APIException.BadRequest("Missing required query parameter: $key")
+
+fun ApplicationCall.getQueryParam(key: String): String? = parameters[key]
+
+
 fun ApplicationCall.getRoomCodeParam(key: String): String {
-  return getStringParam(key)
+  return getPathParam(key)
     .also { if (it.length != 8) throw APIException.BadRequest("The room code must be 8 characters") }
 }
 
@@ -61,6 +68,21 @@ fun ApplicationCall.getImageIdParam(): Uuid = getUUIDParam("id")
 fun ApplicationCall.checkRequestIds(path: Uuid, payload: Uuid) = checkRequestIds(path.toString(), payload.toString())
 fun ApplicationCall.checkRequestIds(path: String, payload: String) {
   if (path != payload) throw APIException.BadRequest("Path id $path doesn't match payload id $payload for resource")
+}
+
+/**
+ * Get the optional `language` query param, if not set returns [Language.DE] as default
+ */
+fun ApplicationCall.getLanguageQueryParam(): Language {
+  return getQueryParam("language")
+    ?.let {
+      try {
+        Language.valueOf(it.uppercase())
+      } catch (e: Exception) {
+        throw APIException.BadRequest("the given value $it is not a valid language, use one of ${Language.values()}")
+      }
+    }
+    ?: Language.DE
 }
 
 fun ApplicationCall.getUUIDQueryParam(key: String): Uuid {

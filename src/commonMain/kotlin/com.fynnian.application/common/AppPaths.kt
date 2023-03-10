@@ -39,6 +39,8 @@ object URLS {
   fun String.replaceParam(vararg params: Param) =
     params.fold(this) { u, param -> u.replace("{${param.key}}", param.value) }
 
+  fun String.addQuerParams(vararg params: Param) =
+    this + "?" + params.joinToString("&") { "${it.key}=${it.value}" }
   data class Param(val key: String, val value: String)
 
   val USER_ID_PARAM = { id: Uuid -> Param("id", id.toString()) }
@@ -47,4 +49,5 @@ object URLS {
   val IMAGE_ID_PARAM = { id: Uuid -> Param("id", id.toString()) }
   val IMAGE_NAME_PARAM = { fileName: String -> Param("imageName", fileName) }
   val VIDEO_NAME_PARAM = { fileName: String -> Param("videoName", fileName) }
+  val LANGUAGE_PARAM = { language: Language -> Param("language", language.toString()) }
 }

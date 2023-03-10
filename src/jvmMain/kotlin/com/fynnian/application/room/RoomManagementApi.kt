@@ -193,8 +193,9 @@ fun Route.roomManagementApi(dependencies: DI) {
   }
 
   get(URLS.API_ROOMS_MANAGEMENT_EXCEL_EXPORT) {
-    val code = call.getRoomCodeParam(codeParam)
-    val excel = dependencies.roomExportService.excelExportRoom(code)
+    val code = call.getRoomCodeParam()
+    val language = call.getLanguageQueryParam()
+    val excel = dependencies.roomExportService.excelExportRoom(code, language)
 
     call.response.header(
       HttpHeaders.ContentDisposition,
