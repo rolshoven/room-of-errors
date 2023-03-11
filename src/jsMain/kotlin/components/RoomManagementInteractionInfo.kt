@@ -1,5 +1,6 @@
 package components
 
+import MissingContent
 import com.fynnian.application.common.room.RoomStatementVariant
 import com.fynnian.application.common.room.RoomInteractionInfo
 import csstype.TextAlign
@@ -43,18 +44,12 @@ val RoomManagementInteractionInfo = FC<RoomManagementInteractionInfoProps> { pro
       sx {
         textAlign = TextAlign.center
       }
-      if (props.interactionInfo.videoURl == null) Typography {
-        variant = TypographyVariant.overline
-        +"There is no video"
-      }
+      if (props.interactionInfo.videoURl == null) MissingContent { text = "There is no video" }
       if (props.interactionInfo.text != null) Typography {
         variant = TypographyVariant.body1
         +props.interactionInfo.text!!
       }
-      else Typography {
-        variant = TypographyVariant.overline
-        +"There is no description"
-      }
+      else MissingContent { text = "There is no description" }
     }
     CardActions {
       CreateRoomInteractionInfoDialog {

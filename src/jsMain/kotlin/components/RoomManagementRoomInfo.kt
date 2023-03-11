@@ -1,5 +1,6 @@
 package components
 
+import MissingContent
 import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.Room
 import com.fynnian.application.common.room.RoomPatch
@@ -83,14 +84,7 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
         variant = TypographyVariant.body1
         +props.room.description!!
       }
-      else Typography {
-        sx {
-          margin = 0.px
-        }
-        paragraph = true
-        variant = TypographyVariant.overline
-        +"There is no room description"
-      }
+      else MissingContent { text = "There is no room description" }
       Typography {
         variant = TypographyVariant.caption
         + I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_QUESTION_LABEL)
@@ -99,14 +93,7 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
         variant = TypographyVariant.body1
         +props.room.question!!
       }
-      else Typography {
-        sx {
-          margin = 0.px
-        }
-        paragraph = true
-        variant = TypographyVariant.overline
-        +"There is no room question"
-      }
+      else MissingContent { text = "There is no room question" }
     }
     else CardContent {
       FormGroup {
