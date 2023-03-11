@@ -5,11 +5,14 @@ import com.fynnian.application.APIException
 import com.fynnian.application.common.Repository
 import com.fynnian.application.common.room.*
 import com.fynnian.application.config.DataSource
-import com.fynnian.application.jooq.Tables.*
 import com.fynnian.application.jooq.enums.RoomStatus
 import com.fynnian.application.jooq.tables.records.RoomImagesRecord
 import com.fynnian.application.jooq.tables.records.RoomsRecord
-import org.jooq.impl.DSL.*
+import com.fynnian.application.jooq.tables.references.ANSWERS
+import com.fynnian.application.jooq.tables.references.ROOMS
+import com.fynnian.application.jooq.tables.references.ROOM_IMAGES
+import org.jooq.impl.DSL.count
+import org.jooq.impl.DSL.countDistinct
 import java.time.OffsetDateTime
 import java.util.stream.Collectors.*
 import com.fynnian.application.common.room.RoomStatus as RoomStatusDomain
@@ -70,9 +73,9 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
             { r ->
               val room = r.into(ROOMS)
               RoomDetails(
-                code = room.code,
-                roomStatus = room.status.toDomain(),
-                title = room.title,
+                code = room.code!!,
+                roomStatus = room.status!!.toDomain(),
+                title = room.title!!,
                 description = room.description,
                 question = room.question,
                 timeLimitMinutes = room.timeLimitMinutes,
@@ -101,7 +104,7 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
       insertInto(ROOMS)
         .set(ROOMS.CODE, roomCreation.code)
         .set(ROOMS.TITLE, roomCreation.title)
-        .set(ROOMS.STATUS, RoomStatus.closed)
+        .set(ROOMS.STATUS, RoomStatus.not_ready)
         .returning()
         .fetchOne()
         ?.toDomain()
@@ -186,14 +189,14 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         .let {
           when (variant) {
             RoomStatementVariant.INTRO ->
-              it.set(ROOMS.STARTING_TEXT, statement.text)
-                .set(ROOMS.STARTING_VIDEO_TITLE, statement.videoTitle)
-                .set(ROOMS.STARTING_VIDEO_URL, statement.videoURl)
+              it.set(ROOMS.INTRO_TEXT, statement.text)
+                .set(ROOMS.INTRO_VIDEO_TITLE, statement.videoTitle)
+                .set(ROOMS.INTRO_VIDEO_URL, statement.videoURl)
 
             RoomStatementVariant.OUTRO ->
-              it.set(ROOMS.ENDING_TEXT, statement.text)
-                .set(ROOMS.ENDING_VIDEO_TITLE, statement.videoTitle)
-                .set(ROOMS.ENDING_VIDEO_URL, statement.videoURl)
+              it.set(ROOMS.OUTRO_TEXT, statement.text)
+                .set(ROOMS.OUTRO_VIDEO_TITLE, statement.videoTitle)
+                .set(ROOMS.OUTRO_VIDEO_URL, statement.videoURl)
           }
         }
         .where(ROOMS.CODE.eq(code))
@@ -206,14 +209,14 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
 }
 
 fun RoomsRecord.toDomain() = Room(
-  code = code,
-  roomStatus = status.toDomain(),
-  title = title,
+  code = code!!,
+  roomStatus = status!!.toDomain(),
+  title = title!!,
   description = description,
   question = question,
   timeLimitMinutes = timeLimitMinutes,
-  startingStatements = RoomStatements(startingText, startingVideoTitle, startingVideoUrl),
-  endingStatements = RoomStatements(endingText, endingVideoTitle, endingVideoUrl),
+  startingStatements = RoomStatements(introText, introVideoTitle, introVideoUrl),
+  endingStatements = RoomStatements(outroText, outroVideoTitle, outroVideoUrl),
   images = listOf()
 )
 
@@ -224,12 +227,12 @@ fun Room.toRecord() = RoomsRecord().also {
   it.description = description
   it.question = question
   it.timeLimitMinutes = timeLimitMinutes
-  it.startingText = startingStatements.text
-  it.startingVideoTitle = startingStatements.videoTitle
-  it.startingVideoUrl = startingStatements.videoURl
-  it.endingText = endingStatements.text
-  it.endingVideoTitle = endingStatements.videoTitle
-  it.endingVideoUrl = endingStatements.videoURl
+  it.introText = startingStatements.text
+  it.introVideoTitle = startingStatements.videoTitle
+  it.introVideoUrl = startingStatements.videoURl
+  it.outroText = endingStatements.text
+  it.outroVideoTitle = endingStatements.videoTitle
+  it.outroVideoUrl = endingStatements.videoURl
 }
 
 fun RoomImage.toRecord(roomCode: String) = RoomImagesRecord().also {
@@ -241,9 +244,9 @@ fun RoomImage.toRecord(roomCode: String) = RoomImagesRecord().also {
 }
 
 fun RoomImagesRecord.toDomain() = RoomImage(
-  id = id,
-  title = title,
-  url = url
+  id = id!!,
+  title = title!!,
+  url = url!!
 )
 
 fun RoomStatusJooq.toDomain() = RoomStatusDomain.valueOf(literal.uppercase())

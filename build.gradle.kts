@@ -175,7 +175,7 @@ jooq {
           password = dbPassword
         }
         generator.apply {
-          name = "org.jooq.codegen.DefaultGenerator"
+          name = "org.jooq.codegen.KotlinGenerator"
           database.apply {
             name = "org.jooq.meta.h2.H2Database"
             inputSchema = dbSchema

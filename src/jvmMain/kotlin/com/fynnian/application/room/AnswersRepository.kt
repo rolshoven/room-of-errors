@@ -6,20 +6,22 @@ import com.fynnian.application.common.Repository
 import com.fynnian.application.common.room.Answer
 import com.fynnian.application.common.room.Coordinates
 import com.fynnian.application.config.DataSource
-import com.fynnian.application.jooq.Tables.ANSWERS
 import com.fynnian.application.jooq.tables.records.AnswersRecord
+import com.fynnian.application.jooq.tables.references.ANSWERS
 import java.time.OffsetDateTime
+import java.util.*
 
 class AnswersRepository(dataSource: DataSource) : Repository(dataSource) {
 
-  fun getAnswersOfRoom(roomCode: String): Map<Uuid, List<Answer>> {
+  fun getAnswersOfRoom(roomCode: String): Map<UUID, List<Answer>> {
     return jooq {
       select(ANSWERS.asterisk())
         .from(ANSWERS)
         .where(ANSWERS.ROOM_CODE.eq(roomCode))
         .orderBy(ANSWERS.USER_ID, ANSWERS.ANSWER_NUMBER)
         .fetchGroups(ANSWERS.USER_ID)
-        .mapValues { (userId, records) -> records.map { it.into(ANSWERS).toDomain() } }
+        .map  { (userId, records) -> userId!! to records.map { it.into(ANSWERS).toDomain() } }
+        .toMap()
     }
   }
 
@@ -73,15 +75,15 @@ class AnswersRepository(dataSource: DataSource) : Repository(dataSource) {
 }
 
 fun AnswersRecord.toDomain() = Answer(
-  id = id,
-  roomCode = roomCode,
-  imageId = roomImageId,
-  userId = userId,
-  no = answerNumber,
-  answer = answer,
+  id = id!!,
+  roomCode = roomCode!!,
+  imageId = roomImageId!!,
+  userId = userId!!,
+  no = answerNumber!!,
+  answer = answer!!,
   coordinates = Coordinates(
-    horizontal = xCoordinate,
-    vertical = yCoordinate
+    horizontal = xCoordinate!!,
+    vertical = yCoordinate!!
   )
 )
 

@@ -4,12 +4,14 @@ import com.benasher44.uuid.Uuid
 import com.fynnian.application.APIException
 import com.fynnian.application.common.Repository
 import com.fynnian.application.common.room.UsersRoomStatus
-import com.fynnian.application.common.room.UsersRoomParticipationStatus as UsersRoomParticipationStatusDomain
 import com.fynnian.application.config.DataSource
-import com.fynnian.application.jooq.Tables.*
-import com.fynnian.application.jooq.enums.UsersRoomParticipationStatus as UsersRoomParticipationStatusJooq
 import com.fynnian.application.jooq.tables.records.UsersRoomStatusRecord
+import com.fynnian.application.jooq.tables.references.ROOMS
+import com.fynnian.application.jooq.tables.references.USERS
+import com.fynnian.application.jooq.tables.references.USERS_ROOM_STATUS
 import java.time.OffsetDateTime
+import com.fynnian.application.common.room.UsersRoomParticipationStatus as UsersRoomParticipationStatusDomain
+import com.fynnian.application.jooq.enums.UsersRoomParticipationStatus as UsersRoomParticipationStatusJooq
 
 class UsersRoomStatusRepository(dataSource: DataSource) : Repository(dataSource) {
 
@@ -82,7 +84,7 @@ class UsersRoomStatusRepository(dataSource: DataSource) : Repository(dataSource)
 
 fun UsersRoomParticipationStatusJooq.toDomain() = UsersRoomParticipationStatusDomain.valueOf(literal.uppercase())
 fun UsersRoomStatusRecord.toDomain() = UsersRoomStatus(
-  userId = userId,
-  roomCode = roomCode,
-  participationStatus = participationStatus.toDomain()
+  userId = userId!!,
+  roomCode = roomCode!!,
+  participationStatus = participationStatus!!.toDomain()
 )

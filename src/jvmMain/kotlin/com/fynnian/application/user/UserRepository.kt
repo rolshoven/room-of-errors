@@ -5,8 +5,8 @@ import com.fynnian.application.APIException
 import com.fynnian.application.common.Repository
 import com.fynnian.application.common.user.User
 import com.fynnian.application.config.DataSource
-import com.fynnian.application.jooq.Tables.USERS
 import com.fynnian.application.jooq.tables.records.UsersRecord
+import com.fynnian.application.jooq.tables.references.USERS
 import java.time.OffsetDateTime
 
 
@@ -55,4 +55,4 @@ fun User.toRecord() = UsersRecord().also {
   it.profession = profession
 }
 
-fun UsersRecord.toDomain() = User(id, profession)
+fun UsersRecord.toDomain() = User(id!!, profession)

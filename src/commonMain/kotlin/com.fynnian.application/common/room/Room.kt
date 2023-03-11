@@ -90,6 +90,7 @@ data class RoomImage(
 }
 
 enum class RoomStatus {
+  NOT_READY,
   OPEN,
   CLOSED
 }

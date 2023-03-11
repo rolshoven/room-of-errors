@@ -3,13 +3,14 @@ package com.fynnian.application.room
 import com.fynnian.application.BaseTestSetup
 import com.fynnian.application.common.URLS
 import com.fynnian.application.common.URLS.ROOM_CODE_PARAM
-import com.fynnian.application.common.URLS.USER_ID_PARAM
 import com.fynnian.application.common.URLS.replaceParam
+import com.fynnian.application.common.room.Room
+import com.fynnian.application.common.room.RoomCreation
 import com.fynnian.application.common.room.RoomDetails
-import com.fynnian.application.common.room.UsersRoomParticipationStatus
-import com.fynnian.application.common.room.UsersRoomStatus
+import com.fynnian.application.common.room.RoomStatus
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import io.ktor.http.*
 import org.assertj.core.api.Assertions.assertThat
 import kotlin.test.Test
 
@@ -17,7 +18,10 @@ class RoomManagementApiTest : BaseTestSetup() {
 
   @Test
   fun `get rooms to manage`() {
-    runTestApplication { _, client ->
+    runTestApplication { repository, client ->
+
+      repository.createRoom()
+
       val response = client.get(URLS.API_ROOMS_MANAGEMENT)
       response.statusIsOK()
 
@@ -35,71 +39,45 @@ class RoomManagementApiTest : BaseTestSetup() {
   }
 
   @Test
-  fun `create users room status on get request if it not exist`() = runTestApplication { repository, client ->
+  fun `create new room`() = runTestApplication { _, client ->
 
-    val user = repository.createUser()
-    val room = repository.createRoom()
+    val newRoom = RoomCreation("ab12rf34", "room creation test")
 
-    client
-      .get(
-        URLS.API_ROOMS_USER_STATUS.replaceParam(
-          ROOM_CODE_PARAM(room.code),
-          USER_ID_PARAM(user.id)
-        )
-      )
+    client.post(URLS.API_ROOMS_MANAGEMENT_BY_ID.replaceParam(ROOM_CODE_PARAM(newRoom.code))) {
+      contentType(ContentType.Application.Json)
+      setBody(newRoom)
+    }
       .apply {
         statusIsOK()
-        val response = body<UsersRoomStatus>()
 
-        assertThat(response.userId).isEqualTo(user.id)
-        assertThat(response.roomCode).isEqualTo(room.code)
-        assertThat(response.participationStatus).isEqualTo(UsersRoomParticipationStatus.NOT_STARTED)
+        val response = body<Room>()
+
+        assertThat(response.code).isEqualTo(newRoom.code)
+        assertThat(response.roomStatus).isEqualTo(RoomStatus.NOT_READY)
+        assertThat(response.title).isEqualTo(newRoom.title)
+        assertThat(response.description).isNull()
+        assertThat(response.question).isNull()
+        assertThat(response.timeLimitMinutes).isNull()
+        assertThat(response.startingStatements.text).isNull()
+        assertThat(response.startingStatements.videoTitle).isNull()
+        assertThat(response.startingStatements.videoTitle).isNull()
+        assertThat(response.endingStatements.text).isNull()
+        assertThat(response.endingStatements.videoTitle).isNull()
+        assertThat(response.endingStatements.videoTitle).isNull()
+        assertThat(response.images).hasSize(0)
       }
   }
 
   @Test
-  fun `user can start a room`() = runTestApplication { repository, client ->
+  fun `check that code in path and payload match when creating a new room`() = runTestApplication { _, client ->
 
-    val user = repository.createUser()
-    val room = repository.createRoom()
+    val newRoom = RoomCreation("ab12rf34", "room creation test")
 
-    client
-      .post(
-        URLS.API_ROOMS_USER_START.replaceParam(
-          ROOM_CODE_PARAM(room.code),
-          USER_ID_PARAM(user.id)
-        )
-      )
-      .apply {
-        statusIsOK()
-        val response = body<UsersRoomStatus>()
-
-        assertThat(response.userId).isEqualTo(user.id)
-        assertThat(response.roomCode).isEqualTo(room.code)
-        assertThat(response.participationStatus).isEqualTo(UsersRoomParticipationStatus.STARTED)
-      }
+    client.post(URLS.API_ROOMS_MANAGEMENT_BY_ID.replaceParam(ROOM_CODE_PARAM("12345678"))) {
+      contentType(ContentType.Application.Json)
+      setBody(newRoom)
+    }
+      .apply { statusIsBadRequest() }
   }
 
-  @Test
-  fun `user can finish a room`() = runTestApplication { repository, client ->
-
-    val user = repository.createUser()
-    val room = repository.createRoom()
-
-    client
-      .post(
-        URLS.API_ROOMS_USER_FINISH.replaceParam(
-          ROOM_CODE_PARAM(room.code),
-          USER_ID_PARAM(user.id)
-        )
-      )
-      .apply {
-        statusIsOK()
-        val response = body<UsersRoomStatus>()
-
-        assertThat(response.userId).isEqualTo(user.id)
-        assertThat(response.roomCode).isEqualTo(room.code)
-        assertThat(response.participationStatus).isEqualTo(UsersRoomParticipationStatus.FINISHED)
-      }
-  }
 }
