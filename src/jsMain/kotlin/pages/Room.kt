@@ -124,7 +124,18 @@ val RoomPage = FC<Props> {
           )
           preNavigation = { setLoading(true) }
         }
-      } else {
+      }
+      else if (room.roomStatus == RoomStatus.NOT_READY || room.roomStatus == RoomStatus.CLOSED) {
+        Spacer {
+          size = SpacerPropsSize.MEDIUM
+        }
+        RoomUnavailableInfo {
+          title = room.title
+          code = room.code
+          status = room.roomStatus
+        }
+      }
+      else {
         Spacer {
           size = SpacerPropsSize.SMALL
         }

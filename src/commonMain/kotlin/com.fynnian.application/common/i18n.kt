@@ -32,6 +32,10 @@ object I18n {
       TranslationKey.ROOM_OUTRO_TITLE to "Raum Abgeschlossen",
       TranslationKey.ROOM_OUTRO_TEXT to "Danke für das Mitmachen, die Lösung für den Raum wird zu einem späteren Zeitpunkt veröffentlicht.",
 
+      TranslationKey.ROOM_UNAVAILABLE_TITLE to "Der Raum ist nicht verfügbar.",
+      TranslationKey.ROOM_UNAVAILABLE_ROOM_NOT_READY to "Der Raum is noch nicht beret, er wird gerade eingerichtet.",
+      TranslationKey.ROOM_UNAVAILABLE_ROOM_CLOSED to "Der Raum is geschlossen - es kann nicht mehr benutzt werden.",
+
       TranslationKey.ROOM_FINISH_DIALOG_BUTTON to "Raum Abschliessen",
       TranslationKey.ROOM_FINISH_DIALOG_CONFIRMATION_TEXT to "Bist du bereit den Raum zu beenden?",
 
@@ -112,6 +116,10 @@ object I18n {
 
       TranslationKey.ROOM_OUTRO_TITLE to "Room Completed",
       TranslationKey.ROOM_OUTRO_TEXT to "Thanks for participating, the solution to the room will be available at a later date.",
+
+      TranslationKey.ROOM_UNAVAILABLE_TITLE to "The room is unavailable!",
+      TranslationKey.ROOM_UNAVAILABLE_ROOM_NOT_READY to "The room is currently being set up and not yet ready.",
+      TranslationKey.ROOM_UNAVAILABLE_ROOM_CLOSED to "The room is closed - participation is no longer possible",
 
       TranslationKey.ROOM_FINISH_DIALOG_BUTTON to "Finish Room",
       TranslationKey.ROOM_FINISH_DIALOG_CONFIRMATION_TEXT to "Are you ready to finish the room?",
@@ -204,6 +212,10 @@ object I18n {
 
     ROOM_OUTRO_TITLE,
     ROOM_OUTRO_TEXT,
+
+    ROOM_UNAVAILABLE_TITLE,
+    ROOM_UNAVAILABLE_ROOM_NOT_READY,
+    ROOM_UNAVAILABLE_ROOM_CLOSED,
 
     ROOM_FINISH_DIALOG_BUTTON,
     ROOM_FINISH_DIALOG_CONFIRMATION_TEXT,
