@@ -145,7 +145,11 @@ val CreateRoomInteractionInfoDialog = FC<CreateRoomInteractionInfoProps> { props
             hidden = true
             accept = "video/mp4"
             type = InputType.file
-            onChange = { setFile(it.target.files?.item(0)) }
+            onChange = {
+              val newFile = it.target.files?.item(0)
+              setFile(newFile)
+              if (title == null) setTitle(newFile?.name)
+            }
           }
         }
         Stack {
