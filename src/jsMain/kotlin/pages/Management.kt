@@ -38,7 +38,7 @@ val Management = FC<Props> {
       Box {
         CreateRoomDialog()
       }
-      RoomList {
+      RoomManagementList {
         this.rooms = rooms
       }
     }

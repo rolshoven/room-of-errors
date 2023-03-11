@@ -1,26 +1,20 @@
 package components
 
-import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.RoomManagementDetail
-import com.fynnian.application.common.room.RoomStatus
 import csstype.*
 import mui.material.*
-import mui.material.Size
-import mui.material.styles.TypographyVariant
 import mui.system.Breakpoint
 import mui.system.responsive
 import mui.system.sx
 import react.FC
 import react.Props
 import react.ReactNode
-import react.router.useNavigate
-import react.useContext
 
 external interface RoomListProps : Props {
   var rooms: List<RoomManagementDetail>
 }
 
-val RoomList = FC<RoomListProps> { props ->
+val RoomManagementList = FC<RoomListProps> { props ->
   List {
     props.rooms.map {
       RoomListItem {

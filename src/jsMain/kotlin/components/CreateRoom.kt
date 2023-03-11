@@ -5,6 +5,7 @@ import com.fynnian.application.common.I18n
 import com.fynnian.application.common.URLS
 import com.fynnian.application.common.URLS.replaceParam
 import com.fynnian.application.common.room.*
+import components.form.FromRoomTitle
 import csstype.*
 import js.core.jso
 import kotlinx.coroutines.MainScope
@@ -31,11 +32,11 @@ val CreateRoomDialog = FC<Props> {
 
   var generatedCode: String by useState(Room.genRoomCode())
   var open: Boolean by useState(false)
-  var roomTitle: String by useState("")
+  val (roomTitle, setRoomTitle) = useState("")
   var successful: Boolean? by useState(null)
 
   fun close() {
-    roomTitle = ""
+    setRoomTitle("")
     open = false
     successful = null
   }
@@ -98,22 +99,10 @@ val CreateRoomDialog = FC<Props> {
           onClick = { generatedCode = Room.genRoomCode() }
         }
       }
-      FormGroup {
-        TextField {
-          id = "title"
-          name = "title"
-          type = InputType.text
-          required = true
-          label = ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TITLE_LABEL))
-          placeholder = "my room"
-          helperText = ReactNode("${roomTitle.length} / ${Room.titleMaxChars}")
-          error = roomTitle.length > Room.titleMaxChars
-          value = roomTitle
-          onChange = {
-            val e = it.target as HTMLInputElement
-            roomTitle = e.value
-          }
-        }
+      FromRoomTitle {
+        this.language = language
+        this.title = roomTitle
+        this.setTitle = setRoomTitle
       }
     }
     DialogActions {

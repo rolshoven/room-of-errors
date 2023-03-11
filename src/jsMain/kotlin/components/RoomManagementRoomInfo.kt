@@ -4,6 +4,7 @@ import MissingContent
 import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.RoomManagementDetail
 import com.fynnian.application.common.room.RoomPatch
+import components.form.FromRoomTitle
 import csstype.rem
 import js.core.jso
 import mui.icons.material.Close
@@ -95,21 +96,10 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
       else MissingContent { text = "There is no room question" }
     }
     else CardContent {
-      FormGroup {
-        TextField {
-          id = "title"
-          name = "title"
-          type = InputType.text
-          required = true
-          label = ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TITLE_LABEL))
-          placeholder = "my room"
-          value = roomTitle
-          error = roomTitle.isBlank()
-          onChange = {
-            val e = it.target as HTMLInputElement
-            setRoomTitle(e.value)
-          }
-        }
+      FromRoomTitle {
+        this.language = language
+        this.title = roomTitle
+        this.setTitle = setRoomTitle
       }
       Spacer { size = SpacerPropsSize.VERY_SMALL }
       FormGroup {
