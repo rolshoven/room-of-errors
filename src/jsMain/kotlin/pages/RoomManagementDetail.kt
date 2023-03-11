@@ -8,12 +8,10 @@ import csstype.*
 import js.core.get
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import mui.icons.material.Delete
 import mui.material.*
 import mui.material.styles.TypographyVariant
 import mui.system.sx
 import react.*
-import react.dom.html.ReactHTML.img
 import react.router.useParams
 
 private val scope = MainScope()
@@ -27,15 +25,15 @@ val RoomManagementDetail = FC<Props> {
   val (roomCode, setRoomCode) = useState("")
   val (room, setRoom) = useState<Room>()
   val (images, setImages) = useState<List<RoomImage>>(emptyList())
-  val (intro, setIntro) = useState<RoomStatements>()
-  val (outro, setOutro) = useState<RoomStatements>()
+  val (intro, setIntro) = useState<RoomInteractionInfo>()
+  val (outro, setOutro) = useState<RoomInteractionInfo>()
   val (loading, setLoading) = useState(true)
 
   val setRoomStates: (room: Room?) -> Unit = {
     setRoom(it)
     setImages(it?.images ?: emptyList())
-    setIntro(it?.startingStatements)
-    setOutro(it?.endingStatements)
+    setIntro(it?.intro)
+    setOutro(it?.outro)
     setLoading(false)
   }
 
@@ -106,16 +104,16 @@ val RoomManagementDetail = FC<Props> {
             alignContent = AlignContent.stretch
             gap = 1.rem
           }
-          RoomManagementStatement {
+          RoomManagementInteractionInfo {
             variant = RoomStatementVariant.INTRO
             code = room.code
-            statement = intro!!
+            interactionInfo = intro!!
             setStatement = setIntro
           }
-          RoomManagementStatement {
+          RoomManagementInteractionInfo {
             variant = RoomStatementVariant.OUTRO
             code = room.code
-            statement = outro!!
+            interactionInfo = outro!!
             setStatement = setOutro
           }
         }

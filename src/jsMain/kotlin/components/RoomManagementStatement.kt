@@ -1,7 +1,7 @@
 package components
 
 import com.fynnian.application.common.room.RoomStatementVariant
-import com.fynnian.application.common.room.RoomStatements
+import com.fynnian.application.common.room.RoomInteractionInfo
 import csstype.TextAlign
 import csstype.rem
 import mui.material.*
@@ -14,14 +14,14 @@ import react.StateSetter
 import react.dom.html.ReactHTML
 import workarounds.controls
 
-external interface RoomManagementStatementProps : Props {
+external interface RoomManagementInteractionInfoProps : Props {
   var variant: RoomStatementVariant
   var code: String
-  var statement: RoomStatements
-  var setStatement: StateSetter<RoomStatements?>
+  var interactionInfo: RoomInteractionInfo
+  var setStatement: StateSetter<RoomInteractionInfo?>
 }
 
-val RoomManagementStatement = FC<RoomManagementStatementProps> { props ->
+val RoomManagementInteractionInfo = FC<RoomManagementInteractionInfoProps> { props ->
   Card {
     sx {
       maxWidth = 21.rem
@@ -30,26 +30,26 @@ val RoomManagementStatement = FC<RoomManagementStatementProps> { props ->
     CardHeader {
       title = ReactNode(props.variant.toString())
     }
-    if (props.statement.videoURl != null) CardMedia {
+    if (props.interactionInfo.videoURl != null) CardMedia {
       sx {
         width = 20.rem
         height = 20.rem
       }
       component = ReactHTML.video
-      src = props.statement.videoURl
+      src = props.interactionInfo.videoURl
       controls = true
     }
     CardContent {
       sx {
         textAlign = TextAlign.center
       }
-      if (props.statement.videoURl == null) Typography {
+      if (props.interactionInfo.videoURl == null) Typography {
         variant = TypographyVariant.overline
         +"There is no video"
       }
-      if (props.statement.text != null) Typography {
+      if (props.interactionInfo.text != null) Typography {
         variant = TypographyVariant.body1
-        +props.statement.text!!
+        +props.interactionInfo.text!!
       }
       else Typography {
         variant = TypographyVariant.overline
@@ -57,7 +57,7 @@ val RoomManagementStatement = FC<RoomManagementStatementProps> { props ->
       }
     }
     CardActions {
-      CreateRoomStatementDialog {
+      CreateRoomInteractionInfoDialog {
         code = props.code
         variant = props.variant
         setStatement = props.setStatement

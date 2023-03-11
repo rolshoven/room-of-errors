@@ -175,7 +175,7 @@ fun Route.roomManagementApi(dependencies: DI) {
       post {
         val code = call.getRoomCodeParam()
         dependencies.roomManagementService
-          .handleRoomStatementCall(code, RoomStatementVariant.INTRO, call)
+          .handleRoomInteractionInfoCall(code, RoomStatementVariant.INTRO, call)
           .also { call.respond(it) }
       }
     }
@@ -186,7 +186,7 @@ fun Route.roomManagementApi(dependencies: DI) {
       post {
         val code = call.getRoomCodeParam()
         dependencies.roomManagementService
-          .handleRoomStatementCall(code, RoomStatementVariant.OUTRO, call)
+          .handleRoomInteractionInfoCall(code, RoomStatementVariant.OUTRO, call)
           .also { call.respond(it) }
       }
     }

@@ -2,7 +2,7 @@ package components
 
 import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.RoomStatementVariant
-import com.fynnian.application.common.room.RoomStatements
+import com.fynnian.application.common.room.RoomInteractionInfo
 import csstype.TextAlign
 import csstype.pct
 import csstype.px
@@ -19,13 +19,13 @@ import react.dom.html.ReactHTML
 import react.useContext
 import workarounds.controls
 
-external interface RoomStatementProps : Props {
+external interface RoomInteractionInfoProps : Props {
   var type: RoomStatementVariant
-  var statement: RoomStatements
+  var interactionInfo: RoomInteractionInfo
   var cardAction: () -> Unit
 }
 
-val RoomStatement = FC<RoomStatementProps> { props ->
+val RoomInteractionInfo = FC<RoomInteractionInfoProps> { props ->
   val (language) = useContext(LanguageContext)
 
   Card {
@@ -35,13 +35,13 @@ val RoomStatement = FC<RoomStatementProps> { props ->
         variant = TypographyVariant.body1
       }
     }
-    if (props.statement.videoURl != null) {
+    if (props.interactionInfo.videoURl != null) {
       Spacer {
         size = SpacerPropsSize.SMALL
       }
       CardMedia {
         component = ReactHTML.video
-        src = props.statement.videoURl
+        src = props.interactionInfo.videoURl
         sx {
           maxHeight = responsive(
             Breakpoint.md to 500.px,
@@ -59,7 +59,7 @@ val RoomStatement = FC<RoomStatementProps> { props ->
         textAlign = TextAlign.center
       }
       Typography {
-        val text = props.statement.text ?: when (props.type) {
+        val text = props.interactionInfo.text ?: when (props.type) {
           RoomStatementVariant.INTRO -> I18n.get(language, I18n.TranslationKey.ROOM_INTRO_TEXT)
           RoomStatementVariant.OUTRO -> I18n.get(language, I18n.TranslationKey.ROOM_OUTRO_TEXT)
         }

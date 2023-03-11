@@ -183,20 +183,24 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
     }
   }
 
-  fun upsertRoomStatement(code: String, statement: RoomStatements, variant: RoomStatementVariant): Room {
+  fun upsertRoomInteractionInfo(
+    code: String,
+    interactionInfo: RoomInteractionInfo,
+    variant: RoomStatementVariant
+  ): Room {
     jooq {
       update(ROOMS)
         .let {
           when (variant) {
             RoomStatementVariant.INTRO ->
-              it.set(ROOMS.INTRO_TEXT, statement.text)
-                .set(ROOMS.INTRO_VIDEO_TITLE, statement.videoTitle)
-                .set(ROOMS.INTRO_VIDEO_URL, statement.videoURl)
+              it.set(ROOMS.INTRO_TEXT, interactionInfo.text)
+                .set(ROOMS.INTRO_VIDEO_TITLE, interactionInfo.videoTitle)
+                .set(ROOMS.INTRO_VIDEO_URL, interactionInfo.videoURl)
 
             RoomStatementVariant.OUTRO ->
-              it.set(ROOMS.OUTRO_TEXT, statement.text)
-                .set(ROOMS.OUTRO_VIDEO_TITLE, statement.videoTitle)
-                .set(ROOMS.OUTRO_VIDEO_URL, statement.videoURl)
+              it.set(ROOMS.OUTRO_TEXT, interactionInfo.text)
+                .set(ROOMS.OUTRO_VIDEO_TITLE, interactionInfo.videoTitle)
+                .set(ROOMS.OUTRO_VIDEO_URL, interactionInfo.videoURl)
           }
         }
         .where(ROOMS.CODE.eq(code))
@@ -215,8 +219,8 @@ fun RoomsRecord.toDomain() = Room(
   description = description,
   question = question,
   timeLimitMinutes = timeLimitMinutes,
-  startingStatements = RoomStatements(introText, introVideoTitle, introVideoUrl),
-  endingStatements = RoomStatements(outroText, outroVideoTitle, outroVideoUrl),
+  intro = RoomInteractionInfo(introText, introVideoTitle, introVideoUrl),
+  outro = RoomInteractionInfo(outroText, outroVideoTitle, outroVideoUrl),
   images = listOf()
 )
 
@@ -227,12 +231,12 @@ fun Room.toRecord() = RoomsRecord().also {
   it.description = description
   it.question = question
   it.timeLimitMinutes = timeLimitMinutes
-  it.introText = startingStatements.text
-  it.introVideoTitle = startingStatements.videoTitle
-  it.introVideoUrl = startingStatements.videoURl
-  it.outroText = endingStatements.text
-  it.outroVideoTitle = endingStatements.videoTitle
-  it.outroVideoUrl = endingStatements.videoURl
+  it.introText = intro.text
+  it.introVideoTitle = intro.videoTitle
+  it.introVideoUrl = intro.videoURl
+  it.outroText = outro.text
+  it.outroVideoTitle = outro.videoTitle
+  it.outroVideoUrl = outro.videoURl
 }
 
 fun RoomImage.toRecord(roomCode: String) = RoomImagesRecord().also {

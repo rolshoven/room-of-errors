@@ -3,7 +3,7 @@ package com.fynnian.application
 import com.fynnian.application.common.Repository
 import com.fynnian.application.common.room.Room
 import com.fynnian.application.common.room.RoomImage
-import com.fynnian.application.common.room.RoomStatements
+import com.fynnian.application.common.room.RoomInteractionInfo
 import com.fynnian.application.common.room.RoomStatus
 import com.fynnian.application.common.user.User
 import com.fynnian.application.config.DataSource
@@ -118,12 +118,12 @@ class TestRepository(dataSource: DataSource) : Repository(dataSource) {
       "Room Description",
       "Room Question",
       0,
-      RoomStatements(
+      RoomInteractionInfo(
         "startingText",
         "startingVideoTitle",
         "startingVideoUrl"
       ),
-      RoomStatements(
+      RoomInteractionInfo(
         "endingText",
         "endingVideoTitle",
         "endingVideoUrl"

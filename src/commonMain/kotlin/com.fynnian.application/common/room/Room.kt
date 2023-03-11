@@ -28,8 +28,8 @@ data class Room(
   val description: String?,
   val question: String?,
   val timeLimitMinutes: Int?,
-  val startingStatements: RoomStatements,
-  val endingStatements: RoomStatements,
+  val intro: RoomInteractionInfo,
+  val outro: RoomInteractionInfo,
   val images: List<RoomImage>
 ) {
   companion object {
@@ -40,7 +40,7 @@ data class Room(
 }
 
 @Serializable
-data class RoomStatements(
+data class RoomInteractionInfo(
   val text: String?,
   val videoTitle: String?,
   val videoURl: String?

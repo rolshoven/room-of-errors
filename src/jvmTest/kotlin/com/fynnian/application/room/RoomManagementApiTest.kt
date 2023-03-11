@@ -58,12 +58,12 @@ class RoomManagementApiTest : BaseTestSetup() {
         assertThat(response.description).isNull()
         assertThat(response.question).isNull()
         assertThat(response.timeLimitMinutes).isNull()
-        assertThat(response.startingStatements.text).isNull()
-        assertThat(response.startingStatements.videoTitle).isNull()
-        assertThat(response.startingStatements.videoTitle).isNull()
-        assertThat(response.endingStatements.text).isNull()
-        assertThat(response.endingStatements.videoTitle).isNull()
-        assertThat(response.endingStatements.videoTitle).isNull()
+        assertThat(response.intro.text).isNull()
+        assertThat(response.intro.videoTitle).isNull()
+        assertThat(response.intro.videoTitle).isNull()
+        assertThat(response.outro.text).isNull()
+        assertThat(response.outro.videoTitle).isNull()
+        assertThat(response.outro.videoTitle).isNull()
         assertThat(response.images).hasSize(0)
       }
   }

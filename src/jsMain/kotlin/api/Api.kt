@@ -236,9 +236,9 @@ class RoomManagementApi : Api() {
         setBody(
           MultiPartFormDataContent(
             formData {
-              text?.let { append(RoomStatements.TEXT_FORM_PARAM, it) }
-              append(RoomStatements.VIDEO_TITLE_FORM_PARAM, videoTitle)
-              append(RoomStatements.VIDEO_FORM_PARAM, videoByteArray, Headers.build {
+              text?.let { append(RoomInteractionInfo.TEXT_FORM_PARAM, it) }
+              append(RoomInteractionInfo.VIDEO_TITLE_FORM_PARAM, videoTitle)
+              append(RoomInteractionInfo.VIDEO_FORM_PARAM, videoByteArray, Headers.build {
                 append(HttpHeaders.ContentType, video.type)
                 append(HttpHeaders.ContentDisposition, "filename=\"${videoTitle}.${video.type}\"")
               })

@@ -140,10 +140,10 @@ val RoomPage = FC<Props> {
             Spacer {
               size = SpacerPropsSize.SMALL
             }
-            RoomStatement {
+            RoomInteractionInfo {
               type = RoomStatementVariant.INTRO
               cardAction = { startRoom() }
-              statement = room.startingStatements
+              interactionInfo = room.intro
             }
           }
 
@@ -151,10 +151,10 @@ val RoomPage = FC<Props> {
             Spacer {
               size = SpacerPropsSize.SMALL
             }
-            RoomStatement {
+            RoomInteractionInfo {
               type = RoomStatementVariant.OUTRO
               cardAction = {}
-              statement = room.endingStatements
+              interactionInfo = room.outro
             }
           }
 

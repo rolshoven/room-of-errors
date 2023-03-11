@@ -7,7 +7,7 @@ import com.fynnian.application.common.URLS.replaceParam
 import com.fynnian.application.common.processMultipartForm
 import com.fynnian.application.common.room.Room
 import com.fynnian.application.common.room.RoomStatementVariant
-import com.fynnian.application.common.room.RoomStatements
+import com.fynnian.application.common.room.RoomInteractionInfo
 import com.fynnian.application.config.Content
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -18,7 +18,7 @@ class RoomManagementService(
   private val roomRepository: RoomRepository
 ) {
 
-  suspend fun handleRoomStatementCall(
+  suspend fun handleRoomInteractionInfoCall(
     code: String,
     variant: RoomStatementVariant,
     call: ApplicationCall
@@ -41,16 +41,16 @@ class RoomManagementService(
       return@processMultipartForm fileName
     }
 
-    val statement = RoomStatements(
-      text = fields[RoomStatements.TEXT_FORM_PARAM], // optional text
-      videoTitle = fields[RoomStatements.VIDEO_TITLE_FORM_PARAM],
-      videoURl = fields[RoomStatements.VIDEO_FORM_PARAM]?.let {
+    val interactionInfo = RoomInteractionInfo(
+      text = fields[RoomInteractionInfo.TEXT_FORM_PARAM], // optional text
+      videoTitle = fields[RoomInteractionInfo.VIDEO_TITLE_FORM_PARAM],
+      videoURl = fields[RoomInteractionInfo.VIDEO_FORM_PARAM]?.let {
         URLS.STATIC_VIDEOS_VIDEO.replaceParam(URLS.VIDEO_NAME_PARAM(it))
       }
     ).also {
       if (it.videoURl != null && it.videoTitle == null) throw APIException.BadRequest("Video provided but title is missing")
     }
 
-    return roomRepository.upsertRoomStatement(code, statement, variant)
+    return roomRepository.upsertRoomInteractionInfo(code, interactionInfo, variant)
   }
 }

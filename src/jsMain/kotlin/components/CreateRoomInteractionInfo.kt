@@ -3,7 +3,7 @@ package components
 import api.RoomManagementApi
 import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.RoomStatementVariant
-import com.fynnian.application.common.room.RoomStatements
+import com.fynnian.application.common.room.RoomInteractionInfo
 import csstype.AlignItems
 import csstype.Display
 import csstype.FlexDirection
@@ -28,13 +28,13 @@ import workarounds.component
 
 private val scope = MainScope()
 
-external interface CreateRoomStatementProps : Props {
+external interface CreateRoomInteractionInfoProps : Props {
   var code: String
   var variant: RoomStatementVariant
-  var setStatement: StateSetter<RoomStatements?>
+  var setStatement: StateSetter<RoomInteractionInfo?>
 }
 
-val CreateRoomStatementDialog = FC<CreateRoomStatementProps> { props ->
+val CreateRoomInteractionInfoDialog = FC<CreateRoomInteractionInfoProps> { props ->
 
   val api = RoomManagementApi()
 
@@ -56,7 +56,7 @@ val CreateRoomStatementDialog = FC<CreateRoomStatementProps> { props ->
 
   fun isIncomplete() = title == null && file == null && successful != null
 
-  fun addStatement() {
+  fun addInteractionInfo() {
     scope.launch {
       api.addRoomStatementWithUpload(
         props.variant,
@@ -69,8 +69,8 @@ val CreateRoomStatementDialog = FC<CreateRoomStatementProps> { props ->
           close()
           props.setStatement(
             when (props.variant) {
-              RoomStatementVariant.INTRO -> it.startingStatements
-              RoomStatementVariant.OUTRO -> it.endingStatements
+              RoomStatementVariant.INTRO -> it.intro
+              RoomStatementVariant.OUTRO -> it.outro
             }
           )
         } else setSuccessful(false)
@@ -178,7 +178,7 @@ val CreateRoomStatementDialog = FC<CreateRoomStatementProps> { props ->
       IconButton {
         disabled = isIncomplete()
         color = IconButtonColor.primary
-        onClick = { addStatement() }
+        onClick = { addInteractionInfo() }
         Save()
       }
     }

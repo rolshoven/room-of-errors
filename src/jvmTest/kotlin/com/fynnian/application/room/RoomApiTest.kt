@@ -29,8 +29,8 @@ class RoomApiTest : BaseTestSetup() {
         assertThat(response.title).isNotBlank
         assertThat(response.description).isNotBlank
         assertThat(response.question).isNotBlank
-        assertThat(response.startingStatements).isNotNull
-        assertThat(response.endingStatements).isNotNull
+        assertThat(response.intro).isNotNull
+        assertThat(response.outro).isNotNull
         assertThat(response.images).hasSizeGreaterThanOrEqualTo(1)
       }
   }
