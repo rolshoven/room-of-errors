@@ -2,9 +2,8 @@ package components
 
 import MissingContent
 import com.fynnian.application.common.I18n
-import com.fynnian.application.common.room.Room
+import com.fynnian.application.common.room.RoomManagementDetail
 import com.fynnian.application.common.room.RoomPatch
-import csstype.px
 import csstype.rem
 import js.core.jso
 import mui.icons.material.Close
@@ -20,7 +19,7 @@ import web.html.HTMLTextAreaElement
 import web.html.InputType
 
 external interface RoomManagementRoomInfoProps : PropsWithChildren {
-  var room: Room
+  var room: RoomManagementDetail
   var editRoomAction: (room: RoomPatch) -> Unit
 }
 

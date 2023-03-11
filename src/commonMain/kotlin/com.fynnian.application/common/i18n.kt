@@ -18,6 +18,10 @@ object I18n {
 
       TranslationKey.ROOM_INFO_LABEL_NAME to "Raum: {roomCode} - {roomTitle}",
 
+      TranslationKey.ROOM_STATUS_NOT_READY to "Unvollständig",
+      TranslationKey.ROOM_STATUS_OPEN to "Offen",
+      TranslationKey.ROOM_STATUS_CLOSED to "Abgeschlossen",
+
       TranslationKey.ROOM_INTRO_TEXT to "Wenn du bereit bist um mit dem Raum zu starten klicke auf 'beginnen'.",
       TranslationKey.ROOM_INTRO_START_BUTTON to "Beginnen",
 
@@ -82,6 +86,10 @@ object I18n {
       TranslationKey.ROOM_NAVIGATOR_BUTTON to "Go to room",
 
       TranslationKey.ROOM_INFO_LABEL_NAME to "Room: {roomCode} - {roomTitle}",
+
+      TranslationKey.ROOM_STATUS_NOT_READY to "Not Ready",
+      TranslationKey.ROOM_STATUS_OPEN to "Open",
+      TranslationKey.ROOM_STATUS_CLOSED to "Closed",
 
       TranslationKey.ROOM_INTRO_TEXT to "When you are ready to begin with the room click on the start button.",
       TranslationKey.ROOM_INTRO_START_BUTTON to "Start",
@@ -159,6 +167,10 @@ object I18n {
 
     ROOM_INFO_LABEL_NAME,
 
+    ROOM_STATUS_NOT_READY,
+    ROOM_STATUS_OPEN,
+    ROOM_STATUS_CLOSED,
+
     ROOM_INTRO_TEXT,
     ROOM_INTRO_START_BUTTON,
 
@@ -222,8 +234,8 @@ object I18n {
 
     data class RoomCode(override val value: String) : TemplateProperty("roomCode", value)
     data class RoomTitle(override val value: String) : TemplateProperty("roomTitle", value)
-    data class Participants(override val value: String) : TemplateProperty("participants", value)
-    data class Answers(override val value: String) : TemplateProperty("answers", value)
+    data class Participants(val number: kotlin.Number) : TemplateProperty("participants", number.toString())
+    data class Answers(val number: kotlin.Number) : TemplateProperty("answers", number.toString())
     data class Number(val number: kotlin.Number) : TemplateProperty("number", number.toString())
   }
 

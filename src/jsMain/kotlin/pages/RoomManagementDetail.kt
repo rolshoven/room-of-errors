@@ -2,6 +2,7 @@ package pages
 
 import api.RoomManagementApi
 import com.benasher44.uuid.Uuid
+import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.*
 import components.*
 import csstype.*
@@ -23,13 +24,13 @@ val RoomManagementDetail = FC<Props> {
 
   val roomCodeParam = useParams()["id"] ?: ""
   val (roomCode, setRoomCode) = useState("")
-  val (room, setRoom) = useState<Room>()
+  val (room, setRoom) = useState<RoomManagementDetail>()
   val (images, setImages) = useState<List<RoomImage>>(emptyList())
   val (intro, setIntro) = useState<RoomInteractionInfo>()
   val (outro, setOutro) = useState<RoomInteractionInfo>()
   val (loading, setLoading) = useState(true)
 
-  val setRoomStates: (room: Room?) -> Unit = {
+  val setRoomStates: (room: RoomManagementDetail?) -> Unit = {
     setRoom(it)
     setImages(it?.images ?: emptyList())
     setIntro(it?.intro)
@@ -87,6 +88,10 @@ val RoomManagementDetail = FC<Props> {
           code = room.code
         }
         ToManagementPage()
+      }
+      RoomManagementUserParticipation {
+        participants = room.participants
+        answers = room.answers
       }
       Spacer { size = SpacerPropsSize.SMALL }
       Box {

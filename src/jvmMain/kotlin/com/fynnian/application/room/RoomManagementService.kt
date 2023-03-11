@@ -8,6 +8,7 @@ import com.fynnian.application.common.processMultipartForm
 import com.fynnian.application.common.room.Room
 import com.fynnian.application.common.room.RoomStatementVariant
 import com.fynnian.application.common.room.RoomInteractionInfo
+import com.fynnian.application.common.room.RoomManagementDetail
 import com.fynnian.application.config.Content
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -22,7 +23,7 @@ class RoomManagementService(
     code: String,
     variant: RoomStatementVariant,
     call: ApplicationCall
-  ): Room {
+  ): RoomManagementDetail {
     // check if room exists
     roomRepository.getRoom(code)
 

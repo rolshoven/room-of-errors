@@ -154,15 +154,15 @@ class RoomApi : Api() {
 
 class RoomManagementApi : Api() {
 
-  suspend fun getRooms(): List<RoomDetails> {
+  suspend fun getRooms(): List<RoomManagementDetail> {
     return processSimpleCall { get(API_ROOMS_MANAGEMENT) } ?: emptyList()
   }
 
-  suspend fun getRoom(code: String): Room? {
+  suspend fun getRoom(code: String): RoomManagementDetail? {
     return processSimpleCall { get(API_ROOMS_MANAGEMENT_BY_ID.replaceParam(ROOM_CODE_PARAM(code))) }
   }
 
-  suspend fun createRoom(room: RoomCreation): Room? {
+  suspend fun createRoom(room: RoomCreation): RoomManagementDetail? {
     return processSimpleCall {
       post(API_ROOMS_MANAGEMENT_BY_ID.replaceParam(ROOM_CODE_PARAM(room.code))) {
         contentType(ContentType.Application.Json)
@@ -171,7 +171,7 @@ class RoomManagementApi : Api() {
     }
   }
 
-  suspend fun patchRoom(patch: RoomPatch): Room? {
+  suspend fun patchRoom(patch: RoomPatch): RoomManagementDetail? {
     return processSimpleCall {
       patch(API_ROOMS_MANAGEMENT_BY_ID.replaceParam(ROOM_CODE_PARAM(patch.code))) {
         contentType(ContentType.Application.Json)
@@ -225,7 +225,7 @@ class RoomManagementApi : Api() {
     text: String?,
     videoTitle: String,
     video: File
-  ): Room? {
+  ): RoomManagementDetail? {
     return processSimpleCall {
       val url = when (variant) {
         RoomStatementVariant.INTRO -> API_ROOMS_MANAGEMENT_ROOM_INTRO

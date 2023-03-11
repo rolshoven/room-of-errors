@@ -35,7 +35,7 @@ fun Route.roomManagementApi(dependencies: DI) {
     get {
       val code = call.getRoomCodeParam(codeParam)
       dependencies.roomRepository
-        .getRooms(code)
+        .getRoomsForManagement(code)
         .firstOrNull()
         ?.also { call.respond(it) }
         ?: throw APIException.NotFound("Room with code $code not found")

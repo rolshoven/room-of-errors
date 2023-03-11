@@ -36,6 +36,8 @@ data class Room(
     fun genRoomCode(): String {
       return uuid4().toString().split("-")[0]
     }
+
+    const val titleMaxChars = 100
   }
 }
 
@@ -61,13 +63,15 @@ enum class RoomStatementVariant {
 
 
 @Serializable
-data class RoomDetails(
+data class RoomManagementDetail(
   val code: String,
   val roomStatus: RoomStatus,
   val title: String,
   val description: String?,
   val question: String?,
   val timeLimitMinutes: Int?,
+  val intro: RoomInteractionInfo,
+  val outro: RoomInteractionInfo,
   val images: List<RoomImage>,
   val participants: Int,
   val answers: Int

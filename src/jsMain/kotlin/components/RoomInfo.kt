@@ -2,21 +2,15 @@ package components
 
 import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.Room
-import com.fynnian.application.common.room.RoomPatch
-import csstype.px
 import csstype.rem
 import js.core.jso
-import mui.icons.material.Close
-import mui.icons.material.Edit
-import mui.icons.material.Save
 import mui.material.*
 import mui.material.styles.TypographyVariant
 import mui.system.sx
-import org.w3c.dom.HTMLInputElement
-import react.*
-import react.dom.onChange
-import web.html.HTMLTextAreaElement
-import web.html.InputType
+import react.FC
+import react.PropsWithChildren
+import react.ReactNode
+import react.useContext
 
 external interface RoomInfoProps : PropsWithChildren {
   var room: Room

@@ -6,7 +6,7 @@ import com.fynnian.application.common.URLS.ROOM_CODE_PARAM
 import com.fynnian.application.common.URLS.replaceParam
 import com.fynnian.application.common.room.Room
 import com.fynnian.application.common.room.RoomCreation
-import com.fynnian.application.common.room.RoomDetails
+import com.fynnian.application.common.room.RoomManagementDetail
 import com.fynnian.application.common.room.RoomStatus
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -25,7 +25,7 @@ class RoomManagementApiTest : BaseTestSetup() {
       val response = client.get(URLS.API_ROOMS_MANAGEMENT)
       response.statusIsOK()
 
-      val list = response.body<List<RoomDetails>>()
+      val list = response.body<List<RoomManagementDetail>>()
       assertThat(list.size).isGreaterThan(0)
     }
   }

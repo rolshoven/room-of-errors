@@ -227,7 +227,7 @@ val RoomPage = FC<Props> {
                 +I18n.get(
                   language,
                   I18n.TranslationKey.ROOM_ANSWER_ANSWERS_TOTAL,
-                  I18n.TemplateProperty.Answers(answers.size.toString())
+                  I18n.TemplateProperty.Answers(answers.size)
                 )
               }
               if (room.images.size > 1) room.images.mapIndexed { i, image ->
@@ -237,7 +237,7 @@ val RoomPage = FC<Props> {
                     language,
                     I18n.TranslationKey.ROOM_ANSWER_ANSWERS_COUNT_PER_IMAGE,
                     I18n.TemplateProperty.Number(i + 1),
-                    I18n.TemplateProperty.Answers(answers.filter { it.imageId == image.id }.size.toString())
+                    I18n.TemplateProperty.Answers(answers.filter { it.imageId == image.id }.size)
                   )
                 }
               }

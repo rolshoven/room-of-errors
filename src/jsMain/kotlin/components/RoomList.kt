@@ -1,27 +1,23 @@
 package components
 
 import com.fynnian.application.common.I18n
-import com.fynnian.application.common.URLS
-import com.fynnian.application.common.URLS.ROOM_CODE_PARAM
-import com.fynnian.application.common.URLS.replaceParam
-import com.fynnian.application.common.room.RoomDetails
-import csstype.FlexDirection
-import csstype.rem
-import mui.icons.material.FileDownload
-import mui.icons.material.Launch
+import com.fynnian.application.common.room.RoomManagementDetail
+import com.fynnian.application.common.room.RoomStatus
+import csstype.*
 import mui.material.*
+import mui.material.Size
 import mui.material.styles.TypographyVariant
+import mui.system.Breakpoint
+import mui.system.responsive
 import mui.system.sx
 import react.FC
 import react.Props
-import react.dom.aria.ariaLabel
+import react.ReactNode
 import react.router.useNavigate
 import react.useContext
-import web.dom.document
-import web.html.HTML
 
 external interface RoomListProps : Props {
-  var rooms: List<RoomDetails>
+  var rooms: List<RoomManagementDetail>
 }
 
 val RoomList = FC<RoomListProps> { props ->
@@ -35,42 +31,35 @@ val RoomList = FC<RoomListProps> { props ->
 }
 
 external interface RoomListItemProp : Props {
-  var room: RoomDetails
+  var room: RoomManagementDetail
 }
 
 val RoomListItem = FC<RoomListItemProp> { props ->
   val room = props.room
-  val navigate = useNavigate()
-  val (language) = useContext(LanguageContext)
 
   ListItem {
     sx {
-      flexDirection = FlexDirection.row
-      gap = 1.rem
-    }
-    Typography {
-      variant = TypographyVariant.body1
-      +room.code
-    }
-    Typography {
-      variant = TypographyVariant.body1
-      +room.title
-    }
-    Typography {
-      variant = TypographyVariant.body1
-      +I18n.get(
-        language,
-        I18n.TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_PARTICIPANTS,
-        I18n.TemplateProperty.Participants(room.participants.toString())
+      gap = 0.2.rem
+      flexWrap = responsive(
+        Breakpoint.md to FlexWrap.nowrap,
+        Breakpoint.xs to FlexWrap.wrap
       )
     }
-    Typography {
-      variant = TypographyVariant.body1
-      +I18n.get(
-        language,
-        I18n.TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_TOTAL_ANSWERS,
-        I18n.TemplateProperty.Answers(room.answers.toString())
-      )
+    divider = true
+
+    ListItemText {
+      sx {
+        width = responsive(
+          Breakpoint.md to Auto.auto,
+          Breakpoint.xs to 100.pct
+        )
+      }
+      primary = ReactNode(room.title)
+      secondary = ReactNode(room.code)
+    }
+
+    RoomStatusBadge {
+      status = room.roomStatus
     }
     ToRoomManagementDetail {
       code = room.code
@@ -80,9 +69,6 @@ val RoomListItem = FC<RoomListItemProp> { props ->
     }
     RoomQRCodeDialog {
       roomCode = room.code
-    }
-    RoomExcelExport {
-      code = room.code
     }
   }
 }

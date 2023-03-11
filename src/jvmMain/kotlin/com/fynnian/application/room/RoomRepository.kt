@@ -48,7 +48,7 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
     }
   }
 
-  fun getRoomsForManagement(code: String? = null): List<RoomDetails> {
+  fun getRoomsForManagement(code: String? = null): List<RoomManagementDetail> {
     return jooq {
 
       val participants = countDistinct(ANSWERS.USER_ID).`as`("participants")
@@ -70,18 +70,10 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         .groupBy(ROOMS.CODE, ROOM_IMAGES.ID)
         .collect(
           groupingBy(
-            { r ->
-              val room = r.into(ROOMS)
-              RoomDetails(
-                code = room.code!!,
-                roomStatus = room.status!!.toDomain(),
-                title = room.title!!,
-                description = room.description,
-                question = room.question,
-                timeLimitMinutes = room.timeLimitMinutes,
-                images = emptyList(),
-                participants = r.get(participants),
-                answers = r.get(answers)
+            {
+              it.into(ROOMS).toRoomManagementDetail(
+                participants = it.get(participants),
+                answers = it.get(answers)
               )
             },
             filtering(
@@ -94,7 +86,7 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
     }
   }
 
-  fun createRoom(roomCreation: RoomCreation): Room {
+  fun createRoom(roomCreation: RoomCreation): RoomManagementDetail {
     return jooq {
       selectFrom(ROOMS)
         .where(ROOMS.CODE.eq(roomCreation.code))
@@ -107,12 +99,12 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         .set(ROOMS.STATUS, RoomStatus.not_ready)
         .returning()
         .fetchOne()
-        ?.toDomain()
+        ?.toRoomManagementDetail(0,0)
         ?: throw APIException.ServerError("Could not create a new room")
     }
   }
 
-  fun patchRoom(room: RoomPatch): Room {
+  fun patchRoom(room: RoomPatch): RoomManagementDetail {
     return jooq {
 
       update(ROOMS)
@@ -125,7 +117,7 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         .fetchOne()
         ?: APIException.RoomNotFound(room.code)
 
-      getRoom(room.code)
+      getRoomsForManagement(room.code).first()
     }
   }
 
@@ -156,7 +148,7 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
     }
   }
 
-  fun updateStatus(code: String, status: RoomStatus): RoomDetails {
+  fun updateStatus(code: String, status: RoomStatus): RoomManagementDetail {
     jooq {
       update(ROOMS)
         .set(ROOMS.STATUS, status)
@@ -187,7 +179,7 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
     code: String,
     interactionInfo: RoomInteractionInfo,
     variant: RoomStatementVariant
-  ): Room {
+  ): RoomManagementDetail {
     jooq {
       update(ROOMS)
         .let {
@@ -208,7 +200,7 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         .fetchOne()
         ?: throw APIException.ServerError("could not update data for $variant")
     }
-    return getRoom(code)
+    return getRoomsForManagement(code).first()
   }
 }
 
@@ -222,6 +214,23 @@ fun RoomsRecord.toDomain() = Room(
   intro = RoomInteractionInfo(introText, introVideoTitle, introVideoUrl),
   outro = RoomInteractionInfo(outroText, outroVideoTitle, outroVideoUrl),
   images = listOf()
+)
+
+fun RoomsRecord.toRoomManagementDetail(
+  participants: Int,
+  answers: Int
+) = RoomManagementDetail(
+  code = code!!,
+  roomStatus = status!!.toDomain(),
+  title = title!!,
+  description = description,
+  question = question,
+  timeLimitMinutes = timeLimitMinutes,
+  intro = RoomInteractionInfo(introText, introVideoTitle, introVideoUrl),
+  outro = RoomInteractionInfo(outroText, outroVideoTitle, outroVideoUrl),
+  images = listOf(),
+  participants = participants,
+  answers = answers
 )
 
 fun Room.toRecord() = RoomsRecord().also {
