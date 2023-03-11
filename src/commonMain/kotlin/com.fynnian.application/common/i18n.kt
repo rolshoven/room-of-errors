@@ -21,6 +21,7 @@ object I18n {
       TranslationKey.ROOM_STATUS_NOT_READY to "Unvollständig",
       TranslationKey.ROOM_STATUS_OPEN to "Offen",
       TranslationKey.ROOM_STATUS_CLOSED to "Abgeschlossen",
+      TranslationKey.ROOM_STATUS_ALL to "Alle",
 
       TranslationKey.ROOM_INTRO_TEXT to "Wenn du bereit bist um mit dem Raum zu starten klicke auf 'beginnen'.",
       TranslationKey.ROOM_INTRO_START_BUTTON to "Beginnen",
@@ -90,6 +91,7 @@ object I18n {
       TranslationKey.ROOM_STATUS_NOT_READY to "Not Ready",
       TranslationKey.ROOM_STATUS_OPEN to "Open",
       TranslationKey.ROOM_STATUS_CLOSED to "Closed",
+      TranslationKey.ROOM_STATUS_ALL to "All",
 
       TranslationKey.ROOM_INTRO_TEXT to "When you are ready to begin with the room click on the start button.",
       TranslationKey.ROOM_INTRO_START_BUTTON to "Start",
@@ -170,6 +172,7 @@ object I18n {
     ROOM_STATUS_NOT_READY,
     ROOM_STATUS_OPEN,
     ROOM_STATUS_CLOSED,
+    ROOM_STATUS_ALL,
 
     ROOM_INTRO_TEXT,
     ROOM_INTRO_START_BUTTON,

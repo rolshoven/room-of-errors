@@ -18,7 +18,9 @@ import com.fynnian.application.common.URLS.API_ROOMS_USER_STATUS
 import com.fynnian.application.common.URLS.API_USERS_BY_ID
 import com.fynnian.application.common.URLS.IMAGE_ID_PARAM
 import com.fynnian.application.common.URLS.ROOM_CODE_PARAM
+import com.fynnian.application.common.URLS.ROOM_STATUS_PARAM
 import com.fynnian.application.common.URLS.USER_ID_PARAM
+import com.fynnian.application.common.URLS.addQuerParams
 import com.fynnian.application.common.URLS.replaceParam
 import com.fynnian.application.common.room.*
 import com.fynnian.application.common.user.User
@@ -154,8 +156,14 @@ class RoomApi : Api() {
 
 class RoomManagementApi : Api() {
 
-  suspend fun getRooms(): List<RoomManagementDetail> {
-    return processSimpleCall { get(API_ROOMS_MANAGEMENT) } ?: emptyList()
+  suspend fun getRooms(status: RoomStatus?): List<RoomManagementDetail> {
+    return processSimpleCall {
+      get(
+        if (status == null) API_ROOMS_MANAGEMENT
+        else API_ROOMS_MANAGEMENT.addQuerParams(ROOM_STATUS_PARAM(status))
+      )
+    }
+      ?: emptyList()
   }
 
   suspend fun getRoom(code: String): RoomManagementDetail? {

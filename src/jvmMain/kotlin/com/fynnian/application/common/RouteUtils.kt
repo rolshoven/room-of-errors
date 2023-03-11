@@ -3,6 +3,7 @@ package com.fynnian.application.common
 import com.benasher44.uuid.Uuid
 import com.benasher44.uuid.uuidFrom
 import com.fynnian.application.APIException
+import com.fynnian.application.common.room.RoomStatus
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
@@ -83,6 +84,18 @@ fun ApplicationCall.getLanguageQueryParam(): Language {
       }
     }
     ?: Language.DE
+}
+
+
+fun ApplicationCall.getRoomStatusQueryParam(): RoomStatus? {
+  return getQueryParam("status")
+    ?.let { value ->
+      try {
+        RoomStatus.valueOf(value.uppercase())
+      } catch (e: Exception) {
+        throw APIException.InvalidEnumValue(value, Language.values().map { it.toString() })
+      }
+    }
 }
 
 fun ApplicationCall.getUUIDQueryParam(key: String): Uuid {

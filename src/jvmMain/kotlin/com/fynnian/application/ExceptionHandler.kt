@@ -53,5 +53,10 @@ sealed class APIException(
     val id: Uuid
   ) : APIException("User with id '$id' not found", null, HttpStatusCode.NotFound)
 
+  data class InvalidEnumValue(
+    val invalidValue: String,
+    val acceptedValues: List<String>
+  ) : APIException("the given value $invalidValue is not a valid, use one of $acceptedValues", null, HttpStatusCode.NotFound)
+
   open fun asResponse(): ErrorResponse = APIErrorResponse(message, status.description, status.value)
 }

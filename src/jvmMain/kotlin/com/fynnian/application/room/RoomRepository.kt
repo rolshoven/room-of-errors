@@ -11,8 +11,7 @@ import com.fynnian.application.jooq.tables.records.RoomsRecord
 import com.fynnian.application.jooq.tables.references.ANSWERS
 import com.fynnian.application.jooq.tables.references.ROOMS
 import com.fynnian.application.jooq.tables.references.ROOM_IMAGES
-import org.jooq.impl.DSL.count
-import org.jooq.impl.DSL.countDistinct
+import org.jooq.impl.DSL.*
 import java.time.OffsetDateTime
 import java.util.stream.Collectors.*
 import com.fynnian.application.common.room.RoomStatus as RoomStatusDomain
@@ -48,7 +47,10 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
     }
   }
 
-  fun getRoomsForManagement(code: String? = null): List<RoomManagementDetail> {
+  fun getRoomsForManagement(
+    code: String? = null,
+    status: RoomStatusDomain? = null
+  ): List<RoomManagementDetail> {
     return jooq {
 
       val participants = countDistinct(ANSWERS.USER_ID).`as`("participants")
@@ -63,10 +65,9 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         .from(ROOMS)
         .leftJoin(ROOM_IMAGES).on(ROOM_IMAGES.ROOM_CODE.eq(ROOMS.CODE))
         .leftJoin(ANSWERS).on(ANSWERS.ROOM_CODE.eq(ROOMS.CODE))
-        .let {
-          if (code != null) it.where(ROOMS.CODE.eq(code))
-          else it
-        }
+        .where(trueCondition())
+        .let { if (code != null) it.and(ROOMS.CODE.eq(code)) else it }
+        .let { if (status != null) it.and(ROOMS.STATUS.eq(status.toRecord())) else it }
         .groupBy(ROOMS.CODE, ROOM_IMAGES.ID)
         .collect(
           groupingBy(

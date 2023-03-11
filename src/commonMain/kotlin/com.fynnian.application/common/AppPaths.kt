@@ -1,6 +1,7 @@
 package com.fynnian.application.common
 
 import com.benasher44.uuid.Uuid
+import com.fynnian.application.common.room.RoomStatus
 
 object URLS {
   const val API_ROOT = "/api"
@@ -50,4 +51,5 @@ object URLS {
   val IMAGE_NAME_PARAM = { fileName: String -> Param("imageName", fileName) }
   val VIDEO_NAME_PARAM = { fileName: String -> Param("videoName", fileName) }
   val LANGUAGE_PARAM = { language: Language -> Param("language", language.toString()) }
+  val ROOM_STATUS_PARAM = { status: RoomStatus -> Param("status", status.toString())}
 }

@@ -24,8 +24,11 @@ fun Route.roomManagementApi(dependencies: DI) {
   route(URLS.API_ROOMS_MANAGEMENT) {
     // list rooms
     get {
+
+      val status = call.getRoomStatusQueryParam()
+
       dependencies.roomRepository
-        .getRoomsForManagement()
+        .getRoomsForManagement(status = status)
         .also { call.respond(it) }
     }
   }
