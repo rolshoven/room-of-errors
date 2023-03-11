@@ -47,6 +47,7 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
       padding = 0.5.rem
     }
     CardHeader {
+      avatar = createElement(RoomStatusBadge, jso { status = props.room.roomStatus } )
       title = ReactNode(
         I18n.get(
           language,
