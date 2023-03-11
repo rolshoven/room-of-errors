@@ -10,6 +10,9 @@ object I18n {
     Language.DE to mapOf(
       TranslationKey.LOADING_SPINNER to "Lade Daten",
 
+      TranslationKey.CONFIRMATION_BUTTON_YES to "Ja",
+      TranslationKey.CONFIRMATION_BUTTON_NO to "Nein",
+
       TranslationKey.ROOM_NAVIGATOR_TITLE_WELCOME to "Willkommen im Room of Horrors",
       TranslationKey.ROOM_NAVIGATOR_TITLE_INVALID_CODE to "Es gibt keinen Raum mit Code {roomCode}",
       TranslationKey.ROOM_NAVIGATOR_INPUT_LABEL to "Bitte gib ein 8 stelligen Raum code ein",
@@ -31,8 +34,6 @@ object I18n {
 
       TranslationKey.ROOM_FINISH_DIALOG_BUTTON to "Raum Abschliessen",
       TranslationKey.ROOM_FINISH_DIALOG_CONFIRMATION_TEXT to "Bist du bereit den Raum zu beenden?",
-      TranslationKey.ROOM_FINISH_DIALOG_CONFIRMATION_BUTTON_YES to "Ja",
-      TranslationKey.ROOM_FINISH_DIALOG_CONFIRMATION_BUTTON_NO to "Nein",
 
       TranslationKey.ROOM_IMAGE_HELP_TEXT to "Markiere die Fehler mit einem Klick auf das Bild",
 
@@ -46,6 +47,8 @@ object I18n {
       TranslationKey.ROOM_QRCODE_BUTTON_DOWNLOAD to "Bild Speichern",
       TranslationKey.ROOM_QRCODE_ALERT_DOWNLOAD_SUCCESS to "Bild erfolgreich generiert und gespeichert.",
       TranslationKey.ROOM_QRCODE_ALERT_DOWNLOAD_ERROR to "Konnte das Bild nicht generieren und speichern.",
+
+      TranslationKey.ROOM_MANAGEMENT_INCOMPLETE_ROOM_ALERT to "Der Raum is unvollständig, er kann nicht geöffnet werden",
 
       TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_PARTICIPANTS to "Teilnehmer: {participants}",
       TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_TOTAL_ANSWERS to "Total Antworten: {answers}",
@@ -61,6 +64,14 @@ object I18n {
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL to "Bild Titel",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL to "Lade ein PNG Bild des Raumes hoch",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE to "Keine Datei - Benötigt ein PNG Bild",
+
+      TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_BUTTON to "Der Raum is bereit - Raum Öffnen",
+      TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_BUTTON_DISABLED to "Der Raum is noch unvollständig.",
+      TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_TEXT to "Ist alles bereit, jedes Bild und Text eingepflegt?",
+      TranslationKey.ROOM_MANAGEMENT_CLOSE_ROOM_BUTTON to "Raum schliessen - wir sind fertig.",
+      TranslationKey.ROOM_MANAGEMENT_CLOSE_ROOM_TEXT to "Bist du sicher das du den Raum schliessen willst?",
+      TranslationKey.ROOM_MANAGEMENT_RE_OPEN_ROOM_BUTTON to "Raum wider öffnen",
+      TranslationKey.ROOM_MANAGEMENT_RE_OPEN_ROOM_TEXT to "Bist du sicher das du den Raum wider öffnen willst?",
 
       TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_IMAGE_VALIDATION_ERROR to "Der Raum hat kein Bild, kann nicht geöffnet werden.",
 
@@ -79,6 +90,9 @@ object I18n {
     ),
     Language.EN to mapOf(
       TranslationKey.LOADING_SPINNER to "Loading Data",
+
+      TranslationKey.CONFIRMATION_BUTTON_YES to "Yes",
+      TranslationKey.CONFIRMATION_BUTTON_NO to "No",
 
       TranslationKey.ROOM_NAVIGATOR_TITLE_WELCOME to "welcome to the room of horrors",
       TranslationKey.ROOM_NAVIGATOR_TITLE_INVALID_CODE to "There is no room with code {roomCode}",
@@ -101,8 +115,6 @@ object I18n {
 
       TranslationKey.ROOM_FINISH_DIALOG_BUTTON to "Finish Room",
       TranslationKey.ROOM_FINISH_DIALOG_CONFIRMATION_TEXT to "Are you ready to finish the room?",
-      TranslationKey.ROOM_FINISH_DIALOG_CONFIRMATION_BUTTON_YES to "Yes",
-      TranslationKey.ROOM_FINISH_DIALOG_CONFIRMATION_BUTTON_NO to "No",
 
       TranslationKey.ROOM_IMAGE_HELP_TEXT to "mark a spot with an error with a click on the image",
 
@@ -116,6 +128,8 @@ object I18n {
       TranslationKey.ROOM_QRCODE_BUTTON_DOWNLOAD to "Save Code",
       TranslationKey.ROOM_QRCODE_ALERT_DOWNLOAD_SUCCESS to "Successfully generate and downloaded image",
       TranslationKey.ROOM_QRCODE_ALERT_DOWNLOAD_ERROR to "Could not generate and download image",
+
+      TranslationKey.ROOM_MANAGEMENT_INCOMPLETE_ROOM_ALERT to "The room is incomplete an can not be opened",
 
       TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_PARTICIPANTS to "participants: {participants}",
       TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_TOTAL_ANSWERS to "total answers: {answers}",
@@ -131,6 +145,14 @@ object I18n {
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL to "Image Title",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL to "upload room png image",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE to "No file - require png image",
+
+      TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_BUTTON to "Room is Ready - Open Room",
+      TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_BUTTON_DISABLED to "Room is not Ready can not open the room",
+      TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_TEXT to "Is everything ready, all images set? ",
+      TranslationKey.ROOM_MANAGEMENT_CLOSE_ROOM_BUTTON to "Close the room - we are done.",
+      TranslationKey.ROOM_MANAGEMENT_CLOSE_ROOM_TEXT to "Are you sure you are done with the room?",
+      TranslationKey.ROOM_MANAGEMENT_RE_OPEN_ROOM_BUTTON to "Re open the room",
+      TranslationKey.ROOM_MANAGEMENT_RE_OPEN_ROOM_TEXT to "Are you sure you want to open the room again?",
 
       TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_IMAGE_VALIDATION_ERROR to "Room has no files, can not open room",
 
@@ -161,6 +183,9 @@ object I18n {
   enum class TranslationKey {
     LOADING_SPINNER,
 
+    CONFIRMATION_BUTTON_YES,
+    CONFIRMATION_BUTTON_NO,
+
     ROOM_NAVIGATOR_TITLE_INVALID_CODE,
     ROOM_NAVIGATOR_TITLE_WELCOME,
     ROOM_NAVIGATOR_INPUT_LABEL,
@@ -182,8 +207,6 @@ object I18n {
 
     ROOM_FINISH_DIALOG_BUTTON,
     ROOM_FINISH_DIALOG_CONFIRMATION_TEXT,
-    ROOM_FINISH_DIALOG_CONFIRMATION_BUTTON_YES,
-    ROOM_FINISH_DIALOG_CONFIRMATION_BUTTON_NO,
 
     ROOM_IMAGE_HELP_TEXT,
 
@@ -197,6 +220,8 @@ object I18n {
     ROOM_QRCODE_BUTTON_DOWNLOAD,
     ROOM_QRCODE_ALERT_DOWNLOAD_SUCCESS,
     ROOM_QRCODE_ALERT_DOWNLOAD_ERROR,
+
+    ROOM_MANAGEMENT_INCOMPLETE_ROOM_ALERT,
 
     ROOM_MANAGEMENT_ROOM_LIST_LABEL_PARTICIPANTS,
     ROOM_MANAGEMENT_ROOM_LIST_LABEL_TOTAL_ANSWERS,
@@ -213,6 +238,14 @@ object I18n {
     ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL,
     ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL,
     ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE,
+
+    ROOM_MANAGEMENT_OPEN_ROOM_BUTTON,
+    ROOM_MANAGEMENT_OPEN_ROOM_BUTTON_DISABLED,
+    ROOM_MANAGEMENT_OPEN_ROOM_TEXT,
+    ROOM_MANAGEMENT_CLOSE_ROOM_BUTTON,
+    ROOM_MANAGEMENT_CLOSE_ROOM_TEXT,
+    ROOM_MANAGEMENT_RE_OPEN_ROOM_BUTTON,
+    ROOM_MANAGEMENT_RE_OPEN_ROOM_TEXT,
 
     ROOM_MANAGEMENT_OPEN_ROOM_IMAGE_VALIDATION_ERROR,
 

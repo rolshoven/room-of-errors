@@ -5,6 +5,7 @@ import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.RoomManagementDetail
 import com.fynnian.application.common.room.RoomPatch
 import components.form.FromRoomTitle
+import csstype.FlexWrap
 import csstype.rem
 import js.core.jso
 import mui.icons.material.Close
@@ -21,6 +22,7 @@ import web.html.InputType
 
 external interface RoomManagementRoomInfoProps : PropsWithChildren {
   var room: RoomManagementDetail
+  var isRoomReadyForOpening: Boolean
   var editRoomAction: (room: RoomPatch) -> Unit
 }
 
@@ -67,6 +69,10 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
         },
         createElement(if (edit) Close else Edit)
       )
+    }
+    if (!props.isRoomReadyForOpening) Alert {
+      severity = AlertColor.warning
+      +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_INCOMPLETE_ROOM_ALERT)
     }
     if (!edit) CardContent {
       Typography {
@@ -156,6 +162,9 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
       }
     }
     CardActions {
+      sx {
+        flexWrap = FlexWrap.wrap
+      }
       +props.children
     }
   }

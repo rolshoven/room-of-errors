@@ -43,11 +43,11 @@ val RoomFinishDialog = FC<RoomFinishDialogProps> { props ->
             justifyContent = JustifyContent.spaceAround
           }
           Button {
-            +I18n.get(language, I18n.TranslationKey.ROOM_FINISH_DIALOG_CONFIRMATION_BUTTON_YES)
+            +I18n.get(language, I18n.TranslationKey.CONFIRMATION_BUTTON_YES)
             onClick = { props.finishingAction() }
           }
           Button {
-            +I18n.get(language, I18n.TranslationKey.ROOM_FINISH_DIALOG_CONFIRMATION_BUTTON_NO)
+            +I18n.get(language, I18n.TranslationKey.CONFIRMATION_BUTTON_NO)
             onClick = { showConfirmation = false }
           }
         }

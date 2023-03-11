@@ -2,7 +2,6 @@ package pages
 
 import api.RoomManagementApi
 import com.benasher44.uuid.Uuid
-import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.*
 import components.*
 import csstype.*
@@ -53,6 +52,9 @@ val RoomManagementDetail = FC<Props> {
     }
   }
 
+  // currently the only missing thin is an image after creation the rest is optional
+  val isRoomReady: Boolean = images.isNotEmpty()
+
   val patchRoom: (patch: RoomPatch) -> Unit = { scope.launch { setRoomStates(api.patchRoom(it)) } }
   val reloadImages: () -> Unit = { scope.launch { setImages(api.getRoomImages(roomCode)) } }
 
@@ -77,6 +79,7 @@ val RoomManagementDetail = FC<Props> {
       }
       RoomManagementRoomInfo {
         this.room = room
+        this.isRoomReadyForOpening = isRoomReady
         this.editRoomAction = patchRoom
         ToRoom {
           code = room.code
@@ -88,6 +91,12 @@ val RoomManagementDetail = FC<Props> {
           code = room.code
         }
         ToManagementPage()
+        RoomManagementChangeRoomStatus {
+          this.code = room.code
+          this.isRoomReadyForOpening = isRoomReady
+          this.roomStatus = room.roomStatus
+          this.setRoom = setRoomStates
+        }
       }
       RoomManagementUserParticipation {
         participants = room.participants

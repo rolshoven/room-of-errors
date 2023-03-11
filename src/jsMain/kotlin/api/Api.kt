@@ -8,9 +8,11 @@ import com.fynnian.application.common.URLS.API_ROOMS_ANSWER_BY_ID
 import com.fynnian.application.common.URLS.API_ROOMS_BY_ID
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_BY_ID
+import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_CLOSE
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_IMAGE
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_IMAGE_BY_ID
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_INTRO
+import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_OPEN
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_OUTRO
 import com.fynnian.application.common.URLS.API_ROOMS_USER_FINISH
 import com.fynnian.application.common.URLS.API_ROOMS_USER_START
@@ -256,6 +258,15 @@ class RoomManagementApi : Api() {
         )
       }
     }
+  }
+
+
+  suspend fun openRoom(code: String): RoomManagementDetail? {
+    return processSimpleCall { post(API_ROOMS_MANAGEMENT_ROOM_OPEN.replaceParam(ROOM_CODE_PARAM(code))) }
+  }
+
+  suspend fun closeRoom(code: String): RoomManagementDetail? {
+    return processSimpleCall { post(API_ROOMS_MANAGEMENT_ROOM_CLOSE.replaceParam(ROOM_CODE_PARAM(code))) }
   }
 
   suspend fun deleteRoom(code: String): HttpStatusCode {
