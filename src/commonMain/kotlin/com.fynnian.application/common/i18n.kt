@@ -79,6 +79,10 @@ object I18n {
 
       TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_IMAGE_VALIDATION_ERROR to "Der Raum hat kein Bild, kann nicht geöffnet werden.",
 
+      TranslationKey.ROOM_MANAGEMENT_DELETE_ROOM_BUTTON to "Raum Löschen",
+      TranslationKey.ROOM_MANAGEMENT_DELETE_ROOM_TEXT to
+          "Bist du sucher das du den Raum löschen willst, alles was zum Raum gehört, Videos, Bilder und Antworten werde UNWIDERRUFLICH gelöscht!",
+
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_ROOM_CODE to "Raum Code",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_TITLE to "Titel",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_DESCRIPTION to "Raum Beschreibung",
@@ -163,6 +167,9 @@ object I18n {
       TranslationKey.ROOM_MANAGEMENT_RE_OPEN_ROOM_TEXT to "Are you sure you want to open the room again?",
 
       TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_IMAGE_VALIDATION_ERROR to "Room has no files, can not open room",
+
+      TranslationKey.ROOM_MANAGEMENT_DELETE_ROOM_BUTTON to "Delete Room",
+      TranslationKey.ROOM_MANAGEMENT_DELETE_ROOM_TEXT to "Are you sure you want to delete the room, everything associated with the room, images, answers are permanently deleted!",
 
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_ROOM_CODE to "Room Code",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_TITLE to "Title",
@@ -261,6 +268,8 @@ object I18n {
 
     ROOM_MANAGEMENT_OPEN_ROOM_IMAGE_VALIDATION_ERROR,
 
+    ROOM_MANAGEMENT_DELETE_ROOM_BUTTON,
+    ROOM_MANAGEMENT_DELETE_ROOM_TEXT,
 
     ROOM_EXCEL_EXPORT_INFO_CARD_ROOM_CODE,
     ROOM_EXCEL_EXPORT_INFO_CARD_TITLE,

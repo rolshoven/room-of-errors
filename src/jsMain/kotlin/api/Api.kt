@@ -269,9 +269,7 @@ class RoomManagementApi : Api() {
     return processSimpleCall { post(API_ROOMS_MANAGEMENT_ROOM_CLOSE.replaceParam(ROOM_CODE_PARAM(code))) }
   }
 
-  suspend fun deleteRoom(code: String): HttpStatusCode {
-    val response = client.delete(API_ROOMS_MANAGEMENT_BY_ID.replaceParam(ROOM_CODE_PARAM(code)))
-    return if (response.status == HttpStatusCode.OK) HttpStatusCode.OK
-    else HttpStatusCode.NotFound
+  suspend fun deleteRoom(code: String): APIErrorResponse? {
+    return processDeleteCall { delete(API_ROOMS_MANAGEMENT_BY_ID.replaceParam(ROOM_CODE_PARAM(code))) }
   }
 }

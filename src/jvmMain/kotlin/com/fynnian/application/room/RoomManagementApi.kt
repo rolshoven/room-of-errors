@@ -68,7 +68,7 @@ fun Route.roomManagementApi(dependencies: DI) {
     delete {
       val code = call.getRoomCodeParam(codeParam)
 
-      dependencies.roomRepository
+      dependencies.roomManagementService
         .deleteRoom(code)
         .also { call.response.status(HttpStatusCode.OK) }
     }

@@ -145,7 +145,7 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         .where(ROOMS.CODE.eq(code))
         .returning()
         .firstOrNull()
-        ?: throw APIException.NotFound("Room with code $code not found")
+        ?: throw APIException.ServerError("Could not delete room $code")
     }
   }
 

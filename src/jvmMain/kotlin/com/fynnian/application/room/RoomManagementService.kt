@@ -5,13 +5,13 @@ import com.fynnian.application.APIException
 import com.fynnian.application.common.URLS
 import com.fynnian.application.common.URLS.replaceParam
 import com.fynnian.application.common.processMultipartForm
-import com.fynnian.application.common.room.Room
-import com.fynnian.application.common.room.RoomStatementVariant
 import com.fynnian.application.common.room.RoomInteractionInfo
 import com.fynnian.application.common.room.RoomManagementDetail
+import com.fynnian.application.common.room.RoomStatementVariant
 import com.fynnian.application.config.Content
 import io.ktor.http.*
 import io.ktor.server.application.*
+import org.slf4j.LoggerFactory
 import java.io.File
 
 class RoomManagementService(
@@ -53,5 +53,37 @@ class RoomManagementService(
     }
 
     return roomRepository.upsertRoomInteractionInfo(code, interactionInfo, variant)
+  }
+
+
+  fun deleteRoom(code: String) {
+    val room = roomRepository.getRoom(code)
+
+    roomRepository.deleteRoom(code)
+
+    val filesToDelete: MutableList<File> =
+      room.images.mapTo(mutableListOf()) { File("${contentConfig.imageUploadDir}/${it.getFileName()}") }
+
+    room.intro.getFileName()
+      ?.let { fileName -> filesToDelete.plus(File("${contentConfig.videoUploadDir}/${fileName}")) }
+    room.outro.getFileName()
+      ?.let { fileName -> filesToDelete.plus(File("${contentConfig.videoUploadDir}/${fileName}")) }
+
+    filesToDelete.forEach {
+      if (!it.exists()) {
+        log.error("while deleting the room $code, could not delete file $it it doesn't exist")
+        return@forEach
+      }
+      if (it.delete().not()) {
+        log.error("while deleting the room $code, could not delete file $it")
+        return@forEach
+      }
+      log.debug("deleted file $it of room $code")
+    }
+  }
+
+  companion object {
+    @JvmStatic
+    private val log = LoggerFactory.getLogger(RoomManagementService::class.java)
   }
 }

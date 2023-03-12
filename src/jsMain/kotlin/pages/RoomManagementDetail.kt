@@ -97,6 +97,9 @@ val RoomManagementDetail = FC<Props> {
           this.roomStatus = room.roomStatus
           this.setRoom = setRoomStates
         }
+        DeleteRoom {
+          code = room.code
+        }
       }
       RoomManagementUserParticipation {
         participants = room.participants
