@@ -5,7 +5,7 @@ import com.benasher44.uuid.uuid4
 import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.*
 import components.*
-import csstype.*
+import csstype.rem
 import js.core.get
 import js.core.jso
 import kotlinx.coroutines.MainScope
@@ -18,6 +18,7 @@ import mui.system.sx
 import react.*
 import react.dom.events.MouseEvent
 import react.router.useParams
+import web.html.HTMLDivElement
 import web.html.HTMLImageElement
 
 private val scope = MainScope()
@@ -37,6 +38,8 @@ val RoomPage = FC<Props> {
   var answers by useState<List<Answer>>(mutableListOf())
   var usersRoomStatus by useState<UsersRoomStatus>()
   val (currentImage, setCurrentImage) = useState(0)
+
+  val createAnswerRef = createRef<HTMLDivElement>()
 
   // workaround for the missing router support in the wrapper
   // check the stored code against the param to trigger rerender
@@ -170,7 +173,9 @@ val RoomPage = FC<Props> {
           }
 
           UsersRoomParticipationStatus.STARTED -> {
-            if (room.images.isEmpty()) return@MainContainer // ToDo: resolve, not needed, missing check for rooom status
+            // safety return when due to some isse there is no image present, dont brake the page
+            if (room.images.isEmpty()) return@MainContainer
+
             val selectedImage = room.images[currentImage]
             val answersForCurrentImage = answers.filter { it.imageId == selectedImage.id }
             Spacer {
@@ -178,7 +183,10 @@ val RoomPage = FC<Props> {
             }
             RoomImage {
               image = selectedImage
-              onImageClick = { event -> cord = calculateCoordinates(event) }
+              onImageClick = { event ->
+                cord = calculateCoordinates(event)
+                createAnswerRef.current?.focus()
+              }
 
               answersForCurrentImage.map {
                 ImageMarker {
@@ -224,6 +232,7 @@ val RoomPage = FC<Props> {
               }
             }
             CreateAnswer {
+              inputFiledRef = createAnswerRef
               currentCoordinates = cord
               currentAnswerCount = answers.size
               createAnswer = ::addAnswer

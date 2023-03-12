@@ -5,16 +5,13 @@ import com.fynnian.application.common.room.Coordinates
 import csstype.AlignItems
 import csstype.Display
 import csstype.rem
-import kotlinx.coroutines.MainScope
 import mui.icons.material.Clear
 import mui.icons.material.Save
 import mui.material.*
 import mui.system.sx
-import react.FC
-import react.Props
+import react.*
 import react.dom.onChange
-import react.useContext
-import react.useState
+import web.html.HTMLDivElement
 import web.html.HTMLTextAreaElement
 import web.html.InputType
 
@@ -23,6 +20,7 @@ external interface CreateAnswerProps : Props {
   var currentAnswerCount: Int
   var createAnswer: (answer: String) -> Unit
   var resetCoordinates: () -> Unit
+  var inputFiledRef: RefObject<HTMLDivElement>
 }
 
 val CreateAnswer = FC<CreateAnswerProps> { props ->
@@ -37,6 +35,7 @@ val CreateAnswer = FC<CreateAnswerProps> { props ->
       alignItems = AlignItems.center
     }
     TextField {
+      inputRef = props.inputFiledRef
       id = "answer"
       name = "answer"
       type = InputType.text
@@ -46,7 +45,7 @@ val CreateAnswer = FC<CreateAnswerProps> { props ->
       multiline = true
       minRows = 2
       fullWidth = true
-      disabled = props.currentCoordinates == null
+      // disabled = props.currentCoordinates == null - commented the check as the disabled field doesn't get correctly focused on a state change
       value = currentAnswer
       onChange = {
         val e = it.target as HTMLTextAreaElement
@@ -57,7 +56,7 @@ val CreateAnswer = FC<CreateAnswerProps> { props ->
       Save()
       size = Size.medium
       color = IconButtonColor.primary
-      disabled = currentAnswer.isBlank()
+      disabled = (currentAnswer.isBlank() && props.currentCoordinates == null) || currentAnswer.isBlank()
       onClick = {
         props.createAnswer(currentAnswer)
         currentAnswer = ""
@@ -66,7 +65,7 @@ val CreateAnswer = FC<CreateAnswerProps> { props ->
     IconButton {
       Clear()
       color = IconButtonColor.primary
-      disabled = props.currentCoordinates == null
+      disabled = props.currentCoordinates == null || currentAnswer.isBlank()
       onClick = {
         currentAnswer = ""
         props.resetCoordinates()
