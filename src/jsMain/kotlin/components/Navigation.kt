@@ -41,7 +41,6 @@ val Navigation = FC<PropsWithChildren> { props ->
         sx {
           gap = 1.rem
         }
-        NewUserSessionButton() // ToDo: check with data or after finishing room
         ThemeSwitch()
         LanguageSwitch()
       }

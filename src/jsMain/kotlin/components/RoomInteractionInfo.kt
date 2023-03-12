@@ -79,5 +79,6 @@ val RoomInteractionInfo = FC<RoomInteractionInfoProps> { props ->
         }
       }
     }
+    if (props.type == RoomStatementVariant.OUTRO) NewUserSessionButton()
   }
 }

@@ -4,10 +4,13 @@ import api.UserApi
 import com.benasher44.uuid.Uuid
 import com.benasher44.uuid.uuid4
 import com.benasher44.uuid.uuidFrom
+import com.fynnian.application.common.I18n
 import kotlinx.coroutines.*
 import com.fynnian.application.common.user.User
+import csstype.pct
 import kotlinx.browser.localStorage
 import mui.material.*
+import mui.system.sx
 import react.*
 import react.router.useNavigate
 
@@ -51,9 +54,13 @@ val NewUserSessionButton = FC<Props> {
 
   val api = UserApi()
   val navigate = useNavigate()
+  val (language) = useContext(LanguageContext)
   val (user, setUser) = useContext(UserContext)
 
   Button {
+    sx {
+      width = 100.pct
+    }
     onClick = {
       val newUserId = setUserIdFromLocalStorage(uuid4())
       scope.launch {
@@ -61,6 +68,6 @@ val NewUserSessionButton = FC<Props> {
       }
       navigate(0)
     }
-    +"New User Session"
+    +I18n.get(language, I18n.TranslationKey.STAR_NEW_USER_SESSION_BUTTON)
   }
 }

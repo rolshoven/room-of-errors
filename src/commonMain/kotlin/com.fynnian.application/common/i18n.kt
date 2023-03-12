@@ -13,6 +13,8 @@ object I18n {
       TranslationKey.CONFIRMATION_BUTTON_YES to "Ja",
       TranslationKey.CONFIRMATION_BUTTON_NO to "Nein",
 
+      TranslationKey.STAR_NEW_USER_SESSION_BUTTON to "Nochmals versuchen - starte eine neue Session",
+
       TranslationKey.ROOM_NAVIGATOR_TITLE_WELCOME to "Willkommen im Room of Horrors",
       TranslationKey.ROOM_NAVIGATOR_TITLE_INVALID_CODE to "Es gibt keinen Raum mit Code {roomCode}",
       TranslationKey.ROOM_NAVIGATOR_INPUT_LABEL to "Bitte gib ein 8 stelligen Raum code ein",
@@ -101,6 +103,8 @@ object I18n {
 
       TranslationKey.CONFIRMATION_BUTTON_YES to "Yes",
       TranslationKey.CONFIRMATION_BUTTON_NO to "No",
+
+      TranslationKey.STAR_NEW_USER_SESSION_BUTTON to "Try again - start a new session",
 
       TranslationKey.ROOM_NAVIGATOR_TITLE_WELCOME to "welcome to the room of horrors",
       TranslationKey.ROOM_NAVIGATOR_TITLE_INVALID_CODE to "There is no room with code {roomCode}",
@@ -200,6 +204,8 @@ object I18n {
 
     CONFIRMATION_BUTTON_YES,
     CONFIRMATION_BUTTON_NO,
+
+    STAR_NEW_USER_SESSION_BUTTON,
 
     ROOM_NAVIGATOR_TITLE_INVALID_CODE,
     ROOM_NAVIGATOR_TITLE_WELCOME,
