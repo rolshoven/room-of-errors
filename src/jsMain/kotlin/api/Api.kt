@@ -3,7 +3,6 @@ package api
 import com.benasher44.uuid.Uuid
 import com.fynnian.application.common.APIErrorResponse
 import com.fynnian.application.common.URLS.ANSWER_ID_PARAM
-import com.fynnian.application.common.URLS.API_ROOMS_USER_ANSWERS
 import com.fynnian.application.common.URLS.API_ROOMS_ANSWER_BY_ID
 import com.fynnian.application.common.URLS.API_ROOMS_BY_ID
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT
@@ -14,6 +13,7 @@ import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_IMAGE_BY_ID
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_INTRO
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_OPEN
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_OUTRO
+import com.fynnian.application.common.URLS.API_ROOMS_USER_ANSWERS
 import com.fynnian.application.common.URLS.API_ROOMS_USER_FINISH
 import com.fynnian.application.common.URLS.API_ROOMS_USER_START
 import com.fynnian.application.common.URLS.API_ROOMS_USER_STATUS
@@ -26,6 +26,7 @@ import com.fynnian.application.common.URLS.addQuerParams
 import com.fynnian.application.common.URLS.replaceParam
 import com.fynnian.application.common.room.*
 import com.fynnian.application.common.user.User
+import components.APIResponseSnackbarContext
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -37,6 +38,7 @@ import io.ktor.serialization.kotlinx.json.*
 import js.typedarrays.Int8Array
 import kotlinx.coroutines.await
 import kotlinx.serialization.json.Json
+import react.useContext
 import web.file.File
 
 open class Api {
@@ -48,27 +50,47 @@ open class Api {
     }
   }
 
-  suspend inline fun <reified T> processSimpleCall(request: HttpClient.() -> HttpResponse): T? {
-    val response = client.request().call.response
-    return if (response.status == HttpStatusCode.OK) response.body<T>()
-    else null
+  val snackbarContext = useContext(APIResponseSnackbarContext)
+  fun showError(error: APIErrorResponse?) {
+    snackbarContext.apiErrorResponse(error)
+    snackbarContext.showSnackbar(true)
   }
 
-  suspend inline fun processDeleteCall(request: HttpClient.() -> HttpResponse): APIErrorResponse? {
+  // ToDo: handle error better, currently a mix of showing snack bar and returning null
+  suspend inline fun <reified T> processSimpleCall(
+    displayError: Boolean = true,
+    request: HttpClient.() -> HttpResponse
+  ): T? {
+    val response = client.request().call.response
+    return if (response.status == HttpStatusCode.OK) response.body<T>()
+    else {
+      if (displayError) showError(response.body())
+      null
+    }
+  }
+
+  // ToDo: handle error better, currently a mix of showing snack bar and returning null
+  suspend inline fun processDeleteCall(
+    displayError: Boolean = true,
+    request: HttpClient.() -> HttpResponse
+  ): APIErrorResponse? {
     val response = client.request()
     return if (response.status == HttpStatusCode.OK) null
-    else response.body()
+    else {
+      if (displayError) showError(response.body())
+      response.body<APIErrorResponse>()
+    }
   }
 }
 
 class UserApi : Api() {
 
   suspend fun getUser(id: Uuid): User? {
-    return processSimpleCall { get(API_USERS_BY_ID.replaceParam(USER_ID_PARAM(id))) }
+    return processSimpleCall(displayError = false) { get(API_USERS_BY_ID.replaceParam(USER_ID_PARAM(id))) }
   }
 
   suspend fun upsertUser(user: User): User? {
-    return processSimpleCall {
+    return processSimpleCall(displayError = false) {
       put(API_USERS_BY_ID.replaceParam(USER_ID_PARAM(user.id))) {
         contentType(ContentType.Application.Json)
         setBody(user)

@@ -1,10 +1,7 @@
 import com.fynnian.application.common.URLS
 import com.fynnian.application.common.URLS.ROOM_CODE_PARAM
 import com.fynnian.application.common.URLS.replaceParam
-import components.Footer
-import components.I18nProvider
-import components.ThemeModule
-import components.UserStorage
+import components.*
 import pages.Landingpage
 import pages.Management
 import pages.RoomManagementDetail
@@ -26,9 +23,11 @@ fun main() {
 private val App = FC<Props> {
   I18nProvider {
     ThemeModule {
-      UserStorage {
-        Routing()
-        Footer()
+      APIResponseSnackbar {
+        UserStorage {
+          Routing()
+          Footer()
+        }
       }
     }
   }
