@@ -33,6 +33,8 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
   val (roomTitle, setRoomTitle) = useState(props.room.title)
   val (description, setDescription) = useState(props.room.description)
   val (question, setQuestion) = useState(props.room.question)
+  val (withTimeLimit, setWithTimeLimit) = useState(props.room.timeLimitMinutes != null)
+  val (timeLimitMinutes, setTimeLimitMinutes) = useState(props.room.timeLimitMinutes)
 
 
   fun setEditState(state: Boolean) {
@@ -40,6 +42,8 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
       setRoomTitle(props.room.title)
       setDescription(props.room.description)
       setQuestion(props.room.question)
+      setWithTimeLimit(props.room.timeLimitMinutes != null)
+      setTimeLimitMinutes(props.room.timeLimitMinutes)
     }
     setEdit(state)
   }
@@ -49,7 +53,9 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
       padding = 0.5.rem
     }
     CardHeader {
-      avatar = createElement(RoomStatusBadge, jso { status = props.room.roomStatus } )
+      avatar = RoomStatusBadge.create {
+        status = props.room.roomStatus
+      }
       title = ReactNode(
         I18n.get(
           language,
@@ -77,7 +83,7 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
     if (!edit) CardContent {
       Typography {
         variant = TypographyVariant.caption
-        + I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TITLE_LABEL)
+        +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TITLE_LABEL)
       }
       Typography {
         variant = TypographyVariant.body1
@@ -85,22 +91,31 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
       }
       Typography {
         variant = TypographyVariant.caption
-        + I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_DESCRIPTION_LABEL)
+        +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_DESCRIPTION_LABEL)
       }
       if (props.room.description != null) Typography {
         variant = TypographyVariant.body1
         +props.room.description!!
       }
-      else MissingContent { text = "There is no room description" }
+      else MissingContent { text = I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_DESCRIPTION_NOT_DEFINED) }
       Typography {
         variant = TypographyVariant.caption
-        + I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_QUESTION_LABEL)
+        +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_QUESTION_LABEL)
       }
       if (props.room.question != null) Typography {
         variant = TypographyVariant.body1
         +props.room.question!!
       }
-      else MissingContent { text = "There is no room question" }
+      else MissingContent { text = I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_QUESTION_NOT_DEFINED) }
+      Typography {
+        variant = TypographyVariant.caption
+        +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_LABLE)
+      }
+      if (props.room.timeLimitMinutes != null) Typography {
+        variant = TypographyVariant.body1
+        +props.room.timeLimitMinutes.toString()
+      }
+      else MissingContent { text = I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_NOT_DEFINED) }
     }
     else CardContent {
       FromRoomTitle {
@@ -140,6 +155,34 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
           }
         }
       }
+      Spacer { size = SpacerPropsSize.VERY_SMALL}
+      FormGroup {
+        FormControlLabel {
+          label = ReactNode(
+            I18n.get(
+              language,
+              I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_WITH_TIME_LIMIT_SWITCH_LABLE
+            )
+          )
+          control = Switch.create {
+            name = "withTimeLimit"
+            checked = withTimeLimit
+            onChange = { _, value -> setWithTimeLimit(value) }
+          }
+        }
+        TextField {
+          id = "timeLimit"
+          name = "timeLimit"
+          disabled = withTimeLimit.not()
+          type = InputType.number
+          label = ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_LABLE))
+          helperText = ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_HELP_TEXT))
+          placeholder = "30"
+          value = timeLimitMinutes ?: ""
+          onChange = { setTimeLimitMinutes(it.target.unsafeCast<HTMLInputElement>().value.toInt()) }
+        }
+      }
+      Spacer { size = SpacerPropsSize.SMALL }
       IconButton {
         Save()
         disabled = roomTitle.isBlank()
@@ -151,7 +194,7 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
               roomTitle,
               description,
               question,
-              null // ToDo: time
+              if (withTimeLimit) timeLimitMinutes else null
             )
           )
         }
