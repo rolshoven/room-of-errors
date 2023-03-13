@@ -30,9 +30,24 @@ val RoomInteractionInfo = FC<RoomInteractionInfoProps> { props ->
 
   Card {
     if (props.type == RoomStatementVariant.OUTRO) CardHeader {
+      sx {
+        textAlign = TextAlign.center
+      }
       title = ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_OUTRO_TITLE))
       titleTypographyProps = jso {
         variant = TypographyVariant.body1
+      }
+    }
+    Spacer {
+      size = SpacerPropsSize.SMALL
+    }
+    if (props.type == RoomStatementVariant.INTRO) CardContent {
+      sx {
+        textAlign = TextAlign.center
+      }
+      Typography {
+        variant = TypographyVariant.body1
+        +(props.interactionInfo.text ?: I18n.get(language, I18n.TranslationKey.ROOM_INTRO_TEXT))
       }
     }
     if (props.interactionInfo.videoURl != null) {
@@ -51,23 +66,7 @@ val RoomInteractionInfo = FC<RoomInteractionInfoProps> { props ->
         controls = true
       }
     }
-    Spacer {
-      size = SpacerPropsSize.SMALL
-    }
-    CardContent {
-      sx {
-        textAlign = TextAlign.center
-      }
-      Typography {
-        val text = props.interactionInfo.text ?: when (props.type) {
-          RoomStatementVariant.INTRO -> I18n.get(language, I18n.TranslationKey.ROOM_INTRO_TEXT)
-          RoomStatementVariant.OUTRO -> I18n.get(language, I18n.TranslationKey.ROOM_OUTRO_TEXT)
-        }
-        variant = TypographyVariant.body1
-        +text
-      }
-    }
-
+    Spacer { size = SpacerPropsSize.MEDIUM }
     if (props.type == RoomStatementVariant.INTRO) {
       CardActions {
         Button {

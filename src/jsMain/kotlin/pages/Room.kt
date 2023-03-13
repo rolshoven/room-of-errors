@@ -7,7 +7,6 @@ import com.fynnian.application.common.room.*
 import components.*
 import csstype.rem
 import js.core.get
-import js.core.jso
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import mui.icons.material.KeyboardArrowLeft
@@ -144,10 +143,7 @@ val RoomPage = FC<Props> {
         }
         RoomInfo {
           this.room = room
-          if (usersRoomStatus?.participationStatus == UsersRoomParticipationStatus.STARTED)
-            RoomFinishDialog {
-              finishingAction = { finishRoom() }
-            }
+          this.userState = usersRoomStatus?.participationStatus
         }
         when (usersRoomStatus?.participationStatus) {
           UsersRoomParticipationStatus.NOT_STARTED -> {
@@ -202,25 +198,26 @@ val RoomPage = FC<Props> {
               }
             }
             if (room.images.size > 1) MobileStepper {
+              //ToDo: some gray stiling in dark mode, maybe card?
+              elevation = 2
+              variant = MobileStepperVariant.dots
               steps = room.images.size
               position = MobileStepperPosition.static
               activeStep = currentImage
-              nextButton = createElement(
-                Button, jso {
-                  size = "small".asDynamic()
-                  onClick = { setCurrentImage(currentImage + 1) }
-                  disabled = currentImage == room.images.size - 1
-                },
-                createElement(KeyboardArrowRight)
-              )
-              backButton = createElement(
-                Button, jso {
-                  size = "small".asDynamic()
-                  onClick = { setCurrentImage(currentImage - 1) }
-                  disabled = currentImage == 0
-                },
-                createElement(KeyboardArrowLeft)
-              )
+              nextButton = Button.create {
+                size = Size.small
+                onClick = { setCurrentImage(currentImage + 1) }
+                disabled = currentImage == room.images.size - 1
+                +I18n.get(language, I18n.TranslationKey.ROOM_IMAGE_SLIDER_NEXT)
+                KeyboardArrowRight()
+              }
+              backButton = Button.create {
+                size = Size.small
+                onClick = { setCurrentImage(currentImage - 1) }
+                disabled = currentImage == 0
+                KeyboardArrowLeft()
+                +I18n.get(language, I18n.TranslationKey.ROOM_IMAGE_SLIDER_BACK)
+              }
             }
             Box {
               sx {
@@ -237,6 +234,9 @@ val RoomPage = FC<Props> {
               currentAnswerCount = answers.size
               createAnswer = ::addAnswer
               resetCoordinates = { cord = null }
+            }
+            RoomFinishDialog {
+              finishingAction = { finishRoom() }
             }
             Box {
               sx {

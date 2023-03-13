@@ -13,7 +13,7 @@ object I18n {
       TranslationKey.CONFIRMATION_BUTTON_YES to "Ja",
       TranslationKey.CONFIRMATION_BUTTON_NO to "Nein",
 
-      TranslationKey.STAR_NEW_USER_SESSION_BUTTON to "Nochmals versuchen - starte eine neue Session",
+      TranslationKey.STAR_NEW_USER_SESSION_BUTTON to "Starte eine neue Session",
 
       TranslationKey.ROOM_NAVIGATOR_TITLE_WELCOME to "Willkommen im Room of Horrors",
       TranslationKey.ROOM_NAVIGATOR_TITLE_INVALID_CODE to "Es gibt keinen Raum mit Code {roomCode}",
@@ -29,10 +29,10 @@ object I18n {
       TranslationKey.ROOM_STATUS_ALL to "Alle",
 
       TranslationKey.ROOM_INTRO_TEXT to "Wenn du bereit bist um mit dem Raum zu starten klicke auf 'beginnen'.",
-      TranslationKey.ROOM_INTRO_START_BUTTON to "Beginnen",
+      TranslationKey.ROOM_INTRO_START_BUTTON to "Mit dem Raum starten",
 
       TranslationKey.ROOM_OUTRO_TITLE to "Raum Abgeschlossen",
-      TranslationKey.ROOM_OUTRO_TEXT to "Danke für das Mitmachen, die Lösung für den Raum wird zu einem späteren Zeitpunkt veröffentlicht.",
+      TranslationKey.ROOM_OUTRO_TEXT to "",
 
       TranslationKey.ROOM_UNAVAILABLE_TITLE to "Der Raum ist nicht verfügbar.",
       TranslationKey.ROOM_UNAVAILABLE_ROOM_NOT_READY to "Der Raum is noch nicht beret, er wird gerade eingerichtet.",
@@ -42,6 +42,9 @@ object I18n {
       TranslationKey.ROOM_FINISH_DIALOG_CONFIRMATION_TEXT to "Bist du bereit den Raum zu beenden?",
 
       TranslationKey.ROOM_IMAGE_HELP_TEXT to "Markiere die Fehler mit einem Klick auf das Bild",
+
+      TranslationKey.ROOM_IMAGE_SLIDER_NEXT to "Nächstes Bild",
+      TranslationKey.ROOM_IMAGE_SLIDER_BACK to "Vorheriges Bild",
 
       TranslationKey.ROOM_ANSWER_ANSWERS_TOTAL to "Total {answers} Antworten",
       TranslationKey.ROOM_ANSWER_ANSWERS_COUNT_PER_IMAGE to "Bild {number}: {answers} Antworten",
@@ -67,6 +70,9 @@ object I18n {
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TITLE_LABEL to "Raum Titel",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_DESCRIPTION_LABEL to "Raum Beschreibung",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_QUESTION_LABEL to "Einstiegs Frage",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_LABLE to "Zeitlimit in Minuten",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_HELP_TEXT to "Optional, Zeitlimit für das abschliessen des Raumes.",
+
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL to "Bild Titel",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL to "Lade ein PNG Bild des Raumes hoch",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE to "Keine Datei - Benötigt ein PNG Bild",
@@ -91,12 +97,14 @@ object I18n {
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_QUESTION to "Display question",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_IMAGES to "Anzahl an Bildern",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_PARTICIPANTS to "Teilnehmer",
-      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_TOTAL_ANSWERS to "Antworten Total",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_TOTAL_ANSWERS to "Total Aller Antworten",
 
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_USER_NO to "userNr",
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_ANSWER_NO to "antwortNr",
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_ANSWER to "antwort",
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_IMAGE_NO to "bildNr",
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_TOTAL_ANSWERS_PER_USER to "totalAntwortenProUser",
+
     ),
     Language.EN to mapOf(
       TranslationKey.LOADING_SPINNER to "Loading Data",
@@ -104,7 +112,7 @@ object I18n {
       TranslationKey.CONFIRMATION_BUTTON_YES to "Yes",
       TranslationKey.CONFIRMATION_BUTTON_NO to "No",
 
-      TranslationKey.STAR_NEW_USER_SESSION_BUTTON to "Try again - start a new session",
+      TranslationKey.STAR_NEW_USER_SESSION_BUTTON to "Start a new session",
 
       TranslationKey.ROOM_NAVIGATOR_TITLE_WELCOME to "welcome to the room of horrors",
       TranslationKey.ROOM_NAVIGATOR_TITLE_INVALID_CODE to "There is no room with code {roomCode}",
@@ -120,10 +128,10 @@ object I18n {
       TranslationKey.ROOM_STATUS_ALL to "All",
 
       TranslationKey.ROOM_INTRO_TEXT to "When you are ready to begin with the room click on the start button.",
-      TranslationKey.ROOM_INTRO_START_BUTTON to "Start",
+      TranslationKey.ROOM_INTRO_START_BUTTON to "Start with the room",
 
       TranslationKey.ROOM_OUTRO_TITLE to "Room Completed",
-      TranslationKey.ROOM_OUTRO_TEXT to "Thanks for participating, the solution to the room will be available at a later date.",
+      TranslationKey.ROOM_OUTRO_TEXT to "",
 
       TranslationKey.ROOM_UNAVAILABLE_TITLE to "The room is unavailable!",
       TranslationKey.ROOM_UNAVAILABLE_ROOM_NOT_READY to "The room is currently being set up and not yet ready.",
@@ -133,6 +141,9 @@ object I18n {
       TranslationKey.ROOM_FINISH_DIALOG_CONFIRMATION_TEXT to "Are you ready to finish the room?",
 
       TranslationKey.ROOM_IMAGE_HELP_TEXT to "mark a spot with an error with a click on the image",
+
+      TranslationKey.ROOM_IMAGE_SLIDER_NEXT to "Next Image",
+      TranslationKey.ROOM_IMAGE_SLIDER_BACK to "Previous Image",
 
       TranslationKey.ROOM_ANSWER_ANSWERS_TOTAL to "Total {answers} answers",
       TranslationKey.ROOM_ANSWER_ANSWERS_COUNT_PER_IMAGE to "Image {number}: {answers} answers",
@@ -158,6 +169,9 @@ object I18n {
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TITLE_LABEL to "Room Title",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_DESCRIPTION_LABEL to "Room Description",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_QUESTION_LABEL to "Room Question",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_LABLE to "Time limit in minutes",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_HELP_TEXT to "Optional, time limit to complete the room.",
+
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL to "Image Title",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL to "upload room png image",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE to "No file - require png image",
@@ -187,7 +201,9 @@ object I18n {
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_ANSWER_NO to "answerNo",
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_ANSWER to "answer",
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_IMAGE_NO to "imageNo",
-      ),
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_TOTAL_ANSWERS_PER_USER to "totalAnswersPerUser",
+
+    ),
     Language.FR to mapOf(
 
     ),
@@ -235,6 +251,9 @@ object I18n {
 
     ROOM_IMAGE_HELP_TEXT,
 
+    ROOM_IMAGE_SLIDER_NEXT,
+    ROOM_IMAGE_SLIDER_BACK,
+
     ROOM_ANSWER_ANSWERS_TOTAL,
     ROOM_ANSWER_ANSWERS_COUNT_PER_IMAGE,
 
@@ -259,6 +278,8 @@ object I18n {
     ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TITLE_LABEL,
     ROOM_MANAGEMENT_CREATE_ROOM_ROOM_DESCRIPTION_LABEL,
     ROOM_MANAGEMENT_CREATE_ROOM_ROOM_QUESTION_LABEL,
+    ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_LABLE,
+    ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_HELP_TEXT,
 
     ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL,
     ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL,
@@ -289,6 +310,7 @@ object I18n {
     ROOM_EXCEL_EXPORT_HEADER_ANSWER_NO,
     ROOM_EXCEL_EXPORT_HEADER_ANSWER,
     ROOM_EXCEL_EXPORT_HEADER_IMAGE_NO,
+    ROOM_EXCEL_EXPORT_HEADER_TOTAL_ANSWERS_PER_USER
 
   }
 

@@ -2,6 +2,7 @@ package components
 
 import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.Room
+import com.fynnian.application.common.room.UsersRoomParticipationStatus
 import csstype.rem
 import js.core.jso
 import mui.material.*
@@ -14,6 +15,7 @@ import react.useContext
 
 external interface RoomInfoProps : PropsWithChildren {
   var room: Room
+  var userState: UsersRoomParticipationStatus?
 }
 
 val RoomInfo = FC<RoomInfoProps> { props ->
@@ -36,17 +38,25 @@ val RoomInfo = FC<RoomInfoProps> { props ->
         variant = TypographyVariant.body1
       }
     }
-    if (!props.room.description.isNullOrBlank() || !props.room.question.isNullOrBlank()) CardContent {
-      Typography {
-        variant = TypographyVariant.body1
-        +(props.room.description ?: "")
+    when(props.userState) {
+      UsersRoomParticipationStatus.NOT_STARTED -> {}
+      UsersRoomParticipationStatus.STARTED -> {
+        if (!props.room.description.isNullOrBlank() || !props.room.question.isNullOrBlank()) CardContent {
+          Typography {
+            variant = TypographyVariant.body1
+            +(props.room.description ?: "")
+          }
+          Spacer { size = SpacerPropsSize.SMALL }
+          Typography {
+            variant = TypographyVariant.body1
+            +(props.room.question ?: "")
+          }
+        }
       }
-      Spacer { size = SpacerPropsSize.SMALL }
-      Typography {
-        variant = TypographyVariant.body1
-        +(props.room.question ?: "")
-      }
+      UsersRoomParticipationStatus.FINISHED -> {}
+      else -> {}
     }
+    // ToDo: remove not needed
     if (props.children != null) CardActions {
       +props.children
     }
