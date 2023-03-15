@@ -7,7 +7,6 @@ import com.fynnian.application.common.user.User
 import com.fynnian.application.config.DataSource
 import com.fynnian.application.jooq.tables.records.UsersRecord
 import com.fynnian.application.jooq.tables.references.USERS
-import java.time.OffsetDateTime
 
 
 class UserRepository(dataSource: DataSource) : Repository(dataSource) {
@@ -25,13 +24,20 @@ class UserRepository(dataSource: DataSource) : Repository(dataSource) {
   fun upsertUser(user: User): User {
     return jooq {
       insertInto(USERS)
-        .set(user.toRecord())
+        .set(
+          user.toRecord()
+            .also {
+              // simply way of setting the updatedAt without trigger
+              it.createdAt = nowAtCHOffsetDateTime()
+              it.updatedAt = nowAtCHOffsetDateTime()
+            }
+        )
         .onConflict(USERS.ID)
         .doUpdate()
         .set(
           user
             .toRecord()
-            .also { it.updatedAt = OffsetDateTime.now() } // simply way of setting the updatedAt without trigger
+            .also { it.updatedAt = nowAtCHOffsetDateTime() } // simply way of setting the updatedAt without trigger
         )
         .returning()
         .map { it.into(USERS).toDomain() }

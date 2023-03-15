@@ -4,6 +4,8 @@ import com.fynnian.application.config.DataSource
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
 import java.sql.DriverManager
+import java.time.OffsetDateTime
+import java.time.ZoneId
 
 open class Repository(private val dataSource: DataSource) {
 
@@ -12,5 +14,7 @@ open class Repository(private val dataSource: DataSource) {
       return DSL.using(it, dataSource.dialect).statement()
     }
   }
+
+  fun nowAtCHOffsetDateTime(): OffsetDateTime = OffsetDateTime.now(ZoneId.of("Europe/Zurich"))
 
 }

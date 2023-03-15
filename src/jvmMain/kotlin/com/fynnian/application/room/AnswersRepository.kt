@@ -8,7 +8,6 @@ import com.fynnian.application.common.room.Coordinates
 import com.fynnian.application.config.DataSource
 import com.fynnian.application.jooq.tables.records.AnswersRecord
 import com.fynnian.application.jooq.tables.references.ANSWERS
-import java.time.OffsetDateTime
 import java.util.*
 
 class AnswersRepository(dataSource: DataSource) : Repository(dataSource) {
@@ -55,7 +54,7 @@ class AnswersRepository(dataSource: DataSource) : Repository(dataSource) {
         .doUpdate()
         .set(answer
           .toRecord()
-          .also { it.updatedAt = OffsetDateTime.now() }
+          .also { it.updatedAt = nowAtCHOffsetDateTime() }
         )
         .returning()
         .map { it.into(ANSWERS).toDomain() }

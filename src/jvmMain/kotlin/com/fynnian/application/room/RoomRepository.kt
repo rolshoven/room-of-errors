@@ -12,7 +12,6 @@ import com.fynnian.application.jooq.tables.references.ANSWERS
 import com.fynnian.application.jooq.tables.references.ROOMS
 import com.fynnian.application.jooq.tables.references.ROOM_IMAGES
 import org.jooq.impl.DSL.*
-import java.time.OffsetDateTime
 import java.util.stream.Collectors.*
 import com.fynnian.application.common.room.RoomStatus as RoomStatusDomain
 import com.fynnian.application.jooq.enums.RoomStatus as RoomStatusJooq
@@ -98,9 +97,11 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         .set(ROOMS.CODE, roomCreation.code)
         .set(ROOMS.TITLE, roomCreation.title)
         .set(ROOMS.STATUS, RoomStatus.not_ready)
+        .set(ROOMS.CREATED_AT, nowAtCHOffsetDateTime())
+        .set(ROOMS.UPDATED_AT, nowAtCHOffsetDateTime())
         .returning()
         .fetchOne()
-        ?.toRoomManagementDetail(0,0)
+        ?.toRoomManagementDetail(0, 0)
         ?: throw APIException.ServerError("Could not create a new room")
     }
   }
@@ -113,6 +114,7 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         .set(ROOMS.DESCRIPTION, room.description)
         .set(ROOMS.QUESTION, room.question)
         .set(ROOMS.TIME_LIMIT_MINUTES, room.timeLimitMinutes)
+        .set(ROOMS.UPDATED_AT, nowAtCHOffsetDateTime())
         .where(ROOMS.CODE.eq(room.code))
         .returning()
         .fetchOne()
@@ -125,13 +127,20 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
   fun upsertRoomImage(image: RoomImage, roomCode: String): RoomImage {
     return jooq {
       insertInto(ROOM_IMAGES)
-        .set(image.toRecord(roomCode))
+        .set(image
+          .toRecord(roomCode)
+          .also {
+            // simply way of setting the updatedAt without trigger
+            it.createdAt = nowAtCHOffsetDateTime()
+            it.updatedAt = nowAtCHOffsetDateTime()
+          }
+        )
         .onConflict(ROOM_IMAGES.ID)
         .doUpdate()
         .set(
           image
             .toRecord(roomCode)
-            .also { it.updatedAt = OffsetDateTime.now() } // simply way of setting the updatedAt without trigger
+            .also { it.updatedAt = nowAtCHOffsetDateTime() } // simply way of setting the updatedAt without trigger
         )
         .returning()
         .map { it.into(ROOM_IMAGES).toDomain() }
@@ -153,6 +162,7 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
     jooq {
       update(ROOMS)
         .set(ROOMS.STATUS, status)
+        .set(ROOMS.UPDATED_AT, nowAtCHOffsetDateTime())
         .where(ROOMS.CODE.eq(code))
         .returning()
         .fetchOne()
@@ -189,11 +199,13 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
               it.set(ROOMS.INTRO_TEXT, interactionInfo.text)
                 .set(ROOMS.INTRO_VIDEO_TITLE, interactionInfo.videoTitle)
                 .set(ROOMS.INTRO_VIDEO_URL, interactionInfo.videoURl)
+                .set(ROOMS.UPDATED_AT, nowAtCHOffsetDateTime())
 
             RoomStatementVariant.OUTRO ->
               it.set(ROOMS.OUTRO_TEXT, interactionInfo.text)
                 .set(ROOMS.OUTRO_VIDEO_TITLE, interactionInfo.videoTitle)
                 .set(ROOMS.OUTRO_VIDEO_URL, interactionInfo.videoURl)
+                .set(ROOMS.UPDATED_AT, nowAtCHOffsetDateTime())
           }
         }
         .where(ROOMS.CODE.eq(code))

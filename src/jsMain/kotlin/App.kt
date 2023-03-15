@@ -55,3 +55,10 @@ private val Routing = FC<Props> {
     }
   }
 }
+
+// load and enable the additional time module
+@JsModule("@js-joda/timezone")
+@JsNonModule
+external object JsJodaTimeZoneModule
+
+private val jsJodaTz = JsJodaTimeZoneModule

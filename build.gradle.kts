@@ -20,6 +20,7 @@ object Versions {
   const val wrapperBom = "1.0.0-pre.485"
   const val serializationJson = "1.4.1"
   const val coroutines = "1.6.4"
+  const val kotlinDatetime = "0.4.0"
   const val ktor = "2.2.2"
   const val logback = "1.2.11"
   const val multiplatformUUID = "0.6.0"
@@ -71,6 +72,7 @@ kotlin {
         implementation("io.ktor:ktor-client-content-negotiation:${Versions.ktor}")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.serializationJson}")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
+        implementation("org.jetbrains.kotlinx:kotlinx-datetime:${Versions.kotlinDatetime}")
 
         // global uuid
         implementation("com.benasher44:uuid:${Versions.multiplatformUUID}")
@@ -132,6 +134,8 @@ kotlin {
         implementation(npm("qrcode.react", "3.1.0"))
         // https://github.com/bubkoo/html-to-image
         implementation(npm("html-to-image", "1.11.4"))
+        //https://js-joda.github.io/js-joda/
+        implementation(npm("@js-joda/timezone", "2.3.0"))
       }
     }
     val jsTest by getting {

@@ -52,6 +52,9 @@ object I18n {
       TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER to "Deine Antwort",
       TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER_DISABLED to "Bitte markiere einen Fehler",
 
+      TranslationKey.ROOM_TIME_LIMIT_REACHED_DIALOG_TITLE to "Die Zeit is abgelaufen!",
+      TranslationKey.ROOM_TIME_LIMIT_REACHED_DIALOG_TEXT to "Deine verfügbare Zeit für den Raum ist aufgebraucht.",
+
       TranslationKey.ROOM_QRCODE_IMAGE_LABEL to "ROOM CODE",
       TranslationKey.ROOM_QRCODE_BUTTON_DOWNLOAD to "Bild Speichern",
       TranslationKey.ROOM_QRCODE_ALERT_DOWNLOAD_SUCCESS to "Bild erfolgreich generiert und gespeichert.",
@@ -154,6 +157,9 @@ object I18n {
 
       TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER to "your answer",
       TranslationKey.ROOM_ANSWER_INPUT_PLACEHOLDER_DISABLED to "mark a spot with an error",
+
+      TranslationKey.ROOM_TIME_LIMIT_REACHED_DIALOG_TITLE to "Time's up!",
+      TranslationKey.ROOM_TIME_LIMIT_REACHED_DIALOG_TEXT to "Your available time for the room is used up.",
 
       TranslationKey.ROOM_QRCODE_IMAGE_LABEL to "ROOM CODE",
       TranslationKey.ROOM_QRCODE_BUTTON_DOWNLOAD to "Save Code",
@@ -267,6 +273,9 @@ object I18n {
 
     ROOM_ANSWER_INPUT_PLACEHOLDER,
     ROOM_ANSWER_INPUT_PLACEHOLDER_DISABLED,
+
+    ROOM_TIME_LIMIT_REACHED_DIALOG_TITLE,
+    ROOM_TIME_LIMIT_REACHED_DIALOG_TEXT,
 
     ROOM_QRCODE_IMAGE_LABEL,
     ROOM_QRCODE_BUTTON_DOWNLOAD,

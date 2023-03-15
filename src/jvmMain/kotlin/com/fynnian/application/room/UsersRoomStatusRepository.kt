@@ -9,7 +9,7 @@ import com.fynnian.application.jooq.tables.records.UsersRoomStatusRecord
 import com.fynnian.application.jooq.tables.references.ROOMS
 import com.fynnian.application.jooq.tables.references.USERS
 import com.fynnian.application.jooq.tables.references.USERS_ROOM_STATUS
-import java.time.OffsetDateTime
+import kotlinx.datetime.Instant
 import com.fynnian.application.common.room.UsersRoomParticipationStatus as UsersRoomParticipationStatusDomain
 import com.fynnian.application.jooq.enums.UsersRoomParticipationStatus as UsersRoomParticipationStatusJooq
 
@@ -52,7 +52,7 @@ class UsersRoomStatusRepository(dataSource: DataSource) : Repository(dataSource)
       val record = internalGetUsersRoomStatus(userId, roomCode)
         .apply {
           participationStatus = UsersRoomParticipationStatusJooq.started
-          startedAt = OffsetDateTime.now()
+          startedAt = nowAtCHOffsetDateTime()
         }
       update(record)
     }
@@ -63,8 +63,8 @@ class UsersRoomStatusRepository(dataSource: DataSource) : Repository(dataSource)
       val record = internalGetUsersRoomStatus(userId, roomCode)
         .apply {
           participationStatus = UsersRoomParticipationStatusJooq.finished
-          if (startedAt == null) startedAt = OffsetDateTime.now()
-          if (finishedAt == null) finishedAt = OffsetDateTime.now()
+          if (startedAt == null) startedAt = nowAtCHOffsetDateTime()
+          if (finishedAt == null) finishedAt = nowAtCHOffsetDateTime()
         }
       update(record)
     }
@@ -86,5 +86,6 @@ fun UsersRoomParticipationStatusJooq.toDomain() = UsersRoomParticipationStatusDo
 fun UsersRoomStatusRecord.toDomain() = UsersRoomStatus(
   userId = userId!!,
   roomCode = roomCode!!,
-  participationStatus = participationStatus!!.toDomain()
+  participationStatus = participationStatus!!.toDomain(),
+  startedAt = startedAt?.let { Instant.fromEpochSeconds(it.toEpochSecond()) }
 )

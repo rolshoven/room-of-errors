@@ -9,6 +9,7 @@ import csstype.rem
 import js.core.get
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
 import mui.icons.material.KeyboardArrowLeft
 import mui.icons.material.KeyboardArrowRight
 import mui.material.*
@@ -26,7 +27,7 @@ val RoomPage = FC<Props> {
 
   val api = RoomApi()
 
-  val (user, setUser) = useContext(UserContext)
+  val (user) = useContext(UserContext)
   val (language) = useContext(LanguageContext)
 
   val roomCodeParam = useParams()["id"] ?: ""
@@ -174,6 +175,15 @@ val RoomPage = FC<Props> {
 
             val selectedImage = room.images[currentImage]
             val answersForCurrentImage = answers.filter { it.imageId == selectedImage.id }
+
+            if(room.timeLimitMinutes != null) FloatingTimer {
+              timeLimitMinutes = room.timeLimitMinutes
+              // use unix epoch as fallback for the edge case when the date would not be set, is set in the app when calling the API
+              userStartTime = usersRoomStatus?.startedAt ?: Instant.parse("1970-01-01T00:00:00Z")
+              actonOnPastLimit = { finishRoom() }
+
+            }
+
             Spacer {
               size = SpacerPropsSize.SMALL
             }
