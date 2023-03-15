@@ -10,6 +10,9 @@ object I18n {
     Language.DE to mapOf(
       TranslationKey.LOADING_SPINNER to "Lade Daten",
 
+      TranslationKey.YES to "Ja",
+      TranslationKey.NO to "Nein",
+
       TranslationKey.CONFIRMATION_BUTTON_YES to "Ja",
       TranslationKey.CONFIRMATION_BUTTON_NO to "Nein",
 
@@ -80,6 +83,16 @@ object I18n {
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_HELP_TEXT to "Optional, Zeitlimit für das abschliessen des Raumes.",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_NOT_DEFINED to "Es wurde kein Zeitlimit definiert",
 
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_LABLE to
+          "Raum wird auf einem auf einem Gerät verwendet.",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_HELP_TEXT to
+          """
+          Lege fest, ob der Raum auf einem einzigen Gerät angezeigt werden soll, i.e. der Raum hat einen PC oder ein Tablet, auf dem die Benutzer die Antworten eingeben.
+          Wenn diese Option nicht aktiviert ist, sollen die Benutzer ihr eigenes Gerät für die Eingabe der Antworten verwenden.
+          Mit dieser dieser Option kannst du steuern ob ein Benutzer eine neue Sitzung beginnen kann wenn der Raum beendet ist.
+          Also macht den Raum für den nächsten Benutzer bereit.
+          """.trimIndent(),
+
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL to "Bild Titel",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL to "Lade ein PNG Bild des Raumes hoch",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE to "Keine Datei - Benötigt ein PNG Bild",
@@ -115,6 +128,9 @@ object I18n {
     ),
     Language.EN to mapOf(
       TranslationKey.LOADING_SPINNER to "Loading Data",
+
+      TranslationKey.YES to "Yes",
+      TranslationKey.NO to "No",
 
       TranslationKey.CONFIRMATION_BUTTON_YES to "Yes",
       TranslationKey.CONFIRMATION_BUTTON_NO to "No",
@@ -186,6 +202,16 @@ object I18n {
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_HELP_TEXT to "Optional, time limit to complete the room.",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_NOT_DEFINED to "There is no time limit defined",
 
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_LABLE to
+          "Room is used on a stationary device, on one device",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_HELP_TEXT to
+          """
+          Set if the room is meant to be displayed on a single device i.e. the room has a pc or tablet where the users enter the answers.
+          when not checked the users are meant to use their own device to enter the answers.
+          With this toggle you can control if an user can start a new session when the room is completed.
+          Also set it up for the next user.
+          """.trimIndent(),
+
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL to "Image Title",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL to "upload room png image",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE to "No file - require png image",
@@ -217,7 +243,7 @@ object I18n {
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_IMAGE_NO to "imageNo",
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_TOTAL_ANSWERS_PER_USER to "totalAnswersPerUser",
 
-    ),
+      ),
     Language.FR to mapOf(
 
     ),
@@ -231,6 +257,9 @@ object I18n {
 
   enum class TranslationKey {
     LOADING_SPINNER,
+
+    YES,
+    NO,
 
     CONFIRMATION_BUTTON_YES,
     CONFIRMATION_BUTTON_NO,
@@ -301,6 +330,8 @@ object I18n {
     ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_LABLE,
     ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_HELP_TEXT,
     ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_NOT_DEFINED,
+    ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_LABLE,
+    ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_HELP_TEXT,
 
     ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL,
     ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL,

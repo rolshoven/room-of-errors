@@ -118,6 +118,7 @@ class TestRepository(dataSource: DataSource) : Repository(dataSource) {
       "Room Description",
       "Room Question",
       0,
+      false,
       RoomInteractionInfo(
         "startingText",
         "startingVideoTitle",

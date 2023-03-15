@@ -5,12 +5,12 @@ import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.RoomManagementDetail
 import com.fynnian.application.common.room.RoomPatch
 import components.form.FromRoomTitle
+import csstype.Display
+import csstype.FlexDirection
 import csstype.FlexWrap
 import csstype.rem
 import js.core.jso
-import mui.icons.material.Close
-import mui.icons.material.Edit
-import mui.icons.material.Save
+import mui.icons.material.*
 import mui.material.*
 import mui.material.styles.TypographyVariant
 import mui.system.sx
@@ -35,6 +35,7 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
   val (question, setQuestion) = useState(props.room.question)
   val (withTimeLimit, setWithTimeLimit) = useState(props.room.timeLimitMinutes != null)
   val (timeLimitMinutes, setTimeLimitMinutes) = useState(props.room.timeLimitMinutes)
+  val (singleDeviceRoom, setSingleDeviceRoom) = useState(props.room.singleDeviceRoom)
 
 
   fun setEditState(state: Boolean) {
@@ -81,6 +82,7 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
       +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_INCOMPLETE_ROOM_ALERT)
     }
     if (!edit) CardContent {
+      // title
       Typography {
         variant = TypographyVariant.caption
         +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TITLE_LABEL)
@@ -89,6 +91,10 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
         variant = TypographyVariant.body1
         +props.room.title
       }
+
+      // description
+      //Divider { variant = DividerVariant.middle}
+      Spacer{ size = SpacerPropsSize.SMALL}
       Typography {
         variant = TypographyVariant.caption
         +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_DESCRIPTION_LABEL)
@@ -97,7 +103,13 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
         variant = TypographyVariant.body1
         +props.room.description!!
       }
-      else MissingContent { text = I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_DESCRIPTION_NOT_DEFINED) }
+      else MissingContent {
+        text = I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_DESCRIPTION_NOT_DEFINED)
+      }
+
+      // question
+      //Divider { variant = DividerVariant.middle}
+      Spacer{ size = SpacerPropsSize.SMALL}
       Typography {
         variant = TypographyVariant.caption
         +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_QUESTION_LABEL)
@@ -106,7 +118,13 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
         variant = TypographyVariant.body1
         +props.room.question!!
       }
-      else MissingContent { text = I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_QUESTION_NOT_DEFINED) }
+      else MissingContent {
+        text = I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_QUESTION_NOT_DEFINED)
+      }
+
+      // time limit
+      //Divider { variant = DividerVariant.middle}
+      Spacer{ size = SpacerPropsSize.SMALL}
       Typography {
         variant = TypographyVariant.caption
         +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_LABLE)
@@ -115,7 +133,36 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
         variant = TypographyVariant.body1
         +props.room.timeLimitMinutes.toString()
       }
-      else MissingContent { text = I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_NOT_DEFINED) }
+      else MissingContent {
+        text = I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_NOT_DEFINED)
+      }
+
+      // single device room
+      //Divider { variant = DividerVariant.middle}
+      Spacer{ size = SpacerPropsSize.SMALL}
+      Box {
+        sx {
+          display = Display.flex
+          flexDirection = FlexDirection.row
+          gap = 0.1.rem
+        }
+        Typography {
+          variant = TypographyVariant.caption
+          +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_LABLE)
+        }
+        Tooltip {
+          title = ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_HELP_TEXT))
+          placement = TooltipPlacement.bottom
+          HelpOutline {
+            fontSize = SvgIconSize.small
+          }
+        }
+      }
+      Typography {
+        variant = TypographyVariant.body1
+        +if (singleDeviceRoom) I18n.get(language, I18n.TranslationKey.YES)
+        else I18n.get(language, I18n.TranslationKey.NO)
+      }
     }
     else CardContent {
       FromRoomTitle {
@@ -123,7 +170,7 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
         this.title = roomTitle
         this.setTitle = setRoomTitle
       }
-      Spacer { size = SpacerPropsSize.VERY_SMALL }
+      Spacer { size = SpacerPropsSize.SMALL }
       FormGroup {
         TextField {
           id = "description"
@@ -139,7 +186,7 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
           }
         }
       }
-      Spacer { size = SpacerPropsSize.VERY_SMALL }
+      Spacer { size = SpacerPropsSize.SMALL }
       FormGroup {
         TextField {
           id = "question"
@@ -155,7 +202,7 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
           }
         }
       }
-      Spacer { size = SpacerPropsSize.VERY_SMALL}
+      Spacer { size = SpacerPropsSize.SMALL }
       FormGroup {
         FormControlLabel {
           label = ReactNode(
@@ -183,6 +230,25 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
         }
       }
       Spacer { size = SpacerPropsSize.SMALL }
+      FormGroup {
+        FormControlLabel {
+          label = ReactNode(
+            I18n.get(
+              language,
+              I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_LABLE
+            )
+          )
+          control = Switch.create {
+            name = "singleDeviceRoom"
+            checked = singleDeviceRoom
+            onChange = { _, value -> setSingleDeviceRoom(value) }
+          }
+        }
+        FormHelperText {
+          +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_HELP_TEXT)
+        }
+      }
+      Spacer { size = SpacerPropsSize.SMALL }
       IconButton {
         Save()
         disabled = roomTitle.isBlank()
@@ -194,7 +260,8 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
               roomTitle,
               description,
               question,
-              if (withTimeLimit) timeLimitMinutes else null
+              if (withTimeLimit) timeLimitMinutes else null,
+              singleDeviceRoom
             )
           )
         }

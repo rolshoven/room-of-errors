@@ -5,6 +5,7 @@ import com.benasher44.uuid.uuid4
 import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.*
 import components.*
+import csstype.pct
 import csstype.rem
 import js.core.get
 import kotlinx.coroutines.MainScope
@@ -127,8 +128,7 @@ val RoomPage = FC<Props> {
           )
           preNavigation = { setLoading(true) }
         }
-      }
-      else if (room.roomStatus == RoomStatus.NOT_READY || room.roomStatus == RoomStatus.CLOSED) {
+      } else if (room.roomStatus == RoomStatus.NOT_READY || room.roomStatus == RoomStatus.CLOSED) {
         Spacer {
           size = SpacerPropsSize.MEDIUM
         }
@@ -137,8 +137,7 @@ val RoomPage = FC<Props> {
           code = room.code
           status = room.roomStatus
         }
-      }
-      else {
+      } else {
         Spacer {
           size = SpacerPropsSize.SMALL
         }
@@ -155,6 +154,13 @@ val RoomPage = FC<Props> {
               type = RoomStatementVariant.INTRO
               cardAction = { startRoom() }
               interactionInfo = room.intro
+              Button {
+                sx {
+                  width = 100.pct
+                }
+                +I18n.get(language, I18n.TranslationKey.ROOM_INTRO_START_BUTTON)
+                onClick = { startRoom() }
+              }
             }
           }
 
@@ -166,6 +172,7 @@ val RoomPage = FC<Props> {
               type = RoomStatementVariant.OUTRO
               cardAction = {}
               interactionInfo = room.outro
+              if (room.singleDeviceRoom) NewUserSessionButton()
             }
           }
 
@@ -176,7 +183,7 @@ val RoomPage = FC<Props> {
             val selectedImage = room.images[currentImage]
             val answersForCurrentImage = answers.filter { it.imageId == selectedImage.id }
 
-            if(room.timeLimitMinutes != null) FloatingTimer {
+            if (room.timeLimitMinutes != null) FloatingTimer {
               timeLimitMinutes = room.timeLimitMinutes
               // use unix epoch as fallback for the edge case when the date would not be set, is set in the app when calling the API
               userStartTime = usersRoomStatus?.startedAt ?: Instant.parse("1970-01-01T00:00:00Z")

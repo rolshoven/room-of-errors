@@ -12,14 +12,11 @@ import mui.material.styles.TypographyVariant
 import mui.system.Breakpoint
 import mui.system.responsive
 import mui.system.sx
-import react.FC
-import react.Props
-import react.ReactNode
+import react.*
 import react.dom.html.ReactHTML
-import react.useContext
 import workarounds.controls
 
-external interface RoomInteractionInfoProps : Props {
+external interface RoomInteractionInfoProps : PropsWithChildren {
   var type: RoomStatementVariant
   var interactionInfo: RoomInteractionInfo
   var cardAction: () -> Unit
@@ -66,18 +63,11 @@ val RoomInteractionInfo = FC<RoomInteractionInfoProps> { props ->
         controls = true
       }
     }
-    Spacer { size = SpacerPropsSize.MEDIUM }
-    if (props.type == RoomStatementVariant.INTRO) {
+    if (props.children != null) {
+      Spacer { size = SpacerPropsSize.MEDIUM }
       CardActions {
-        Button {
-          sx {
-            width = 100.pct
-          }
-          +I18n.get(language, I18n.TranslationKey.ROOM_INTRO_START_BUTTON)
-          onClick = { props.cardAction() }
-        }
+        +props.children
       }
     }
-    if (props.type == RoomStatementVariant.OUTRO) NewUserSessionButton()
   }
 }
