@@ -55,6 +55,7 @@ val RoomManagementInteractionInfo = FC<RoomManagementInteractionInfoProps> { pro
       CreateRoomInteractionInfoDialog {
         code = props.code
         variant = props.variant
+        interactionInfo = props.interactionInfo
         setStatement = props.setStatement
       }
     }

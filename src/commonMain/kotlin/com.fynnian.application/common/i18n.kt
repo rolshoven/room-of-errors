@@ -97,6 +97,8 @@ object I18n {
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL to "Lade ein PNG Bild des Raumes hoch",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE to "Keine Datei - Benötigt ein PNG Bild",
 
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_INTERACTION_INFO_FORM_SWITCH to "Upload Video",
+
       TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_BUTTON to "Der Raum is bereit - Raum Öffnen",
       TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_BUTTON_DISABLED to "Der Raum is noch unvollständig.",
       TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_TEXT to "Ist alles bereit, jedes Bild und Text eingepflegt?",
@@ -215,6 +217,8 @@ object I18n {
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL to "Image Title",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL to "upload room png image",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE to "No file - require png image",
+
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_INTERACTION_INFO_FORM_SWITCH to "Upload Video",
 
       TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_BUTTON to "Room is Ready - Open Room",
       TranslationKey.ROOM_MANAGEMENT_OPEN_ROOM_BUTTON_DISABLED to "Room is not Ready can not open the room",
@@ -336,6 +340,8 @@ object I18n {
     ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL,
     ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL,
     ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE,
+
+    ROOM_MANAGEMENT_CREATE_ROOM_INTERACTION_INFO_FORM_SWITCH,
 
     ROOM_MANAGEMENT_OPEN_ROOM_BUTTON,
     ROOM_MANAGEMENT_OPEN_ROOM_BUTTON_DISABLED,

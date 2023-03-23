@@ -37,6 +37,7 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import js.typedarrays.Int8Array
 import kotlinx.coroutines.await
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import react.useContext
 import web.file.File
@@ -64,7 +65,13 @@ open class Api {
     val response = client.request().call.response
     return if (response.status == HttpStatusCode.OK) response.body<T>()
     else {
-      if (displayError) showError(response.body())
+      if (displayError) showError(response.bodyAsText().run {
+        try {
+          Json.decodeFromString(this)
+        } catch (e: Exception) {
+          APIErrorResponse(this, response.status.description, response.status.value)
+        }
+      })
       null
     }
   }
@@ -77,7 +84,13 @@ open class Api {
     val response = client.request()
     return if (response.status == HttpStatusCode.OK) null
     else {
-      if (displayError) showError(response.body())
+      if (displayError) showError(response.bodyAsText().run {
+        try {
+          Json.decodeFromString(this)
+        } catch (e: Exception) {
+          APIErrorResponse(this, response.status.description, response.status.value)
+        }
+      })
       response.body<APIErrorResponse>()
     }
   }
@@ -251,7 +264,30 @@ class RoomManagementApi : Api() {
     }
   }
 
-  suspend fun addRoomStatementWithUpload(
+  suspend fun upsertRoomInteractionInfo(
+    variant: RoomStatementVariant,
+    roomCode: String,
+    text: String?
+  ): RoomManagementDetail? {
+    return processSimpleCall {
+      val url = when (variant) {
+        RoomStatementVariant.INTRO -> API_ROOMS_MANAGEMENT_ROOM_INTRO
+        RoomStatementVariant.OUTRO -> API_ROOMS_MANAGEMENT_ROOM_OUTRO
+      }
+      post(url.replaceParam(ROOM_CODE_PARAM(roomCode))) {
+        contentType(ContentType.Application.Json)
+        setBody(
+          RoomInteractionInfo(
+            text = text,
+            videoTitle = null,
+            videoURl = null
+          )
+        )
+      }
+    }
+  }
+
+  suspend fun upsertRoomInteractionInfoWithUpload(
     variant: RoomStatementVariant,
     roomCode: String,
     text: String?,

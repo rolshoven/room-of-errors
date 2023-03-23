@@ -86,6 +86,10 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
     }
   }
 
+  fun getRoomForManagement(code: String): RoomManagementDetail {
+    return getRoomsForManagement(code).firstOrNull() ?: throw APIException.RoomNotFound(code)
+  }
+
   fun createRoom(roomCreation: RoomCreation): RoomManagementDetail {
     return jooq {
       selectFrom(ROOMS)
@@ -214,7 +218,7 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         .fetchOne()
         ?: throw APIException.ServerError("could not update data for $variant")
     }
-    return getRoomsForManagement(code).first()
+    return getRoomForManagement(code)
   }
 }
 

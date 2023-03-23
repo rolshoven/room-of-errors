@@ -174,6 +174,15 @@ fun Route.roomManagementApi(dependencies: DI) {
   }
 
   route(URLS.API_ROOMS_MANAGEMENT_ROOM_INTRO) {
+    contentType(ContentType.Application.Json) {
+      post {
+        val code = call.getRoomCodeParam()
+        val body = call.receive<RoomInteractionInfo>()
+        dependencies.roomManagementService
+          .updateRoomInteractionInfo(code, body, RoomStatementVariant.INTRO)
+          .also { call.respond(it) }
+      }
+    }
     contentType(ContentType.MultiPart.FormData) {
       post {
         val code = call.getRoomCodeParam()
@@ -185,6 +194,15 @@ fun Route.roomManagementApi(dependencies: DI) {
   }
 
   route(URLS.API_ROOMS_MANAGEMENT_ROOM_OUTRO) {
+    contentType(ContentType.Application.Json) {
+      post {
+        val code = call.getRoomCodeParam()
+        val body = call.receive<RoomInteractionInfo>()
+        dependencies.roomManagementService
+          .updateRoomInteractionInfo(code, body, RoomStatementVariant.OUTRO)
+          .also { call.respond(it) }
+      }
+    }
     contentType(ContentType.MultiPart.FormData) {
       post {
         val code = call.getRoomCodeParam()

@@ -56,6 +56,22 @@ class RoomManagementService(
   }
 
 
+  fun updateRoomInteractionInfo(
+    code: String,
+    newInfo: RoomInteractionInfo,
+    variant: RoomStatementVariant
+  ): RoomManagementDetail {
+
+    val room = roomRepository.getRoomForManagement(code)
+
+    val update = when (variant) {
+      RoomStatementVariant.INTRO -> room.intro.copy(text = newInfo.text)
+      RoomStatementVariant.OUTRO -> room.outro.copy(text = newInfo.text)
+    }
+
+    return roomRepository.upsertRoomInteractionInfo(code, update, variant)
+  }
+
   fun deleteRoom(code: String) {
     val room = roomRepository.getRoom(code)
 
