@@ -4,11 +4,9 @@ import com.benasher44.uuid.uuid4
 import com.fynnian.application.APIException
 import com.fynnian.application.common.*
 import com.fynnian.application.common.URLS.replaceParam
-import com.fynnian.application.common.getRoomCodeParam
 import com.fynnian.application.common.room.*
 import com.fynnian.application.config.DI
 import io.ktor.http.*
-import io.ktor.http.content.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -89,33 +87,25 @@ fun Route.roomManagementApi(dependencies: DI) {
     contentType(ContentType.MultiPart.FormData) {
       post {
         val code = call.getRoomCodeParam()
-        val fields = mutableMapOf<String, String>()
         val imageId = uuid4()
 
-        call.receiveMultipart().forEachPart { part ->
-          when (part) {
-            is PartData.FormItem -> {
-              fields[part.name ?: ""] = part.value
-            }
+        val fields = call.processMultipartForm(
+          setOf(ContentType.Image.PNG, ContentType.Image.JPEG)
+        ) { stream, type ->
 
-            is PartData.FileItem -> {
-              val fileType = part.contentType
-              if (fileType?.contentSubtype != "png") APIException.BadRequest("only PNG allowed")
+          val fileName = "$imageId.${type.contentSubtype}"
+          File("${dependencies.config.content.imageUploadDir}/$fileName")
+            .absoluteFile
+            .outputStream()
+            .use { output -> stream.transferTo(output) }
 
-              fields["imageFileName"] = imageId.toString() + "." + fileType!!.contentSubtype
-              File("${dependencies.config.content.imageUploadDir}/${fields["imageFileName"]}")
-                .absoluteFile.writeBytes(part.streamProvider().readBytes())
-            }
-
-            else -> {}
-          }
-          part.dispose()
+          return@processMultipartForm fileName
         }
 
         val newImage = RoomImage(
           id = imageId,
           title = fields[RoomImage.TITLE_FORM_PARAM] ?: throw APIException.BadRequest("title is required"),
-          url = fields["imageFileName"]
+          url = fields[RoomImage.FILE_FORM_PARAM]
             ?.let { URLS.STATIC_IMAGES_IMAGE.replaceParam(URLS.IMAGE_NAME_PARAM(it)) }
             ?: throw APIException.BadRequest("image file is required.")
         )

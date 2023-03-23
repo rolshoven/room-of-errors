@@ -37,7 +37,8 @@ class RoomManagementService(
 
       File("${contentConfig.videoUploadDir}/$fileName")
         .absoluteFile
-        .writeBytes(stream.readBytes())
+        .outputStream()
+        .use { output -> stream.transferTo(output) }
 
       return@processMultipartForm fileName
     }
