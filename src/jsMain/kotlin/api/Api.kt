@@ -29,6 +29,7 @@ import com.fynnian.application.common.user.User
 import components.APIResponseSnackbarContext
 import io.ktor.client.*
 import io.ktor.client.call.*
+import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
@@ -39,8 +40,10 @@ import js.typedarrays.Int8Array
 import kotlinx.coroutines.await
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import react.StateSetter
 import react.useContext
 import web.file.File
+import kotlin.math.floor
 
 open class Api {
   val client = HttpClient {
@@ -63,7 +66,10 @@ open class Api {
     request: HttpClient.() -> HttpResponse
   ): T? {
     val response = client.request().call.response
-    return if (response.status == HttpStatusCode.OK) response.body<T>()
+    return if (response.status == HttpStatusCode.OK) {
+      snackbarContext.apiErrorResponse(null)
+      response.body<T>()
+    }
     else {
       if (displayError) showError(response.bodyAsText().run {
         try {
@@ -82,7 +88,10 @@ open class Api {
     request: HttpClient.() -> HttpResponse
   ): APIErrorResponse? {
     val response = client.request()
-    return if (response.status == HttpStatusCode.OK) null
+    return if (response.status == HttpStatusCode.OK) {
+      snackbarContext.apiErrorResponse(null)
+      null
+    }
     else {
       if (displayError) showError(response.bodyAsText().run {
         try {
@@ -264,56 +273,50 @@ class RoomManagementApi : Api() {
     }
   }
 
-  suspend fun upsertRoomInteractionInfo(
-    variant: RoomStatementVariant,
-    roomCode: String,
-    text: String?
-  ): RoomManagementDetail? {
-    return processSimpleCall {
-      val url = when (variant) {
-        RoomStatementVariant.INTRO -> API_ROOMS_MANAGEMENT_ROOM_INTRO
-        RoomStatementVariant.OUTRO -> API_ROOMS_MANAGEMENT_ROOM_OUTRO
-      }
-      post(url.replaceParam(ROOM_CODE_PARAM(roomCode))) {
-        contentType(ContentType.Application.Json)
-        setBody(
-          RoomInteractionInfo(
-            text = text,
-            videoTitle = null,
-            videoURl = null
-          )
-        )
-      }
-    }
-  }
-
   suspend fun upsertRoomInteractionInfoWithUpload(
     variant: RoomStatementVariant,
     roomCode: String,
     text: String?,
-    videoTitle: String,
-    video: File
+    videoTitle: String?,
+    video: File?,
+    setProgress: StateSetter<Int>
   ): RoomManagementDetail? {
     return processSimpleCall {
       val url = when (variant) {
         RoomStatementVariant.INTRO -> API_ROOMS_MANAGEMENT_ROOM_INTRO
         RoomStatementVariant.OUTRO -> API_ROOMS_MANAGEMENT_ROOM_OUTRO
       }
-      val videoByteArray = video.arrayBuffer().await().let { Int8Array(it).unsafeCast<ByteArray>() }
       post(url.replaceParam(ROOM_CODE_PARAM(roomCode))) {
-        setBody(
-          MultiPartFormDataContent(
-            formData {
-              text?.let { append(RoomInteractionInfo.TEXT_FORM_PARAM, it) }
-              append(RoomInteractionInfo.VIDEO_TITLE_FORM_PARAM, videoTitle)
-              append(RoomInteractionInfo.VIDEO_FORM_PARAM, videoByteArray, Headers.build {
-                append(HttpHeaders.ContentType, video.type)
-                append(HttpHeaders.ContentDisposition, "filename=\"${videoTitle}.${video.type}\"")
-              })
-            },
-            boundary = "WebAppBoundary"
+        if (videoTitle == null || video == null) {
+          contentType(ContentType.Application.Json)
+          setBody(
+            RoomInteractionInfo(
+              text = text,
+              videoTitle = null,
+              videoURl = null
+            )
           )
-        )
+        } else {
+          val videoByteArray = video.arrayBuffer().await().let { Int8Array(it).unsafeCast<ByteArray>() }
+          setBody(
+            MultiPartFormDataContent(
+              formData {
+                text?.let { append(RoomInteractionInfo.TEXT_FORM_PARAM, it) }
+                append(RoomInteractionInfo.VIDEO_TITLE_FORM_PARAM, videoTitle)
+                append(RoomInteractionInfo.VIDEO_FORM_PARAM, videoByteArray, Headers.build {
+                  append(HttpHeaders.ContentType, video.type)
+                  append(HttpHeaders.ContentDisposition, "filename=\"${videoTitle}.${video.type}\"")
+                })
+              },
+              boundary = "WebAppBoundary"
+            )
+          )
+        }
+        onUpload { bytesSentTotal, contentLength ->
+          val pct = bytesSentTotal / (contentLength / 100.0)
+          val part = floor((pct + 5 - 1) / 5) * 5
+          setProgress(part.toInt())
+        }
       }
     }
   }

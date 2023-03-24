@@ -7,7 +7,8 @@ import react.*
 
 data class APIResponseSnackbarData(
   val showSnackbar: StateSetter<Boolean>,
-  var apiErrorResponse: StateSetter<APIErrorResponse?>
+  val apiErrorSate: StateInstance<APIErrorResponse?>,
+  val apiErrorResponse: StateSetter<APIErrorResponse?>
 )
 
 val APIResponseSnackbarContext = createContext<APIResponseSnackbarData>()
@@ -15,10 +16,12 @@ val APIResponseSnackbarContext = createContext<APIResponseSnackbarData>()
 val APIResponseSnackbar = FC<PropsWithChildren> { props ->
 
   val (showSnackbar, setShowSnackbar) = useState(false)
-  val (apiError, setApiError) = useState<APIErrorResponse?>(null)
+  val apiErrorState = useState<APIErrorResponse?>(null)
+  val (apiError, setApiError) = apiErrorState
 
   val contextData = APIResponseSnackbarData(
     setShowSnackbar,
+    apiErrorState,
     setApiError
   )
 

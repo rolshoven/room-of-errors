@@ -1,6 +1,9 @@
+@file:Suppress("CAST_NEVER_SUCCEEDS")
+
 package components
 
 import api.RoomManagementApi
+import com.fynnian.application.common.APIErrorResponse
 import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.RoomInteractionInfo
 import com.fynnian.application.common.room.RoomStatementVariant
@@ -40,36 +43,36 @@ val CreateRoomInteractionInfoDialog = FC<CreateRoomInteractionInfoProps> { props
   val api = RoomManagementApi()
 
   val language by useContext(LanguageContext)
+  val (apiError) = useContext(APIResponseSnackbarContext).apiErrorSate
 
   val (open, setOpen) = useState(false)
   val (changeVideo, setChangeVideo) = useState(false)
-  val (successful, setSuccessful) = useState<Boolean?>(null)
   val (text, setText) = useState(props.interactionInfo.text)
   val (title, setTitle) = useState<String?>(null)
   val (file, setFile) = useState<File?>(null)
+  val (submitting, setSubmitting) = useState(false)
+  val (progress, setProgress) = useState(0)
 
   fun close() {
     setFile(null)
     setTitle(null)
     setText(props.interactionInfo.text)
-    setSuccessful(null)
     setChangeVideo(false)
     setOpen(false)
+    setProgress(0)
+    setSubmitting(false)
   }
 
   fun addInteractionInfo() {
     scope.launch {
-      if (changeVideo) {
-        api.upsertRoomInteractionInfoWithUpload(
-          props.variant,
-          props.code,
-          text,
-          title!!,
-          file!!
-        )
-      } else {
-        api.upsertRoomInteractionInfo(props.variant, props.code, text)
-      }.let {
+      api.upsertRoomInteractionInfoWithUpload(
+        props.variant,
+        props.code,
+        text,
+        title,
+        file,
+        setProgress
+      ).let {
         if (it != null) {
           close()
           props.setStatement(
@@ -78,7 +81,7 @@ val CreateRoomInteractionInfoDialog = FC<CreateRoomInteractionInfoProps> { props
               RoomStatementVariant.OUTRO -> it.outro
             }
           )
-        } else setSuccessful(false)
+        }
       }
     }
   }
@@ -106,85 +109,98 @@ val CreateRoomInteractionInfoDialog = FC<CreateRoomInteractionInfoProps> { props
       }
       FormGroup {
         FormControlLabel {
-          label = ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_INTERACTION_INFO_FORM_SWITCH))
+          label =
+            ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_INTERACTION_INFO_FORM_SWITCH))
           control = Switch.create {
+            disabled = submitting
             onChange = { _, value -> setChangeVideo(value) }
           }
         }
       }
       Divider()
       Spacer { size = SpacerPropsSize.SMALL }
-      FormGroup {
-        TextField {
-          id = "description"
-          name = "description"
-          type = InputType.text
-          placeholder = "some description or other ${props.variant.toString().lowercase()} text"
-          helperText = ReactNode(
-            """
-            Optional text, additional ${props.variant.toString().lowercase()} text to guide the user. 
-            """.trimIndent()
-          )
-          multiline = true
-          minRows = 2
-          fullWidth = true
-          value = text ?: ""
-          onChange = {
-            val e = it.target as HTMLTextAreaElement
-            setText(e.value.ifEmpty { null })
-          }
+      if (submitting) {
+        LinearProgress {
+          variant = LinearProgressVariant.determinate
+          value = progress
         }
-      }
-      if (changeVideo) {
+        if (progress >= 100) Typography {
+          + "finishing upload..."
+        }
+        if (apiError != null) APIErrorAlert { error = apiError }
+      } else {
         FormGroup {
           TextField {
-            id = "videoTitle"
-            name = "videoTitle"
+            id = "description"
+            name = "description"
             type = InputType.text
-            required = true
-            label =
-              ReactNode("Video Title") // ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL))
-            placeholder = "intro"
-            value = title ?: ""
+            placeholder = "some description or other ${props.variant.toString().lowercase()} text"
+            helperText = ReactNode(
+              """
+            Optional text, additional ${props.variant.toString().lowercase()} text to guide the user. 
+            """.trimIndent()
+            )
+            multiline = true
+            minRows = 2
+            fullWidth = true
+            value = text ?: ""
             onChange = {
-              val e = it.target as HTMLInputElement
-              setTitle(e.value.ifEmpty { null })
+              val e = it.target as HTMLTextAreaElement
+              setText(e.value.ifEmpty { null })
             }
           }
         }
-        FormGroup {
-          Button {
-            variant = ButtonVariant.contained
-            component = label
-            +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL) // Todo
-            input {
-              hidden = true
-              accept = "video/mp4"
-              type = InputType.file
+        if (changeVideo) {
+          FormGroup {
+            TextField {
+              id = "videoTitle"
+              name = "videoTitle"
+              type = InputType.text
+              required = true
+              label =
+                ReactNode("Video Title") // ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL))
+              placeholder = "intro"
+              value = title ?: ""
               onChange = {
-                val newFile = it.target.files?.item(0)
-                setFile(newFile)
-                if (title == null) setTitle(newFile?.name)
+                val e = it.target as HTMLInputElement
+                setTitle(e.value.ifEmpty { null })
               }
             }
           }
-          Stack {
-            direction = responsive(StackDirection.row)
-            spacing = responsive(2)
-            sx {
-              alignItems = AlignItems.center
+          FormGroup {
+            Button {
+              variant = ButtonVariant.contained
+              component = label
+              +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL) // Todo
+              input {
+                hidden = true
+                accept = "video/mp4"
+                type = InputType.file
+                onChange = {
+                  val newFile = it.target.files?.item(0)
+                  setFile(newFile)
+                  if (title == null) setTitle(newFile?.name)
+                }
+              }
             }
-            Typography {
-              variant = TypographyVariant.subtitle1
-              +(file?.name ?: I18n.get(
-                language,
-                I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE // Todo
-              ))
-            }
-            IconButton {
-              color = IconButtonColor.primary
-              onClick = { setFile(null) }
-              Clear()
+            Stack {
+              direction = responsive(StackDirection.row)
+              spacing = responsive(2)
+              sx {
+                alignItems = AlignItems.center
+              }
+              Typography {
+                variant = TypographyVariant.subtitle1
+                +(file?.name ?: I18n.get(
+                  language,
+                  I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE // Todo
+                ))
+              }
+              IconButton {
+                color = IconButtonColor.primary
+                onClick = { setFile(null) }
+                Clear()
+              }
             }
           }
         }
@@ -197,11 +213,29 @@ val CreateRoomInteractionInfoDialog = FC<CreateRoomInteractionInfoProps> { props
         Clear()
       }
       IconButton {
-        disabled = if (changeVideo) file == null || title == null else false
+        disabled = when {
+          submitting -> true
+          changeVideo -> file == null || title == null
+          else -> false
+        }
         color = IconButtonColor.primary
-        onClick = { addInteractionInfo() }
+        onClick = {
+          setSubmitting(true)
+          addInteractionInfo()
+        }
         Save()
       }
     }
+  }
+}
+
+external interface APIErrorAlertProps : Props {
+  var error: APIErrorResponse
+}
+
+val APIErrorAlert = FC<APIErrorAlertProps> { props ->
+  Alert {
+    severity = AlertColor.error
+    +props.error.toString()
   }
 }
