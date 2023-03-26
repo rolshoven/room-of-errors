@@ -14,6 +14,7 @@ import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_INTRO
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_OPEN
 import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_OUTRO
 import com.fynnian.application.common.URLS.API_ROOMS_USER_ANSWERS
+import com.fynnian.application.common.URLS.API_ROOMS_USER_CLOSE
 import com.fynnian.application.common.URLS.API_ROOMS_USER_FINISH
 import com.fynnian.application.common.URLS.API_ROOMS_USER_START
 import com.fynnian.application.common.URLS.API_ROOMS_USER_STATUS
@@ -69,8 +70,7 @@ open class Api {
     return if (response.status == HttpStatusCode.OK) {
       snackbarContext.apiErrorResponse(null)
       response.body<T>()
-    }
-    else {
+    } else {
       if (displayError) showError(response.bodyAsText().run {
         try {
           Json.decodeFromString(this)
@@ -91,8 +91,7 @@ open class Api {
     return if (response.status == HttpStatusCode.OK) {
       snackbarContext.apiErrorResponse(null)
       null
-    }
-    else {
+    } else {
       if (displayError) showError(response.bodyAsText().run {
         try {
           Json.decodeFromString(this)
@@ -152,14 +151,25 @@ class RoomApi : Api() {
   }
 
   suspend fun finishRoom(code: String, user: User): UsersRoomStatus? {
-    val response = client.post(
-      API_ROOMS_USER_FINISH.replaceParam(
-        ROOM_CODE_PARAM(code),
-        USER_ID_PARAM(user.id)
+    return processSimpleCall {
+      post(
+        API_ROOMS_USER_FINISH.replaceParam(
+          ROOM_CODE_PARAM(code),
+          USER_ID_PARAM(user.id)
+        )
       )
-    )
-    return if (response.status == HttpStatusCode.OK) response.body()
-    else null
+    }
+  }
+
+  suspend fun closeRoom(code: String, user: User): UsersRoomStatus? {
+    return processSimpleCall {
+      post(
+        API_ROOMS_USER_CLOSE.replaceParam(
+          ROOM_CODE_PARAM(code),
+          USER_ID_PARAM(user.id)
+        )
+      )
+    }
   }
 
   suspend fun getAnswers(code: String, user: User): List<Answer> {

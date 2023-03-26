@@ -58,6 +58,9 @@ object I18n {
       TranslationKey.ROOM_TIME_LIMIT_REACHED_DIALOG_TITLE to "Die Zeit is abgelaufen!",
       TranslationKey.ROOM_TIME_LIMIT_REACHED_DIALOG_TEXT to "Deine verfügbare Zeit für den Raum ist aufgebraucht.",
 
+      TranslationKey.ROOM_RESTART_TIMER_COUNTING to "Raum wird in {time} zurückgesetzt.",
+      TranslationKey.ROOM_RESTART_TIMER_ROOM_RESETTING to "Raum wird zurückgeesetzt.",
+
       TranslationKey.ROOM_QRCODE_IMAGE_LABEL to "ROOM CODE",
       TranslationKey.ROOM_QRCODE_BUTTON_DOWNLOAD to "Bild Speichern",
       TranslationKey.ROOM_QRCODE_ALERT_DOWNLOAD_SUCCESS to "Bild erfolgreich generiert und gespeichert.",
@@ -178,6 +181,9 @@ object I18n {
 
       TranslationKey.ROOM_TIME_LIMIT_REACHED_DIALOG_TITLE to "Time's up!",
       TranslationKey.ROOM_TIME_LIMIT_REACHED_DIALOG_TEXT to "Your available time for the room is used up.",
+
+      TranslationKey.ROOM_RESTART_TIMER_COUNTING to "Room will be reset in {time}.",
+      TranslationKey.ROOM_RESTART_TIMER_ROOM_RESETTING to "Resetting Room.",
 
       TranslationKey.ROOM_QRCODE_IMAGE_LABEL to "ROOM CODE",
       TranslationKey.ROOM_QRCODE_BUTTON_DOWNLOAD to "Save Code",
@@ -310,6 +316,9 @@ object I18n {
     ROOM_TIME_LIMIT_REACHED_DIALOG_TITLE,
     ROOM_TIME_LIMIT_REACHED_DIALOG_TEXT,
 
+    ROOM_RESTART_TIMER_COUNTING,
+    ROOM_RESTART_TIMER_ROOM_RESETTING,
+
     ROOM_QRCODE_IMAGE_LABEL,
     ROOM_QRCODE_BUTTON_DOWNLOAD,
     ROOM_QRCODE_ALERT_DOWNLOAD_SUCCESS,
@@ -380,6 +389,7 @@ object I18n {
     data class Participants(val number: kotlin.Number) : TemplateProperty("participants", number.toString())
     data class Answers(val number: kotlin.Number) : TemplateProperty("answers", number.toString())
     data class Number(val number: kotlin.Number) : TemplateProperty("number", number.toString())
+    data class Time(override val value: String) : TemplateProperty("time", value)
   }
 
   fun get(language: Language, key: TranslationKey) = localization[language]!![key] ?: ""

@@ -1,9 +1,11 @@
 package pages
 
 import api.RoomApi
+import api.UserApi
 import com.benasher44.uuid.uuid4
 import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.*
+import com.fynnian.application.common.user.User
 import components.*
 import csstype.pct
 import csstype.rem
@@ -18,18 +20,22 @@ import mui.material.styles.TypographyVariant
 import mui.system.sx
 import react.*
 import react.dom.events.MouseEvent
+import react.router.useNavigate
 import react.router.useParams
 import web.html.HTMLDivElement
 import web.html.HTMLImageElement
+import web.html.HTMLVideoElement
 
 private val scope = MainScope()
 
 val RoomPage = FC<Props> {
 
-  val api = RoomApi()
+  val roomApi = RoomApi()
+  val userApi = UserApi()
 
-  val (user) = useContext(UserContext)
+  val (user, setUser) = useContext(UserContext)
   val (language) = useContext(LanguageContext)
+  val navigate = useNavigate()
 
   val roomCodeParam = useParams()["id"] ?: ""
   val (roomCode, setRoomCode) = useState("")
@@ -41,6 +47,7 @@ val RoomPage = FC<Props> {
   val (currentImage, setCurrentImage) = useState(0)
 
   val createAnswerRef = createRef<HTMLDivElement>()
+  val outroVideoRef = createRef<HTMLVideoElement>()
 
   // workaround for the missing router support in the wrapper
   // check the stored code against the param to trigger rerender
@@ -55,25 +62,35 @@ val RoomPage = FC<Props> {
   useEffect {
     scope.launch {
       if (loading && roomCode.isNotBlank() && user != null) {
-        api.getRoom(roomCode).let {
+        roomApi.getRoom(roomCode).let {
           setRoom(it)
           setLoading(false)
         }
-        usersRoomStatus = api.getUsersRoomStatus(roomCode, user)
-        answers = api.getAnswers(roomCode, user)
+        usersRoomStatus = roomApi.getUsersRoomStatus(roomCode, user)
+        answers = roomApi.getAnswers(roomCode, user)
       }
     }
   }
 
   val reloadAnswers: () -> Unit = {
     scope.launch {
-      answers = api.getAnswers(roomCode, user!!)
+      answers = roomApi.getAnswers(roomCode, user!!)
+    }
+  }
+
+  val (roomResetTimeLimit, setRoomResetTimeLimit) = useState(300L)
+  useEffect {
+    if (outroVideoRef.current != null) {
+      outroVideoRef.current!!.onloadeddata = { _ ->
+        // use video plus 5 min for the reset
+        setRoomResetTimeLimit(outroVideoRef.current!!.duration.toLong().plus(300L))
+      }
     }
   }
 
   fun addAnswer(answer: String) {
     scope.launch {
-      api.upsertAnswer(
+      roomApi.upsertAnswer(
         roomCode,
         Answer(
           id = uuid4(),
@@ -86,21 +103,13 @@ val RoomPage = FC<Props> {
         )
       )
       cord = null
-      answers = api.getAnswers(roomCode, user)
+      answers = roomApi.getAnswers(roomCode, user)
     }
   }
 
-  fun startRoom() {
-    scope.launch {
-      usersRoomStatus = api.startRoom(roomCode, user!!)
-    }
-  }
-
-  fun finishRoom() {
-    scope.launch {
-      usersRoomStatus = api.finishRoom(roomCode, user!!)
-    }
-  }
+  fun startRoom() { scope.launch { usersRoomStatus = roomApi.startRoom(roomCode, user!!) } }
+  fun finishRoom() { scope.launch { usersRoomStatus = roomApi.finishRoom(roomCode, user!!) } }
+  fun closeRoom() { scope.launch { usersRoomStatus = roomApi.closeRoom(roomCode, user!!) } }
 
   fun calculateCoordinates(event: MouseEvent<HTMLImageElement, *>): Coordinates {
     val image = event.target as HTMLImageElement
@@ -152,7 +161,6 @@ val RoomPage = FC<Props> {
             }
             RoomInteractionInfo {
               type = RoomStatementVariant.INTRO
-              cardAction = { startRoom() }
               interactionInfo = room.intro
               Button {
                 sx {
@@ -170,9 +178,22 @@ val RoomPage = FC<Props> {
             }
             RoomInteractionInfo {
               type = RoomStatementVariant.OUTRO
-              cardAction = {}
+              videoRef = outroVideoRef
               interactionInfo = room.outro
-              if (room.singleDeviceRoom) NewUserSessionButton()
+              if (room.singleDeviceRoom) {
+                RoomRestartTimer {
+                  timeLimitSeconds = roomResetTimeLimit
+                  userFinishTime = usersRoomStatus?.finishedAt ?: Instant.parse("1970-01-01T00:00:00Z")
+                  actonOnPastLimit = {
+                    scope.launch {
+                      userApi.upsertUser(User(setUserIdFromLocalStorage(uuid4()), null))?.let { setUser(it) }
+                    }
+                    navigate(0)
+                  }
+                }
+                Spacer { size = SpacerPropsSize.MEDIUM }
+                NewUserSessionButton()
+              }
             }
           }
 

@@ -1,10 +1,10 @@
 package components
 
 import com.fynnian.application.common.I18n
-import com.fynnian.application.common.room.RoomStatementVariant
 import com.fynnian.application.common.room.RoomInteractionInfo
+import com.fynnian.application.common.room.RoomStatementVariant
+import csstype.FlexWrap
 import csstype.TextAlign
-import csstype.pct
 import csstype.px
 import js.core.jso
 import mui.material.*
@@ -14,12 +14,14 @@ import mui.system.responsive
 import mui.system.sx
 import react.*
 import react.dom.html.ReactHTML
+import web.html.HTMLVideoElement
 import workarounds.controls
+import workarounds.ref
 
 external interface RoomInteractionInfoProps : PropsWithChildren {
   var type: RoomStatementVariant
   var interactionInfo: RoomInteractionInfo
-  var cardAction: () -> Unit
+  var videoRef: Ref<HTMLVideoElement>?
 }
 
 val RoomInteractionInfo = FC<RoomInteractionInfoProps> { props ->
@@ -52,6 +54,7 @@ val RoomInteractionInfo = FC<RoomInteractionInfoProps> { props ->
         size = SpacerPropsSize.SMALL
       }
       CardMedia {
+        ref = props.videoRef
         component = ReactHTML.video
         src = props.interactionInfo.videoURl
         sx {
@@ -66,6 +69,9 @@ val RoomInteractionInfo = FC<RoomInteractionInfoProps> { props ->
     if (props.children != null) {
       Spacer { size = SpacerPropsSize.MEDIUM }
       CardActions {
+        sx {
+          flexWrap = FlexWrap.wrap
+        }
         +props.children
       }
     }
