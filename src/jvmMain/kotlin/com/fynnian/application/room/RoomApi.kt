@@ -61,6 +61,17 @@ fun Route.roomApi(dependencies: DI) {
     }
   }
 
+  route(URLS.API_ROOMS_USER_CLOSE) {
+    post {
+      val code = call.getRoomCodeParam()
+      val userId = call.getUserIdParam()
+
+      dependencies.usersRoomStatusRepository
+        .closeRoom(userId, code)
+        .also { call.respond(it) }
+    }
+  }
+
   route(URLS.API_ROOMS_USER_ANSWERS) {
     // list answers
     get {

@@ -12,6 +12,7 @@ object URLS {
   const val API_ROOMS_USER_STATUS = "$API_ROOT/rooms/{code}/users/{id}/status"
   const val API_ROOMS_USER_START = "$API_ROOT/rooms/{code}/users/{id}/start-room"
   const val API_ROOMS_USER_FINISH = "$API_ROOT/rooms/{code}/users/{id}/finish-room"
+  const val API_ROOMS_USER_CLOSE = "$API_ROOT/rooms/{code}/users/{id}/close-room"
   const val API_ROOMS_USER_ANSWERS = "$API_ROOT/rooms/{code}/users/{id}/answers"
   const val API_ROOMS_ANSWER_BY_ID = "$API_ROOT/rooms/{code}/answers/{id}"
 

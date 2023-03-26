@@ -70,6 +70,18 @@ class UsersRoomStatusRepository(dataSource: DataSource) : Repository(dataSource)
     }
   }
 
+  fun closeRoom(userId: Uuid, roomCode: String): UsersRoomStatus {
+    return jooq {
+      val record = internalGetUsersRoomStatus(userId, roomCode)
+        .apply {
+          participationStatus = UsersRoomParticipationStatusJooq.finished
+          if (startedAt == null) startedAt = nowAtCHOffsetDateTime()
+          if (finishedAt == null) finishedAt = nowAtCHOffsetDateTime()
+          if (closedAt == null) closedAt = nowAtCHOffsetDateTime()
+        }
+      update(record)
+    }
+  }
   private fun update(record: UsersRoomStatusRecord) = jooq {
     update(USERS_ROOM_STATUS)
       .set(record)
@@ -87,5 +99,7 @@ fun UsersRoomStatusRecord.toDomain() = UsersRoomStatus(
   userId = userId!!,
   roomCode = roomCode!!,
   participationStatus = participationStatus!!.toDomain(),
-  startedAt = startedAt?.let { Instant.fromEpochSeconds(it.toEpochSecond()) }
+  startedAt = startedAt?.let { Instant.fromEpochSeconds(it.toEpochSecond()) },
+  finishedAt = finishedAt?.let { Instant.fromEpochSeconds(it.toEpochSecond()) },
+  closedAt = closedAt?.let { Instant.fromEpochSeconds(it.toEpochSecond()) }
 )

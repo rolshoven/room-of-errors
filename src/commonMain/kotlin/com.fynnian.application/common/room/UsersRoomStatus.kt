@@ -11,7 +11,9 @@ data class UsersRoomStatus(
   val userId: Uuid,
   val roomCode: String,
   val participationStatus: UsersRoomParticipationStatus,
-  val startedAt: Instant?
+  val startedAt: Instant?,
+  val finishedAt: Instant?,
+  val closedAt: Instant?
 )
 
 enum class UsersRoomParticipationStatus {
