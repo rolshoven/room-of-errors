@@ -40,13 +40,16 @@ val RoomInteractionInfo = FC<RoomInteractionInfoProps> { props ->
     Spacer {
       size = SpacerPropsSize.SMALL
     }
-    if (props.type == RoomStatementVariant.INTRO) CardContent {
+    CardContent {
       sx {
         textAlign = TextAlign.center
       }
       Typography {
         variant = TypographyVariant.body1
-        +(props.interactionInfo.text ?: I18n.get(language, I18n.TranslationKey.ROOM_INTRO_TEXT))
+        + when(props.type) {
+          RoomStatementVariant.INTRO -> props.interactionInfo.text ?: I18n.get(language, I18n.TranslationKey.ROOM_INTRO_TEXT)
+          RoomStatementVariant.OUTRO -> props.interactionInfo.text ?: ""
+        }
       }
     }
     if (props.interactionInfo.videoURl != null) {
