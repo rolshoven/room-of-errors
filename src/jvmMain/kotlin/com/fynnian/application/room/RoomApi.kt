@@ -3,6 +3,7 @@ package com.fynnian.application.room
 import com.fynnian.application.APIException
 import com.fynnian.application.common.*
 import com.fynnian.application.common.room.Answer
+import com.fynnian.application.common.room.RoomGroupInformation
 import com.fynnian.application.config.DI
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -116,5 +117,35 @@ fun Route.roomApi(dependencies: DI) {
         .deleteAnswer(id, code)
         .also { call.response.status(HttpStatusCode.OK) }
     }
+  }
+
+  route(URLS.API_ROOMS_USER_GROUP_INFO) {
+    get {
+      val id = call.getUserIdParam()
+      val code = call.getRoomCodeParam()
+
+      dependencies.groupRepository
+        .getGroupInformation(code, id)
+        .also { call.respond(it) }
+    }
+
+    put {
+      val id = call.getUserIdParam()
+      val code = call.getRoomCodeParam()
+      val info = call.receive<RoomGroupInformation>()
+
+      call.checkRequestIds(id, info.userId)
+      call.checkRequestIds(code, info.roomCode)
+
+      when {
+        info.groupSize < 0 -> throw APIException.BadRequest("Group size must be 1 or greater.")
+        info.groupName.isBlank() -> throw APIException.BadRequest("Group name must be provided and not be an empty string.")
+      }
+
+      dependencies.groupRepository
+        .createGroupInformation(info)
+        .also { call.respond(it) }
+    }
+
   }
 }

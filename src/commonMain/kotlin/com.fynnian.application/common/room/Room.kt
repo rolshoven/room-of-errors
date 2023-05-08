@@ -18,7 +18,9 @@ data class RoomPatch(
   val description: String?,
   val question: String?,
   val timeLimitMinutes: Int?,
-  val singleDeviceRoom: Boolean?
+  val singleDeviceRoom: Boolean?,
+  val withGroupInformation: Boolean?,
+  val withGroupInformationText: String?
 )
 
 @Serializable
@@ -30,6 +32,8 @@ data class Room(
   val question: String?,
   val timeLimitMinutes: Int?,
   val singleDeviceRoom: Boolean,
+  val withGroupInformation: Boolean,
+  val withGroupInformationText: String?,
   val intro: RoomInteractionInfo,
   val outro: RoomInteractionInfo,
   val images: List<RoomImage>
@@ -73,6 +77,8 @@ data class RoomManagementDetail(
   val question: String?,
   val timeLimitMinutes: Int?,
   val singleDeviceRoom: Boolean,
+  val withGroupInformation: Boolean,
+  val withGroupInformationText: String?,
   val intro: RoomInteractionInfo,
   val outro: RoomInteractionInfo,
   val images: List<RoomImage>,

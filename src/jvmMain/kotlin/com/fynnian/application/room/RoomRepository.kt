@@ -119,6 +119,8 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         .set(ROOMS.QUESTION, room.question)
         .set(ROOMS.TIME_LIMIT_MINUTES, room.timeLimitMinutes)
         .set(ROOMS.SINGLE_DEVICE_ROOM, nvl(room.singleDeviceRoom, ROOMS.SINGLE_DEVICE_ROOM))
+        .set(ROOMS.WITH_GROUP_INFO, nvl(room.withGroupInformation, ROOMS.WITH_GROUP_INFO))
+        .set(ROOMS.WITH_GROUP_INFO_TEXT, room.withGroupInformationText)
         .set(ROOMS.UPDATED_AT, nowAtCHOffsetDateTime())
         .where(ROOMS.CODE.eq(room.code))
         .returning()
@@ -230,6 +232,8 @@ fun RoomsRecord.toDomain() = Room(
   question = question,
   timeLimitMinutes = timeLimitMinutes,
   singleDeviceRoom = singleDeviceRoom!!,
+  withGroupInformation = withGroupInfo!!,
+  withGroupInformationText = withGroupInfoText,
   intro = RoomInteractionInfo(introText, introVideoTitle, introVideoUrl),
   outro = RoomInteractionInfo(outroText, outroVideoTitle, outroVideoUrl),
   images = listOf()
@@ -246,6 +250,8 @@ fun RoomsRecord.toRoomManagementDetail(
   question = question,
   timeLimitMinutes = timeLimitMinutes,
   singleDeviceRoom = singleDeviceRoom!!,
+  withGroupInformation = withGroupInfo!!,
+  withGroupInformationText = withGroupInfoText,
   intro = RoomInteractionInfo(introText, introVideoTitle, introVideoUrl),
   outro = RoomInteractionInfo(outroText, outroVideoTitle, outroVideoUrl),
   images = listOf(),
