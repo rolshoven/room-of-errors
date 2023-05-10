@@ -24,10 +24,13 @@ class GroupRepository(dataSource: DataSource) : Repository(dataSource) {
   fun createGroupInformation(data: RoomGroupInformation): RoomGroupInformation {
     return jooq {
       insertInto(ROOM_GROUP_INFORMATION)
-        .set(ROOM_GROUP_INFORMATION.USER_ID, data.userId)
-        .set(ROOM_GROUP_INFORMATION.ROOM_CODE, data.roomCode)
-        .set(ROOM_GROUP_INFORMATION.GROUP_NAME, data.groupName)
-        .set(ROOM_GROUP_INFORMATION.GROUP_SIZE, data.groupSize)
+        .set(data.toRecord())
+        .onConflict(ROOM_GROUP_INFORMATION.USER_ID, ROOM_GROUP_INFORMATION.ROOM_CODE)
+        .doUpdate()
+        .set(data
+          .toRecord()
+          .also { it.updatedAt = nowAtCHOffsetDateTime() }
+        )
         .returning()
         .fetchOne { it.toDomain() }
         ?: throw APIException.ServerError("Could not create group information entry")
@@ -43,9 +46,9 @@ fun RoomGroupInformationRecord.toDomain() = RoomGroupInformation(
   groupSize = groupSize!!
 )
 
-fun RoomGroupInformation.toRecord() = RoomGroupInformationRecord().apply {
-  userId = this.userId
-  roomCode = this.roomCode
-  groupName = this.groupName
-  groupSize = this.groupSize
+fun RoomGroupInformation.toRecord() = RoomGroupInformationRecord().also {
+  it.userId = userId
+  it.roomCode = roomCode
+  it.groupName = groupName
+  it.groupSize = groupSize
 }
