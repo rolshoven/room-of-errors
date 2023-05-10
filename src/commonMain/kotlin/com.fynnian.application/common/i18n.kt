@@ -96,6 +96,12 @@ object I18n {
           Also macht den Raum für den nächsten Benutzer bereit.
           """.trimIndent(),
 
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_LABEL to "Wird Gruppen Information verlangt.",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_HELP_TEXT to
+              "Wenn aktiviert, muss der Benutzer einen Gruppennamen und die Gruppengrösse angeben bevor gestartet werden kann.",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_TEXT_LABEL to "Hilfe Text für die Gruppen Information Card",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_TEXT_NOT_DEFINED to "Es ist kein Text für die Gruppen Information Card definiert.",
+
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL to "Bild Titel",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL to "Lade ein PNG Bild des Raumes hoch",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_MISSING_FILE to "Keine Datei - Benötigt ein PNG Bild",
@@ -219,6 +225,12 @@ object I18n {
           With this toggle you can control if an user can start a new session when the room is completed.
           Also set it up for the next user.
           """.trimIndent(),
+
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_LABEL to "Require Group Information",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_HELP_TEXT to
+              "If active the user must enter a group name and the group size before they can continue.",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_TEXT_LABEL to "Help Text for the group information card",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_TEXT_NOT_DEFINED to "There is no text for the group info card defined",
 
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL to "Image Title",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL to "upload room png image",
@@ -345,6 +357,11 @@ object I18n {
     ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_NOT_DEFINED,
     ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_LABLE,
     ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_HELP_TEXT,
+
+    ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_LABEL,
+    ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_HELP_TEXT,
+    ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_TEXT_LABEL,
+    ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_TEXT_NOT_DEFINED,
 
     ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL,
     ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL,

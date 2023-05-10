@@ -36,7 +36,8 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
   val (withTimeLimit, setWithTimeLimit) = useState(props.room.timeLimitMinutes != null)
   val (timeLimitMinutes, setTimeLimitMinutes) = useState(props.room.timeLimitMinutes)
   val (singleDeviceRoom, setSingleDeviceRoom) = useState(props.room.singleDeviceRoom)
-
+  val (withGroupInfo, setWithGroupInfo) = useState(props.room.withGroupInformation)
+  val (withGroupInfoText, setWithGroupInfoText) = useState(props.room.withGroupInformationText)
 
   fun setEditState(state: Boolean) {
     if (!state) {
@@ -163,6 +164,31 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
         +if (singleDeviceRoom) I18n.get(language, I18n.TranslationKey.YES)
         else I18n.get(language, I18n.TranslationKey.NO)
       }
+      // Group configuration
+      Spacer { size = SpacerPropsSize.SMALL }
+      Typography {
+        variant = TypographyVariant.caption
+        +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_LABEL)
+      }
+      Typography {
+        variant = TypographyVariant.body1
+        +if (withGroupInfo) I18n.get(language, I18n.TranslationKey.YES)
+        else I18n.get(language, I18n.TranslationKey.NO)
+      }
+      // only show the withGroupInfoText if the option is enabled
+      if (withGroupInfo) {
+        Typography {
+          variant = TypographyVariant.caption
+          +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_TEXT_LABEL)
+        }
+        if (withGroupInfoText != null) Typography {
+          variant = TypographyVariant.body1
+          +withGroupInfoText.toString()
+        }
+        else MissingContent {
+          text = I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_TEXT_NOT_DEFINED)
+        }
+      }
     }
     else CardContent {
       FromRoomTitle {
@@ -249,6 +275,33 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
         }
       }
       Spacer { size = SpacerPropsSize.SMALL }
+      FormGroup {
+        FormControlLabel {
+          label = ReactNode(
+            I18n.get(
+              language,
+              I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_LABEL
+            )
+          )
+          control = Switch.create {
+            name = "withGroupInfo"
+            checked = withGroupInfo
+            onChange = { _, value -> setWithGroupInfo(value) }
+          }
+        }
+        TextField {
+          id = "withGroupInfoText"
+          name = "withGroupInfoText"
+          disabled = withGroupInfo.not()
+          type = InputType.text
+          label = ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_TEXT_LABEL))
+          value = withGroupInfoText ?: ""
+          onChange = {
+            setWithGroupInfoText(it.target.unsafeCast<HTMLTextAreaElement>().value.ifBlank { null })
+          }
+        }
+      }
+      Spacer { size = SpacerPropsSize.SMALL }
       IconButton {
         Save()
         disabled = roomTitle.isBlank()
@@ -261,7 +314,9 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
               description,
               question,
               if (withTimeLimit) timeLimitMinutes else null,
-              singleDeviceRoom
+              singleDeviceRoom,
+              withGroupInfo,
+              withGroupInfoText
             )
           )
         }
