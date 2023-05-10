@@ -44,6 +44,7 @@ val RoomPage = FC<Props> {
   var cord by useState<Coordinates>()
   var answers by useState<List<Answer>>(mutableListOf())
   var usersRoomStatus by useState<UsersRoomStatus>()
+  val (groupInfo, setGroupInfo) = useState<RoomGroupInformation>()
   val (currentImage, setCurrentImage) = useState(0)
 
   val createAnswerRef = createRef<HTMLDivElement>()
@@ -110,6 +111,11 @@ val RoomPage = FC<Props> {
   fun startRoom() { scope.launch { usersRoomStatus = roomApi.startRoom(roomCode, user!!) } }
   fun finishRoom() { scope.launch { usersRoomStatus = roomApi.finishRoom(roomCode, user!!) } }
   fun closeRoom() { scope.launch { usersRoomStatus = roomApi.closeRoom(roomCode, user!!) } }
+  fun saveGroupInfo(name: String, size: Int) {
+    scope.launch {
+      setGroupInfo(roomApi.saveRoomGroupInformation(RoomGroupInformation(user!!.id, roomCode, size, name)))
+    }
+  }
 
   fun calculateCoordinates(event: MouseEvent<HTMLImageElement, *>): Coordinates {
     val image = event.target as HTMLImageElement
@@ -159,7 +165,10 @@ val RoomPage = FC<Props> {
             Spacer {
               size = SpacerPropsSize.SMALL
             }
-            RoomInteractionInfo {
+            if (room.withGroupInformation && groupInfo == null) RoomGroupInfo {
+              text = room.withGroupInformationText
+              onGroupInfoSubmit = ::saveGroupInfo
+            } else RoomInteractionInfo {
               type = RoomStatementVariant.INTRO
               interactionInfo = room.intro
               Button {

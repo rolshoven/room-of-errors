@@ -16,6 +16,7 @@ import com.fynnian.application.common.URLS.API_ROOMS_MANAGEMENT_ROOM_OUTRO
 import com.fynnian.application.common.URLS.API_ROOMS_USER_ANSWERS
 import com.fynnian.application.common.URLS.API_ROOMS_USER_CLOSE
 import com.fynnian.application.common.URLS.API_ROOMS_USER_FINISH
+import com.fynnian.application.common.URLS.API_ROOMS_USER_GROUP_INFO
 import com.fynnian.application.common.URLS.API_ROOMS_USER_START
 import com.fynnian.application.common.URLS.API_ROOMS_USER_STATUS
 import com.fynnian.application.common.URLS.API_USERS_BY_ID
@@ -137,6 +138,20 @@ class RoomApi : Api() {
     )
     return if (response.status == HttpStatusCode.OK) response.body()
     else null
+  }
+
+  suspend fun saveRoomGroupInformation(data: RoomGroupInformation): RoomGroupInformation? {
+    return processSimpleCall {
+      put(
+        API_ROOMS_USER_GROUP_INFO.replaceParam(
+          ROOM_CODE_PARAM(data.roomCode),
+          USER_ID_PARAM(data.userId)
+        )
+      ) {
+        contentType(ContentType.Application.Json)
+        setBody(data)
+      }
+    }
   }
 
   suspend fun startRoom(code: String, user: User): UsersRoomStatus? {

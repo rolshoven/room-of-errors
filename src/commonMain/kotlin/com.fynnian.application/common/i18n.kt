@@ -31,6 +31,11 @@ object I18n {
       TranslationKey.ROOM_STATUS_CLOSED to "Abgeschlossen",
       TranslationKey.ROOM_STATUS_ALL to "Alle",
 
+      TranslationKey.ROOM_GROUP_INFO_TITLE to "Gruppen Information",
+      TranslationKey.ROOM_GROUP_INFO_GROUP_NAME_LABEL to "Gruppenname",
+      TranslationKey.ROOM_GROUP_INFO_GROUP_SIZE_LABEL to "Gruppengrösse",
+      TranslationKey.ROOM_GROUP_INFO_GROUP_BUTTON to "Weiter",
+
       TranslationKey.ROOM_INTRO_TEXT to "Wenn du bereit bist um mit dem Raum zu starten klicke auf 'beginnen'.",
       TranslationKey.ROOM_INTRO_START_BUTTON to "Mit dem Raum starten",
 
@@ -160,6 +165,11 @@ object I18n {
       TranslationKey.ROOM_STATUS_OPEN to "Open",
       TranslationKey.ROOM_STATUS_CLOSED to "Closed",
       TranslationKey.ROOM_STATUS_ALL to "All",
+
+      TranslationKey.ROOM_GROUP_INFO_TITLE to "Group Information",
+      TranslationKey.ROOM_GROUP_INFO_GROUP_NAME_LABEL to "Groupname",
+      TranslationKey.ROOM_GROUP_INFO_GROUP_SIZE_LABEL to "Group Size",
+      TranslationKey.ROOM_GROUP_INFO_GROUP_BUTTON to "Continue",
 
       TranslationKey.ROOM_INTRO_TEXT to "When you are ready to begin with the room click on the start button.",
       TranslationKey.ROOM_INTRO_START_BUTTON to "Start with the room",
@@ -300,6 +310,11 @@ object I18n {
     ROOM_STATUS_OPEN,
     ROOM_STATUS_CLOSED,
     ROOM_STATUS_ALL,
+
+    ROOM_GROUP_INFO_TITLE,
+    ROOM_GROUP_INFO_GROUP_NAME_LABEL,
+    ROOM_GROUP_INFO_GROUP_SIZE_LABEL,
+    ROOM_GROUP_INFO_GROUP_BUTTON,
 
     ROOM_INTRO_TEXT,
     ROOM_INTRO_START_BUTTON,
