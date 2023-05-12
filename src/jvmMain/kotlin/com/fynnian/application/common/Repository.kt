@@ -15,6 +15,9 @@ open class Repository(private val dataSource: DataSource) {
     }
   }
 
-  fun nowAtCHOffsetDateTime(): OffsetDateTime = OffsetDateTime.now(ZoneId.of("Europe/Zurich"))
+  fun nowAtCHOffsetDateTime(): OffsetDateTime = OffsetDateTime.now(CH_TZ)
 
+  companion object {
+    val CH_TZ: ZoneId = ZoneId.of("Europe/Zurich")
+  }
 }

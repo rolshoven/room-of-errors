@@ -92,6 +92,15 @@ class UsersRoomStatusRepository(dataSource: DataSource) : Repository(dataSource)
       ?: throw APIException.ServerError("Can't change status of room ${record.roomCode} for user ${record.userId}")
   }
 
+  fun getUserStatesOfRoom(code: String): Map<Uuid, UsersRoomStatus> {
+    return jooq {
+      selectFrom(USERS_ROOM_STATUS)
+        .where(USERS_ROOM_STATUS.ROOM_CODE.eq(code))
+        .fetch { it.userId!! to it.toDomain() }
+        .toMap()
+    }
+  }
+
 }
 
 fun UsersRoomParticipationStatusJooq.toDomain() = UsersRoomParticipationStatusDomain.valueOf(literal.uppercase())

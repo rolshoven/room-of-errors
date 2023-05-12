@@ -10,6 +10,15 @@ import com.fynnian.application.jooq.tables.references.ROOM_GROUP_INFORMATION
 
 class GroupRepository(dataSource: DataSource) : Repository(dataSource) {
 
+  fun getGroupsOfRoom(code: String): Map<Uuid, RoomGroupInformation> {
+    return jooq {
+      selectFrom(ROOM_GROUP_INFORMATION)
+        .where(ROOM_GROUP_INFORMATION.ROOM_CODE.eq(code))
+        .fetch { it.userId!! to it.toDomain() }
+        .toMap()
+    }
+  }
+
   fun getGroupInformation(code: String, userId: Uuid): RoomGroupInformation {
     return jooq {
       selectFrom(ROOM_GROUP_INFORMATION)

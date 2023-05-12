@@ -134,12 +134,19 @@ object I18n {
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_IMAGES to "Anzahl an Bildern",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_PARTICIPANTS to "Teilnehmer",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_TOTAL_ANSWERS to "Total Aller Antworten",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_COLLECT_GROUP_INFO to "Sammle Gruppen Information",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_GROUPS to "Anzahl Gruppen",
 
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_USER_NO to "userNr",
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_ANSWER_NO to "antwortNr",
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_ANSWER to "antwort",
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_IMAGE_NO to "bildNr",
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_TOTAL_ANSWERS_PER_USER to "totalAntwortenProUser",
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_GROUP_NAME to "gruppenName",
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_GROUP_SIZE to "gruppenGroesse",
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_STARTED to "gestartet",
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_FINISHED to "beendet",
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_TIME to "zeit",
 
     ),
     Language.EN to mapOf(
@@ -268,12 +275,19 @@ object I18n {
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_IMAGES to "Number of images",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_PARTICIPANTS to "Participants",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_TOTAL_ANSWERS to "Total answers",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_COLLECT_GROUP_INFO to "Collect Group Information",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_GROUPS to "Group Count",
 
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_USER_NO to "userNo",
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_ANSWER_NO to "answerNo",
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_ANSWER to "answer",
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_IMAGE_NO to "imageNo",
       TranslationKey.ROOM_EXCEL_EXPORT_HEADER_TOTAL_ANSWERS_PER_USER to "totalAnswersPerUser",
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_GROUP_NAME to "groupName",
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_GROUP_SIZE to "groupSize",
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_STARTED to "startedAt",
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_FINISHED to "finishedAt",
+      TranslationKey.ROOM_EXCEL_EXPORT_HEADER_TIME to "time",
 
       ),
     Language.FR to mapOf(
@@ -404,12 +418,19 @@ object I18n {
     ROOM_EXCEL_EXPORT_INFO_CARD_IMAGES,
     ROOM_EXCEL_EXPORT_INFO_CARD_PARTICIPANTS,
     ROOM_EXCEL_EXPORT_INFO_CARD_TOTAL_ANSWERS,
+    ROOM_EXCEL_EXPORT_INFO_CARD_COLLECT_GROUP_INFO,
+    ROOM_EXCEL_EXPORT_INFO_CARD_GROUPS,
 
     ROOM_EXCEL_EXPORT_HEADER_USER_NO,
     ROOM_EXCEL_EXPORT_HEADER_ANSWER_NO,
     ROOM_EXCEL_EXPORT_HEADER_ANSWER,
     ROOM_EXCEL_EXPORT_HEADER_IMAGE_NO,
-    ROOM_EXCEL_EXPORT_HEADER_TOTAL_ANSWERS_PER_USER
+    ROOM_EXCEL_EXPORT_HEADER_TOTAL_ANSWERS_PER_USER,
+    ROOM_EXCEL_EXPORT_HEADER_GROUP_NAME,
+    ROOM_EXCEL_EXPORT_HEADER_GROUP_SIZE,
+    ROOM_EXCEL_EXPORT_HEADER_STARTED,
+    ROOM_EXCEL_EXPORT_HEADER_FINISHED,
+    ROOM_EXCEL_EXPORT_HEADER_TIME,
 
   }
 

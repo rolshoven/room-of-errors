@@ -8,10 +8,9 @@ import com.fynnian.application.config.DataSource
 import com.fynnian.application.jooq.enums.RoomStatus
 import com.fynnian.application.jooq.tables.records.RoomImagesRecord
 import com.fynnian.application.jooq.tables.records.RoomsRecord
-import com.fynnian.application.jooq.tables.references.ANSWERS
-import com.fynnian.application.jooq.tables.references.ROOMS
-import com.fynnian.application.jooq.tables.references.ROOM_IMAGES
+import com.fynnian.application.jooq.tables.references.*
 import org.jooq.impl.DSL.*
+import java.math.BigDecimal
 import java.util.stream.Collectors.*
 import com.fynnian.application.common.room.RoomStatus as RoomStatusDomain
 import com.fynnian.application.jooq.enums.RoomStatus as RoomStatusJooq
@@ -52,17 +51,32 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
   ): List<RoomManagementDetail> {
     return jooq {
 
-      val participants = countDistinct(ANSWERS.USER_ID).`as`("participants")
-      val answers = count(ANSWERS.ID).`as`("answers")
+      val participants = `when`(ROOMS.WITH_GROUP_INFO.isTrue,
+        select(sum(ROOM_GROUP_INFORMATION.GROUP_SIZE))
+          .from(ROOM_GROUP_INFORMATION)
+          .where(ROOM_GROUP_INFORMATION.ROOM_CODE.eq(ROOMS.CODE))
+          .asField<BigDecimal>())
+        .otherwise(
+          select(count(USERS_ROOM_STATUS.USER_ID))
+            .from(USERS_ROOM_STATUS)
+            .where(USERS_ROOM_STATUS.ROOM_CODE.eq(ROOMS.CODE))
+            .asField()
+          )
+        .`as`("participants")
+      val groupCount = countDistinct(ROOM_GROUP_INFORMATION.USER_ID).`as`("group_count")
+      val answers = countDistinct(ANSWERS.ID).`as`("answers")
 
       select(
         ROOMS.asterisk(),
         ROOM_IMAGES.asterisk(),
         participants,
+        groupCount,
         answers
       )
         .from(ROOMS)
         .leftJoin(ROOM_IMAGES).on(ROOM_IMAGES.ROOM_CODE.eq(ROOMS.CODE))
+        .leftJoin(ROOM_GROUP_INFORMATION).on(ROOM_GROUP_INFORMATION.ROOM_CODE.eq(ROOMS.CODE))
+        .leftJoin(USERS_ROOM_STATUS).on(USERS_ROOM_STATUS.ROOM_CODE.eq(ROOMS.CODE))
         .leftJoin(ANSWERS).on(ANSWERS.ROOM_CODE.eq(ROOMS.CODE))
         .where(trueCondition())
         .let { if (code != null) it.and(ROOMS.CODE.eq(code)) else it }
@@ -72,8 +86,9 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
           groupingBy(
             {
               it.into(ROOMS).toRoomManagementDetail(
-                participants = it.get(participants),
-                answers = it.get(answers)
+                participants = it.get(participants).toInt(),
+                answers = it.get(answers),
+                groups = it.get(groupCount)
               )
             },
             filtering(
@@ -105,7 +120,7 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         .set(ROOMS.UPDATED_AT, nowAtCHOffsetDateTime())
         .returning()
         .fetchOne()
-        ?.toRoomManagementDetail(0, 0)
+        ?.toRoomManagementDetail(0, 0, null)
         ?: throw APIException.ServerError("Could not create a new room")
     }
   }
@@ -241,7 +256,8 @@ fun RoomsRecord.toDomain() = Room(
 
 fun RoomsRecord.toRoomManagementDetail(
   participants: Int,
-  answers: Int
+  answers: Int,
+  groups: Int?
 ) = RoomManagementDetail(
   code = code!!,
   roomStatus = status!!.toDomain(),
@@ -256,7 +272,8 @@ fun RoomsRecord.toRoomManagementDetail(
   outro = RoomInteractionInfo(outroText, outroVideoTitle, outroVideoUrl),
   images = listOf(),
   participants = participants,
-  answers = answers
+  answers = answers,
+  groups = groups
 )
 
 fun Room.toRecord() = RoomsRecord().also {

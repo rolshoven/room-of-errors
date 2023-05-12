@@ -83,7 +83,8 @@ data class RoomManagementDetail(
   val outro: RoomInteractionInfo,
   val images: List<RoomImage>,
   val participants: Int,
-  val answers: Int
+  val answers: Int,
+  val groups: Int?
 )
 
 @Serializable

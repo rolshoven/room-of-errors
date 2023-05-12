@@ -13,6 +13,6 @@ data class DI(
   val answersRepository = AnswersRepository(config.dataSource)
   val usersRoomStatusRepository = UsersRoomStatusRepository(config.dataSource)
   val groupRepository = GroupRepository(config.dataSource)
-  val roomExportService = RoomExportService(roomRepository, answersRepository)
+  val roomExportService = RoomExportService(roomRepository, answersRepository, usersRoomStatusRepository, groupRepository)
   val roomManagementService = RoomManagementService(config.content, roomRepository)
 }
