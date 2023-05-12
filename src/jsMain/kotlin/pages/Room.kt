@@ -204,6 +204,12 @@ val RoomPage = FC<Props> {
                 NewUserSessionButton()
               }
             }
+            AnswerList {
+              this.images = room.images
+              this.answers = answers
+              this.reloadAnswers = reloadAnswers
+              readOnly = true
+            }
           }
 
           UsersRoomParticipationStatus.STARTED -> {
@@ -285,33 +291,11 @@ val RoomPage = FC<Props> {
             RoomFinishDialog {
               finishingAction = { finishRoom() }
             }
-            Box {
-              sx {
-                padding = 0.5.rem
-              }
-              Typography {
-                variant = TypographyVariant.body1
-                +I18n.get(
-                  language,
-                  I18n.TranslationKey.ROOM_ANSWER_ANSWERS_TOTAL,
-                  I18n.TemplateProperty.Answers(answers.size)
-                )
-              }
-              if (room.images.size > 1) room.images.mapIndexed { i, image ->
-                Typography {
-                  variant = TypographyVariant.body1
-                  +I18n.get(
-                    language,
-                    I18n.TranslationKey.ROOM_ANSWER_ANSWERS_COUNT_PER_IMAGE,
-                    I18n.TemplateProperty.Number(i + 1),
-                    I18n.TemplateProperty.Answers(answers.filter { it.imageId == image.id }.size)
-                  )
-                }
-              }
-            }
             AnswerList {
+              this.images = room.images
               this.answers = answersForCurrentImage
               this.reloadAnswers = reloadAnswers
+              this.totalAnswers = answers.size
             }
           }
 
