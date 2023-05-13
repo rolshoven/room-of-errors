@@ -75,6 +75,9 @@ object I18n {
 
       TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_PARTICIPANTS to "Teilnehmer: {participants}",
       TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_TOTAL_ANSWERS to "Total Antworten: {answers}",
+      TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_WITH_GROUP_INFORMATION to "Gruppen Information wird gesammelt: {boolean}",
+      TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_GROUPS to "Gruppen: {number}",
+      TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_PARTICIPANTS_WITHOUT_ANSWERS to "Teilnehmer / Gruppen die keine Antworten angegeben haben: {participants}",
       TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_BUTTON_EXCEL_EXPORT to "Excel Export",
       TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_EXCEL_EXPORT_FILE_NAME to "room-export-{roomCode}.xlsx",
 
@@ -101,11 +104,11 @@ object I18n {
           Also macht den Raum für den nächsten Benutzer bereit.
           """.trimIndent(),
 
-      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_LABEL to "Wird Gruppen Information verlangt.",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_LABEL to "Gruppen Information Sammeln",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_HELP_TEXT to
               "Wenn aktiviert, muss der Benutzer einen Gruppennamen und die Gruppengrösse angeben bevor gestartet werden kann.",
-      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_TEXT_LABEL to "Hilfe Text für die Gruppen Information Card",
-      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_TEXT_NOT_DEFINED to "Es ist kein Text für die Gruppen Information Card definiert.",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_TEXT_LABEL to "Hilfe Text für die Gruppen Information Card. Was soll der Benutzer machen etc.",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_TEXT_NOT_DEFINED to "Es ist kein Hilfe Text für die Gruppen Information Card definiert. Es wird nichts angezeigt.",
 
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL to "Bild Titel",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL to "Lade ein PNG Bild des Raumes hoch",
@@ -133,7 +136,7 @@ object I18n {
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_QUESTION to "Display question",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_IMAGES to "Anzahl an Bildern",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_PARTICIPANTS to "Teilnehmer",
-      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_PARTICIPANTS_WITHOUT_ANSWERS to "Teilnehmer die keine Antworten abgegeben haben",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_PARTICIPANTS_WITHOUT_ANSWERS to "Teilnehmer / Gruppen die keine Antworten abgegeben haben",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_TOTAL_ANSWERS to "Total Aller Antworten",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_COLLECT_GROUP_INFO to "Sammle Gruppen Information",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_GROUPS to "Anzahl Gruppen",
@@ -218,6 +221,9 @@ object I18n {
 
       TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_PARTICIPANTS to "participants: {participants}",
       TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_TOTAL_ANSWERS to "total answers: {answers}",
+      TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_WITH_GROUP_INFORMATION to "collect group information: {boolean}",
+      TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_GROUPS to "groups: {number}",
+      TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_LABEL_PARTICIPANTS_WITHOUT_ANSWERS to "participants / groups without answers: {participants}",
       TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_BUTTON_EXCEL_EXPORT to "Excel Export",
       TranslationKey.ROOM_MANAGEMENT_ROOM_LIST_EXCEL_EXPORT_FILE_NAME to "room-export-{roomCode}.xlsx",
 
@@ -244,11 +250,11 @@ object I18n {
           Also set it up for the next user.
           """.trimIndent(),
 
-      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_LABEL to "Require Group Information",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_LABEL to "Collect Group Information",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_HELP_TEXT to
-              "If active the user must enter a group name and the group size before they can continue.",
+              "If active the user must enter a group name and the group size before they can continue with the room.",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_TEXT_LABEL to "Help Text for the group information card",
-      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_TEXT_NOT_DEFINED to "There is no text for the group info card defined",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_TEXT_NOT_DEFINED to "There is no text for the group info card defined. There is noting displayed.",
 
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_TITLE_LABEL to "Image Title",
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_IMAGE_UPLOAD_LABEL to "upload room png image",
@@ -275,7 +281,7 @@ object I18n {
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_QUESTION to "Display question",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_IMAGES to "Number of images",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_PARTICIPANTS to "Participants",
-      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_PARTICIPANTS_WITHOUT_ANSWERS to "Participants that didn't enter an answer",
+      TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_PARTICIPANTS_WITHOUT_ANSWERS to "Participants / Groups that didn't enter an answer",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_TOTAL_ANSWERS to "Total answers",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_COLLECT_GROUP_INFO to "Collect Group Information",
       TranslationKey.ROOM_EXCEL_EXPORT_INFO_CARD_GROUPS to "Group Count",
@@ -371,6 +377,9 @@ object I18n {
 
     ROOM_MANAGEMENT_ROOM_LIST_LABEL_PARTICIPANTS,
     ROOM_MANAGEMENT_ROOM_LIST_LABEL_TOTAL_ANSWERS,
+    ROOM_MANAGEMENT_ROOM_LIST_LABEL_WITH_GROUP_INFORMATION,
+    ROOM_MANAGEMENT_ROOM_LIST_LABEL_GROUPS,
+    ROOM_MANAGEMENT_ROOM_LIST_LABEL_PARTICIPANTS_WITHOUT_ANSWERS,
     ROOM_MANAGEMENT_ROOM_LIST_BUTTON_EXCEL_EXPORT,
     ROOM_MANAGEMENT_ROOM_LIST_EXCEL_EXPORT_FILE_NAME,
 
@@ -446,6 +455,8 @@ object I18n {
     data class Answers(val number: kotlin.Number) : TemplateProperty("answers", number.toString())
     data class Number(val number: kotlin.Number) : TemplateProperty("number", number.toString())
     data class Time(override val value: String) : TemplateProperty("time", value)
+    data class BooleanParam(val bool: Boolean, val language: Language) :
+      TemplateProperty("boolean", if (bool) I18n.get(language, TranslationKey.YES) else I18n.get(language, TranslationKey.NO))
   }
 
   fun get(language: Language, key: TranslationKey) = localization[language]!![key] ?: ""

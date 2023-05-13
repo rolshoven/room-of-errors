@@ -51,27 +51,28 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
   ): List<RoomManagementDetail> {
     return jooq {
 
-      val participants = `when`(ROOMS.WITH_GROUP_INFO.isTrue,
-        select(sum(ROOM_GROUP_INFORMATION.GROUP_SIZE))
-          .from(ROOM_GROUP_INFORMATION)
-          .where(ROOM_GROUP_INFORMATION.ROOM_CODE.eq(ROOMS.CODE))
-          .asField<BigDecimal>())
-        .otherwise(
-          select(count(USERS_ROOM_STATUS.USER_ID))
-            .from(USERS_ROOM_STATUS)
-            .where(USERS_ROOM_STATUS.ROOM_CODE.eq(ROOMS.CODE))
-            .asField()
-          )
-        .`as`("participants")
+      // when no group info is collected, ROOM_GROUP_INFORMATION is null, use coalesce with 1 for the sum
+      val participants = select(sum(coalesce(ROOM_GROUP_INFORMATION.GROUP_SIZE, 1)))
+        .from(USERS_ROOM_STATUS)
+        .leftJoin(ROOM_GROUP_INFORMATION).on(ROOM_GROUP_INFORMATION.USER_ID.eq(USERS_ROOM_STATUS.USER_ID))
+        .where(USERS_ROOM_STATUS.ROOM_CODE.eq(ROOMS.CODE))
+        .asField<BigDecimal>("participants")
       val groupCount = countDistinct(ROOM_GROUP_INFORMATION.USER_ID).`as`("group_count")
       val answers = countDistinct(ANSWERS.ID).`as`("answers")
+      val participantsWithoutAnswers = selectCount()
+          .from(USERS_ROOM_STATUS)
+          .leftJoin(ANSWERS).on(ANSWERS.USER_ID.eq(USERS_ROOM_STATUS.USER_ID))
+          .where(USERS_ROOM_STATUS.ROOM_CODE.eq(ROOMS.CODE))
+          .and(ANSWERS.ID.isNull)
+          .asField<Int>("participants_without_answers")
 
       select(
         ROOMS.asterisk(),
         ROOM_IMAGES.asterisk(),
         participants,
         groupCount,
-        answers
+        answers,
+        participantsWithoutAnswers
       )
         .from(ROOMS)
         .leftJoin(ROOM_IMAGES).on(ROOM_IMAGES.ROOM_CODE.eq(ROOMS.CODE))
@@ -86,7 +87,8 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
           groupingBy(
             {
               it.into(ROOMS).toRoomManagementDetail(
-                participants = it.get(participants).toInt(),
+                participants = it.get(participants)?.toInt() ?: 0,
+                participantsWithoutAnswers = it.get(participantsWithoutAnswers),
                 answers = it.get(answers),
                 groups = it.get(groupCount)
               )
@@ -120,7 +122,7 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         .set(ROOMS.UPDATED_AT, nowAtCHOffsetDateTime())
         .returning()
         .fetchOne()
-        ?.toRoomManagementDetail(0, 0, null)
+        ?.toRoomManagementDetail(0, 0, 0, null)
         ?: throw APIException.ServerError("Could not create a new room")
     }
   }
@@ -256,6 +258,7 @@ fun RoomsRecord.toDomain() = Room(
 
 fun RoomsRecord.toRoomManagementDetail(
   participants: Int,
+  participantsWithoutAnswers: Int,
   answers: Int,
   groups: Int?
 ) = RoomManagementDetail(
@@ -272,6 +275,7 @@ fun RoomsRecord.toRoomManagementDetail(
   outro = RoomInteractionInfo(outroText, outroVideoTitle, outroVideoUrl),
   images = listOf(),
   participants = participants,
+  participantsWithoutAnswers = participantsWithoutAnswers,
   answers = answers,
   groups = groups
 )

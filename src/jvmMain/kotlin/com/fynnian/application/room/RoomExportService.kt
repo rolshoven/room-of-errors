@@ -54,7 +54,7 @@ class RoomExportService(
       I18n.get(language, ROOM_EXCEL_EXPORT_INFO_CARD_GROUPS) to room.groups,
       I18n.get(language, ROOM_EXCEL_EXPORT_INFO_CARD_PARTICIPANTS) to room.participants,
       I18n.get(language, ROOM_EXCEL_EXPORT_INFO_CARD_TOTAL_ANSWERS) to room.answers,
-      I18n.get(language, ROOM_EXCEL_EXPORT_INFO_CARD_PARTICIPANTS_WITHOUT_ANSWERS) to userStates.filterKeys { user2Answers[it] == null }.size
+      I18n.get(language, ROOM_EXCEL_EXPORT_INFO_CARD_PARTICIPANTS_WITHOUT_ANSWERS) to room.participantsWithoutAnswers
     )
     roomData.forEachIndexed { i, (text, value) ->
       sheet.createRow(roomDataStart + i).apply {

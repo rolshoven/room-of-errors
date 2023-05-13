@@ -103,7 +103,10 @@ val RoomManagementDetail = FC<Props> {
       }
       RoomManagementUserParticipation {
         participants = room.participants
+        participantsWithoutAnswers = room.participantsWithoutAnswers
         answers = room.answers
+        withGroupInformation = room.withGroupInformation
+        groups = room.groups
       }
       Spacer { size = SpacerPropsSize.SMALL }
       Box {
