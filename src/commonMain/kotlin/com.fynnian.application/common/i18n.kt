@@ -33,6 +33,7 @@ object I18n {
 
       TranslationKey.ROOM_GROUP_INFO_TITLE to "Gruppen Information",
       TranslationKey.ROOM_GROUP_INFO_GROUP_NAME_LABEL to "Gruppenname",
+      TranslationKey.ROOM_GROUP_INFO_GROUP_NAME_GENERATOR_BUTTON to "Mache mir einen Vorschlag",
       TranslationKey.ROOM_GROUP_INFO_GROUP_SIZE_LABEL to "Gruppengrösse",
       TranslationKey.ROOM_GROUP_INFO_GROUP_BUTTON to "Weiter",
 
@@ -102,6 +103,15 @@ object I18n {
           Wenn diese Option nicht aktiviert ist, sollen die Benutzer ihr eigenes Gerät für die Eingabe der Antworten verwenden.
           Mit dieser dieser Option kannst du steuern ob ein Benutzer eine neue Sitzung beginnen kann wenn der Raum beendet ist.
           Also macht den Raum für den nächsten Benutzer bereit.
+          """.trimIndent(),
+
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_AUTO_START_NEXT_ROOM_SWITCH_LABLE to "Raum Reset timer aktiviert",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_AUTO_START_NEXT_ROOM_SWITCH_HELP_TEXT to
+          """
+          Wen der Raum auf einem Gerät verwendet wird, dann kann ein Timer aktiviert werden der den Raum 
+          automatisch nach ablauf zurücksetzt.
+          Wenn diese Option aktiviert ist, läuft ein Timer, standardmäßig 5 Minuten plus, wenn ein Video vorhanden ist, die Länge des Videos.
+          Wenn diese Option nicht aktiviert ist, wird nur der Resetknopf angezeigt, und der Raum bleibt unverändert, bis der Button geklickt wird.  
           """.trimIndent(),
 
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_LABEL to "Gruppen Information Sammeln",
@@ -179,6 +189,7 @@ object I18n {
 
       TranslationKey.ROOM_GROUP_INFO_TITLE to "Group Information",
       TranslationKey.ROOM_GROUP_INFO_GROUP_NAME_LABEL to "Groupname",
+      TranslationKey.ROOM_GROUP_INFO_GROUP_NAME_GENERATOR_BUTTON to "Generate a name",
       TranslationKey.ROOM_GROUP_INFO_GROUP_SIZE_LABEL to "Group Size",
       TranslationKey.ROOM_GROUP_INFO_GROUP_BUTTON to "Continue",
 
@@ -248,6 +259,14 @@ object I18n {
           when not checked the users are meant to use their own device to enter the answers.
           With this toggle you can control if an user can start a new session when the room is completed.
           Also set it up for the next user.
+          """.trimIndent(),
+
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_AUTO_START_NEXT_ROOM_SWITCH_LABLE to "Room reset timer is active",
+      TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_AUTO_START_NEXT_ROOM_SWITCH_HELP_TEXT to
+          """
+          When the room is used on a a single device, then a timer to automatically reset the room can be activated.
+          When checked a timer runs, by default a 5 minutes plus, if there is a video, the length of the video.
+          When not checked only the restart button is shown and the room stays as is until the button is clicked.  
           """.trimIndent(),
 
       TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_LABEL to "Collect Group Information",
@@ -335,6 +354,7 @@ object I18n {
 
     ROOM_GROUP_INFO_TITLE,
     ROOM_GROUP_INFO_GROUP_NAME_LABEL,
+    ROOM_GROUP_INFO_GROUP_NAME_GENERATOR_BUTTON,
     ROOM_GROUP_INFO_GROUP_SIZE_LABEL,
     ROOM_GROUP_INFO_GROUP_BUTTON,
 
@@ -397,6 +417,9 @@ object I18n {
     ROOM_MANAGEMENT_CREATE_ROOM_ROOM_TIME_LIMIT_NOT_DEFINED,
     ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_LABLE,
     ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_HELP_TEXT,
+
+    ROOM_MANAGEMENT_CREATE_ROOM_AUTO_START_NEXT_ROOM_SWITCH_LABLE,
+    ROOM_MANAGEMENT_CREATE_ROOM_AUTO_START_NEXT_ROOM_SWITCH_HELP_TEXT,
 
     ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_LABEL,
     ROOM_MANAGEMENT_CREATE_ROOM_WITH_GROUP_INFO_SWITCH_HELP_TEXT,

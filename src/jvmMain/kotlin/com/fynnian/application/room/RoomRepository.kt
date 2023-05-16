@@ -136,6 +136,7 @@ class RoomRepository(dataSource: DataSource) : Repository(dataSource) {
         .set(ROOMS.QUESTION, room.question)
         .set(ROOMS.TIME_LIMIT_MINUTES, room.timeLimitMinutes)
         .set(ROOMS.SINGLE_DEVICE_ROOM, nvl(room.singleDeviceRoom, ROOMS.SINGLE_DEVICE_ROOM))
+        .set(ROOMS.AUTO_START_NEXT_ROOM, nvl(room.autoStartNextRoom, ROOMS.AUTO_START_NEXT_ROOM))
         .set(ROOMS.WITH_GROUP_INFO, nvl(room.withGroupInformation, ROOMS.WITH_GROUP_INFO))
         .set(ROOMS.WITH_GROUP_INFO_TEXT, room.withGroupInformationText)
         .set(ROOMS.UPDATED_AT, nowAtCHOffsetDateTime())
@@ -249,6 +250,7 @@ fun RoomsRecord.toDomain() = Room(
   question = question,
   timeLimitMinutes = timeLimitMinutes,
   singleDeviceRoom = singleDeviceRoom!!,
+  autoStartNextRoom = autoStartNextRoom!!,
   withGroupInformation = withGroupInfo!!,
   withGroupInformationText = withGroupInfoText,
   intro = RoomInteractionInfo(introText, introVideoTitle, introVideoUrl),
@@ -269,6 +271,7 @@ fun RoomsRecord.toRoomManagementDetail(
   question = question,
   timeLimitMinutes = timeLimitMinutes,
   singleDeviceRoom = singleDeviceRoom!!,
+  autoStartNextRoom = autoStartNextRoom!!,
   withGroupInformation = withGroupInfo!!,
   withGroupInformationText = withGroupInfoText,
   intro = RoomInteractionInfo(introText, introVideoTitle, introVideoUrl),
@@ -288,6 +291,7 @@ fun Room.toRecord() = RoomsRecord().also {
   it.question = question
   it.timeLimitMinutes = timeLimitMinutes
   it.singleDeviceRoom = singleDeviceRoom
+  it.autoStartNextRoom = autoStartNextRoom
   it.introText = intro.text
   it.introVideoTitle = intro.videoTitle
   it.introVideoUrl = intro.videoURl

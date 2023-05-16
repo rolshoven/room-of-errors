@@ -190,17 +190,19 @@ val RoomPage = FC<Props> {
               videoRef = outroVideoRef
               interactionInfo = room.outro
               if (room.singleDeviceRoom) {
-                RoomRestartTimer {
-                  timeLimitSeconds = roomResetTimeLimit
-                  userFinishTime = usersRoomStatus?.finishedAt ?: Instant.parse("1970-01-01T00:00:00Z")
-                  actonOnPastLimit = {
-                    scope.launch {
-                      userApi.upsertUser(User(setUserIdFromLocalStorage(uuid4()), null))?.let { setUser(it) }
+                if (room.autoStartNextRoom) {
+                  RoomRestartTimer {
+                    timeLimitSeconds = roomResetTimeLimit
+                    userFinishTime = usersRoomStatus?.finishedAt ?: Instant.parse("1970-01-01T00:00:00Z")
+                    actonOnPastLimit = {
+                      scope.launch {
+                        userApi.upsertUser(User(setUserIdFromLocalStorage(uuid4()), null))?.let { setUser(it) }
+                      }
+                      navigate(0)
                     }
-                    navigate(0)
                   }
+                  Spacer { size = SpacerPropsSize.MEDIUM }
                 }
-                Spacer { size = SpacerPropsSize.MEDIUM }
                 NewUserSessionButton()
               }
             }

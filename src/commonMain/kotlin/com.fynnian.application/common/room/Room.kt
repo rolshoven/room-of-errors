@@ -19,6 +19,7 @@ data class RoomPatch(
   val question: String?,
   val timeLimitMinutes: Int?,
   val singleDeviceRoom: Boolean?,
+  val autoStartNextRoom: Boolean?,
   val withGroupInformation: Boolean?,
   val withGroupInformationText: String?
 )
@@ -32,6 +33,7 @@ data class Room(
   val question: String?,
   val timeLimitMinutes: Int?,
   val singleDeviceRoom: Boolean,
+  val autoStartNextRoom: Boolean,
   val withGroupInformation: Boolean,
   val withGroupInformationText: String?,
   val intro: RoomInteractionInfo,
@@ -77,6 +79,7 @@ data class RoomManagementDetail(
   val question: String?,
   val timeLimitMinutes: Int?,
   val singleDeviceRoom: Boolean,
+  val autoStartNextRoom: Boolean,
   val withGroupInformation: Boolean,
   val withGroupInformationText: String?,
   val intro: RoomInteractionInfo,

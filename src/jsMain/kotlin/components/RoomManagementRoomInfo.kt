@@ -1,16 +1,19 @@
 package components
 
+import BinaryLabel
+import LabelWithHelpText
 import MissingContent
 import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.RoomManagementDetail
 import com.fynnian.application.common.room.RoomPatch
+import components.form.FormSwitchElement
 import components.form.FromRoomTitle
-import csstype.Display
-import csstype.FlexDirection
 import csstype.FlexWrap
 import csstype.rem
 import js.core.jso
-import mui.icons.material.*
+import mui.icons.material.Close
+import mui.icons.material.Edit
+import mui.icons.material.Save
 import mui.material.*
 import mui.material.styles.TypographyVariant
 import mui.system.sx
@@ -36,6 +39,7 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
   val (withTimeLimit, setWithTimeLimit) = useState(props.room.timeLimitMinutes != null)
   val (timeLimitMinutes, setTimeLimitMinutes) = useState(props.room.timeLimitMinutes)
   val (singleDeviceRoom, setSingleDeviceRoom) = useState(props.room.singleDeviceRoom)
+  val (autoStartNextRoom, setAutoStartNextRoom) = useState(props.room.autoStartNextRoom)
   val (withGroupInfo, setWithGroupInfo) = useState(props.room.withGroupInformation)
   val (withGroupInfoText, setWithGroupInfoText) = useState(props.room.withGroupInformationText)
 
@@ -46,6 +50,10 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
       setQuestion(props.room.question)
       setWithTimeLimit(props.room.timeLimitMinutes != null)
       setTimeLimitMinutes(props.room.timeLimitMinutes)
+      setSingleDeviceRoom(props.room.singleDeviceRoom)
+      setAutoStartNextRoom(props.room.autoStartNextRoom)
+      setWithGroupInfo(props.room.withGroupInformation)
+      setWithGroupInfoText(props.room.withGroupInformationText)
     }
     setEdit(state)
   }
@@ -139,30 +147,28 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
       }
 
       // single device room
-      //Divider { variant = DividerVariant.middle}
-      Spacer{ size = SpacerPropsSize.SMALL}
-      Box {
-        sx {
-          display = Display.flex
-          flexDirection = FlexDirection.row
-          gap = 0.1.rem
-        }
-        Typography {
-          variant = TypographyVariant.caption
-          +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_LABLE)
-        }
-        Tooltip {
-          title = ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_HELP_TEXT))
-          placement = TooltipPlacement.bottom
-          HelpOutline {
-            fontSize = SvgIconSize.small
-          }
-        }
+      Spacer { size = SpacerPropsSize.SMALL }
+      LabelWithHelpText {
+        this.language = language
+        this.labelKey = I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_LABLE
+        this.helpTextKey = I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_HELP_TEXT
       }
-      Typography {
-        variant = TypographyVariant.body1
-        +if (singleDeviceRoom) I18n.get(language, I18n.TranslationKey.YES)
-        else I18n.get(language, I18n.TranslationKey.NO)
+      BinaryLabel {
+        this.state = singleDeviceRoom
+        this.language = language
+      }
+      // auto start next room
+      if (singleDeviceRoom) {
+        Spacer { size = SpacerPropsSize.SMALL }
+        LabelWithHelpText {
+          this.language = language
+          this.labelKey = I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_AUTO_START_NEXT_ROOM_SWITCH_LABLE
+          this.helpTextKey = I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_AUTO_START_NEXT_ROOM_SWITCH_HELP_TEXT
+        }
+        BinaryLabel {
+          this.state = autoStartNextRoom
+          this.language = language
+        }
       }
       // Group configuration
       Spacer { size = SpacerPropsSize.SMALL }
@@ -256,22 +262,26 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
         }
       }
       Spacer { size = SpacerPropsSize.SMALL }
-      FormGroup {
-        FormControlLabel {
-          label = ReactNode(
-            I18n.get(
-              language,
-              I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_LABLE
-            )
-          )
-          control = Switch.create {
-            name = "singleDeviceRoom"
-            checked = singleDeviceRoom
-            onChange = { _, value -> setSingleDeviceRoom(value) }
-          }
+      FormSwitchElement {
+        this.language = language
+        this.labelKey = I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_LABLE
+        this.helpTextKey = I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_HELP_TEXT
+        this.fieldName = "singleDeviceRoom"
+        this.value = singleDeviceRoom
+        this.onChange = { _, value ->
+          setSingleDeviceRoom(value)
+          if (value.not()) setAutoStartNextRoom(false)
         }
-        FormHelperText {
-          +I18n.get(language, I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_SINGLE_DEVICE_ROOM_SWITCH_HELP_TEXT)
+      }
+      if (singleDeviceRoom) {
+        Spacer { size = SpacerPropsSize.SMALL }
+        FormSwitchElement {
+          this.language = language
+          this.labelKey = I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_AUTO_START_NEXT_ROOM_SWITCH_LABLE
+          this.helpTextKey = I18n.TranslationKey.ROOM_MANAGEMENT_CREATE_ROOM_AUTO_START_NEXT_ROOM_SWITCH_HELP_TEXT
+          this.fieldName = "autoStartNextRoom"
+          this.value = autoStartNextRoom
+          this.onChange = { _, value -> setAutoStartNextRoom(value) }
         }
       }
       Spacer { size = SpacerPropsSize.SMALL }
@@ -306,7 +316,7 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
         Save()
         disabled = roomTitle.isBlank()
         onClick = {
-          setEditState(false)
+          setEdit(false)
           props.editRoomAction(
             RoomPatch(
               props.room.code,
@@ -315,6 +325,7 @@ val RoomManagementRoomInfo = FC<RoomManagementRoomInfoProps> { props ->
               question,
               if (withTimeLimit) timeLimitMinutes else null,
               singleDeviceRoom,
+              autoStartNextRoom,
               withGroupInfo,
               withGroupInfoText
             )
