@@ -43,7 +43,7 @@ val RoomPage = FC<Props> {
   val (loading, setLoading) = useState(true)
   var cord by useState<Coordinates>()
   var answers by useState<List<Answer>>(mutableListOf())
-  var usersRoomStatus by useState<UsersRoomStatus>()
+  val (usersRoomStatus, setUsersRoomStatus ) = useState<UsersRoomStatus>()
   val (groupInfo, setGroupInfo) = useState<RoomGroupInformation>()
   val (currentImage, setCurrentImage) = useState(0)
 
@@ -63,12 +63,23 @@ val RoomPage = FC<Props> {
   useEffect {
     scope.launch {
       if (loading && roomCode.isNotBlank() && user != null) {
-        roomApi.getRoom(roomCode).let {
+        val r = roomApi.getRoom(roomCode).also {
           setRoom(it)
           setLoading(false)
         }
-        usersRoomStatus = roomApi.getUsersRoomStatus(roomCode, user)
+        val urs = roomApi.getUsersRoomStatus(roomCode, user).also {
+          setUsersRoomStatus(it)
+        }
         answers = roomApi.getAnswers(roomCode, user)
+        // fetch the group info if the page is reloaded during or after the room is finished
+        if (
+          r?.withGroupInformation == true &&
+          groupInfo == null &&
+          urs?.participationStatus != null &&
+          urs.participationStatus != UsersRoomParticipationStatus.NOT_STARTED
+        ) {
+          setGroupInfo(roomApi.getRoomGroupInformation(roomCode, user.id))
+        }
       }
     }
   }
@@ -108,9 +119,9 @@ val RoomPage = FC<Props> {
     }
   }
 
-  fun startRoom() { scope.launch { usersRoomStatus = roomApi.startRoom(roomCode, user!!) } }
-  fun finishRoom() { scope.launch { usersRoomStatus = roomApi.finishRoom(roomCode, user!!) } }
-  fun closeRoom() { scope.launch { usersRoomStatus = roomApi.closeRoom(roomCode, user!!) } }
+  fun startRoom() { scope.launch { setUsersRoomStatus(roomApi.startRoom(roomCode, user!!)) } }
+  fun finishRoom() { scope.launch { setUsersRoomStatus(roomApi.finishRoom(roomCode, user!!)) } }
+  fun closeRoom() { scope.launch { setUsersRoomStatus(roomApi.closeRoom(roomCode, user!!)) } }
   fun saveGroupInfo(name: String, size: Int) {
     scope.launch {
       setGroupInfo(roomApi.saveRoomGroupInformation(RoomGroupInformation(user!!.id, roomCode, size, name)))

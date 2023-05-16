@@ -140,6 +140,17 @@ class RoomApi : Api() {
     else null
   }
 
+  suspend fun getRoomGroupInformation(code: String, userId: Uuid): RoomGroupInformation? {
+    return processSimpleCall(false) {
+      get(
+        API_ROOMS_USER_GROUP_INFO.replaceParam(
+          ROOM_CODE_PARAM(code),
+          USER_ID_PARAM(userId)
+        )
+      )
+    }
+  }
+
   suspend fun saveRoomGroupInformation(data: RoomGroupInformation): RoomGroupInformation? {
     return processSimpleCall {
       put(
