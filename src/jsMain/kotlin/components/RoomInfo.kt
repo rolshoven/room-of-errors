@@ -2,6 +2,7 @@ package components
 
 import com.fynnian.application.common.I18n
 import com.fynnian.application.common.room.Room
+import com.fynnian.application.common.room.RoomGroupInformation
 import com.fynnian.application.common.room.UsersRoomParticipationStatus
 import csstype.rem
 import js.core.jso
@@ -15,6 +16,7 @@ import react.useContext
 
 external interface RoomInfoProps : PropsWithChildren {
   var room: Room
+  var groupInfo: RoomGroupInformation?
   var userState: UsersRoomParticipationStatus?
 }
 
@@ -34,6 +36,15 @@ val RoomInfo = FC<RoomInfoProps> { props ->
           I18n.TemplateProperty.RoomTitle(props.room.title)
         )
       )
+      if (props.groupInfo != null) {
+        subheader = ReactNode(
+          I18n.get(
+            language,
+            I18n.TranslationKey.ROOM_INFO_GROUP_NAME_LABEL,
+            I18n.TemplateProperty.Name(props.groupInfo!!.groupName)
+          )
+        )
+      }
       titleTypographyProps = jso {
         variant = TypographyVariant.body1
       }

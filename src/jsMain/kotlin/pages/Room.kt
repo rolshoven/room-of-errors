@@ -158,6 +158,7 @@ val RoomPage = FC<Props> {
         }
         RoomInfo {
           this.room = room
+          this.groupInfo = groupInfo
           this.userState = usersRoomStatus?.participationStatus
         }
         when (usersRoomStatus?.participationStatus) {

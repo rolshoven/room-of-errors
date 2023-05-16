@@ -25,6 +25,7 @@ object I18n {
       TranslationKey.ROOM_NAVIGATOR_BUTTON to "Zum Raum",
 
       TranslationKey.ROOM_INFO_LABEL_NAME to "Raum: {roomCode} - {roomTitle}",
+      TranslationKey.ROOM_INFO_GROUP_NAME_LABEL to "Gruppenname: {name}",
 
       TranslationKey.ROOM_STATUS_NOT_READY to "Unvollständig",
       TranslationKey.ROOM_STATUS_OPEN to "Offen",
@@ -181,6 +182,7 @@ object I18n {
       TranslationKey.ROOM_NAVIGATOR_BUTTON to "Go to room",
 
       TranslationKey.ROOM_INFO_LABEL_NAME to "Room: {roomCode} - {roomTitle}",
+      TranslationKey.ROOM_INFO_GROUP_NAME_LABEL to "Groupname: {name}",
 
       TranslationKey.ROOM_STATUS_NOT_READY to "Not Ready",
       TranslationKey.ROOM_STATUS_OPEN to "Open",
@@ -346,6 +348,7 @@ object I18n {
     ROOM_NAVIGATOR_BUTTON,
 
     ROOM_INFO_LABEL_NAME,
+    ROOM_INFO_GROUP_NAME_LABEL,
 
     ROOM_STATUS_NOT_READY,
     ROOM_STATUS_OPEN,
@@ -480,6 +483,7 @@ object I18n {
     data class Time(override val value: String) : TemplateProperty("time", value)
     data class BooleanParam(val bool: Boolean, val language: Language) :
       TemplateProperty("boolean", if (bool) I18n.get(language, TranslationKey.YES) else I18n.get(language, TranslationKey.NO))
+    data class Name(override val value: String) : TemplateProperty("name", value)
   }
 
   fun get(language: Language, key: TranslationKey) = localization[language]!![key] ?: ""
