@@ -1,6 +1,7 @@
 package components
 
 import com.fynnian.application.common.I18n
+import com.fynnian.application.common.room.GroupNameGenerator
 import csstype.TextAlign
 import js.core.jso
 import mui.material.*
@@ -51,8 +52,15 @@ val RoomGroupInfo = FC<RoomGroupInfoProps> { props ->
           type = InputType.text
           label = ReactNode(I18n.get(language, I18n.TranslationKey.ROOM_GROUP_INFO_GROUP_NAME_LABEL))
           placeholder = "name"
-          value = groupName
+          value = groupName ?: ""
           onChange = { setGroupName(it.target.unsafeCast<HTMLTextAreaElement>().value.ifBlank { null }) }
+          InputLabelProps = jso {
+            shrink = true
+          }
+        }
+        Button {
+          +I18n.get(language, I18n.TranslationKey.ROOM_GROUP_INFO_GROUP_NAME_GENERATOR_BUTTON)
+          onClick = { setGroupName(GroupNameGenerator.getName())}
         }
       }
       Spacer { size = SpacerPropsSize.SMALL }
@@ -68,6 +76,9 @@ val RoomGroupInfo = FC<RoomGroupInfoProps> { props ->
           error = isInvalidSize
           onChange = {
             setGroupSize(it.target.unsafeCast<HTMLTextAreaElement>().value.ifBlank { null })
+          }
+          InputLabelProps = jso {
+            shrink = true
           }
         }
       }
