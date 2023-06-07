@@ -101,10 +101,11 @@ class RoomExportService(
           addCell(RoomExportAnswerColumns.FINISHED, finished ?: "")
           addCell(
             RoomExportAnswerColumns.TIME,
-            Duration.between(started, finished)
-              .run { "%02d:%02d:%02d".format(toHours(), toMinutesPart(), toSecondsPart()) })
-
-
+            if (started != null && finished != null)
+              Duration.between(started, finished)
+                .run { "%02d:%02d:%02d".format(toHours(), toMinutesPart(), toSecondsPart()) }
+            else ""
+          )
           currentAnswerRow++
         }
       }
