@@ -3,7 +3,7 @@ FROM eclipse-temurin:17-jre-alpine
 ENV PROFILE PROD
 
 COPY build/install/room-of-horrors /room-of-horrors
-COPY build/compileSync/js/main/productionExecutable/kotlin/ /room-of-horrors/static/
+COPY build/compileSync/js/main/productionExecutable/kotlin/* /room-of-horrors/static/
 
 WORKDIR /room-of-horrors
 

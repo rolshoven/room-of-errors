@@ -1,12 +1,14 @@
 package com.fynnian.application.common
 
+
 import com.benasher44.uuid.Uuid
 import com.fynnian.application.common.room.RoomStatus
 
 object URLS {
-  private val STATIC_PREFIX = if (System.getenv("PROFILE") == "PROD") "/training" else ""
 
-  const val API_ROOT = "/api"
+  const val ROOT = "/training"
+
+  const val API_ROOT = "$ROOT/api"
   const val API_USERS = "$API_ROOT/users"
   const val API_USERS_BY_ID = "$API_ROOT/users/{id}"
   const val API_ROOMS = "$API_ROOT/rooms"
@@ -30,16 +32,16 @@ object URLS {
   const val API_ROOMS_MANAGEMENT_ROOM_OUTRO = "$API_ROOT/management/rooms/{code}/outro"
 
   const val API_ROOMS_MANAGEMENT_EXCEL_EXPORT = "$API_ROOT/management/rooms/{code}/export"
-  const val STATIC_ROOT = "$STATIC_PREFIX/static"
-  const val STATIC_IMAGES_ROOT = "$STATIC_PREFIX/static/images"
-  const val STATIC_IMAGES_IMAGE = "$STATIC_PREFIX/static/images/{imageName}"
-  const val STATIC_VIDEOS_ROOT = "$STATIC_PREFIX/static/videos"
-  const val STATIC_VIDEOS_VIDEO = "$STATIC_PREFIX/static/videos/{videoName}"
+  const val STATIC_ROOT = "$ROOT/static"
+  const val STATIC_IMAGES_ROOT = "$STATIC_ROOT/images"
+  const val STATIC_IMAGES_IMAGE = "$STATIC_ROOT/images/{imageName}"
+  const val STATIC_VIDEOS_ROOT = "$STATIC_ROOT/videos"
+  const val STATIC_VIDEOS_VIDEO = "$STATIC_ROOT/videos/{videoName}"
 
-  const val HOME = "/"
-  const val ROOM = "/room/{code}"
-  const val MANAGEMENT = "/management"
-  const val MANAGEMENT_ROOM_DETAIL = "/management/room/{code}"
+  const val HOME = "$ROOT/"
+  const val ROOM = "$ROOT/room/{code}"
+  const val MANAGEMENT = "$ROOT/management"
+  const val MANAGEMENT_ROOM_DETAIL = "$ROOT/management/room/{code}"
 
   fun String.replaceParam(vararg params: Param) =
     params.fold(this) { u, param -> u.replace("{${param.key}}", param.value) }
