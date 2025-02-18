@@ -25,7 +25,9 @@ enum class Profile {
 data class AppConfig(
   val profile: Profile,
   val dataSource: DataSource,
-  val content: Content
+  val content: Content,
+  val supabaseUrl: String,
+  val supabaseKey: String
 ) {
   companion object {
     private const val root = "ktor.environment"
@@ -34,8 +36,10 @@ data class AppConfig(
         config.propertyOrNull("$root.profile")
           ?.let { Profile.fromString(it.getString()) } ?: Profile.DEV,
         DataSource.initFrom(config),
-        Content.initFrom(config)
-      )
+        Content.initFrom(config),
+        config.propertyOrNull("$root.supabaseUrl").toString(),
+        config.propertyOrNull("$root.supabaseKey").toString()
+        )
     }
   }
 }

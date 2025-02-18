@@ -95,6 +95,7 @@ kotlin {
         implementation("io.ktor:ktor-client-cio:${Versions.ktor}")
         implementation("io.ktor:ktor-serialization:${Versions.ktor}")
         implementation("io.ktor:ktor-serialization-kotlinx-json:${Versions.ktor}")
+        implementation("io.ktor:ktor-server-sessions:${Versions.ktor}")
         implementation("ch.qos.logback:logback-classic:${Versions.logback}")
         implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2")
 
@@ -107,6 +108,10 @@ kotlin {
         // generate excel files
         implementation("org.apache.poi:poi:${Versions.poi}")
         implementation("org.apache.poi:poi-ooxml:${Versions.poi}")
+
+        // auth
+        // https://github.com/supabase-community/supabase-kt
+        implementation("io.github.jan-tennert.supabase:auth-kt:3.1.1")
 
       }
     }
