@@ -8,6 +8,9 @@ import com.fynnian.application.config.Profile
 import com.fynnian.application.room.roomApi
 import com.fynnian.application.room.roomManagementApi
 import com.fynnian.application.user.userApi
+import com.fynnian.application.auth.authApi
+import com.fynnian.application.auth.authenticatedRoute
+import io.github.jan.supabase.auth.user.UserSession
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
@@ -22,6 +25,7 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 import kotlinx.serialization.json.Json
 import java.io.File
 
@@ -32,6 +36,15 @@ fun Application.module() {
   val config = AppConfig.initFrom(environment.config)
   FlywayConfig(config.dataSource)
   val dependencies = DI(config)
+
+  install(Sessions) {
+    cookie<UserSession>("userSession") {
+      cookie.path = "/training/"  // Available for all API calls
+      cookie.httpOnly = true  // Prevents JavaScript access (security)
+      cookie.secure = config.profile == Profile.PROD
+      cookie.maxAgeInSeconds = 3600  // 1-hour session duration
+    }
+  }
 
   installExceptionHandling()
   install(ContentNegotiation) {
@@ -84,9 +97,13 @@ fun Application.module() {
       staticRootFolder = File(config.content.videoUploadDir)
       files(".")
     }
+    authApi(dependencies)
     userApi(dependencies)
     roomApi(dependencies)
-    roomManagementApi(dependencies)
+
+    authenticatedRoute {
+      roomManagementApi(dependencies)
+    }
   }
 }
 

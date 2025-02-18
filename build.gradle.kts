@@ -1,6 +1,9 @@
+import org.jetbrains.kotlin.config.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 plugins {
-  val kotlin = "1.8.0"
-  val ktor = "2.2.2"
+  val kotlin = "2.1.0"
+  val ktor = "3.0.3"
   val flyway = "9.8.2"
   val jooq = "8.0"
   kotlin("multiplatform") version kotlin
@@ -16,12 +19,12 @@ version = "1.0-SNAPSHOT"
 
 object Versions {
   // https://github.com/JetBrains/kotlin-wrappers
-  const val kotlin = "1.8.0"
+  const val kotlin = "2.1.0"
   const val wrapperBom = "1.0.0-pre.485"
   const val serializationJson = "1.4.1"
   const val coroutines = "1.6.4"
   const val kotlinDatetime = "0.4.0"
-  const val ktor = "2.2.2"
+  const val ktor = "3.0.3"
   const val logback = "1.2.11"
   const val multiplatformUUID = "0.6.0"
   const val hikari = "5.0.1"
@@ -31,6 +34,7 @@ object Versions {
   const val poi = "5.2.3"
 
   const val assertj = "3.24.2"
+  const val supabase = "3.1.1"
 }
 
 repositories {
@@ -44,9 +48,6 @@ dependencies {
 
 kotlin {
   jvm {
-    compilations.all {
-      kotlinOptions.jvmTarget = "17"
-    }
     withJava()
     testRuns["test"].executionTask.configure {
       useJUnitPlatform()
@@ -92,6 +93,7 @@ kotlin {
         implementation("io.ktor:ktor-server-core-jvm:${Versions.ktor}")
         implementation("io.ktor:ktor-server-netty:${Versions.ktor}")
         implementation("io.ktor:ktor-server-status-pages:${Versions.ktor}")
+        implementation("io.ktor:ktor-server-sessions:${Versions.ktor}")
         implementation("io.ktor:ktor-client-cio:${Versions.ktor}")
         implementation("io.ktor:ktor-serialization:${Versions.ktor}")
         implementation("io.ktor:ktor-serialization-kotlinx-json:${Versions.ktor}")
@@ -107,6 +109,10 @@ kotlin {
         // generate excel files
         implementation("org.apache.poi:poi:${Versions.poi}")
         implementation("org.apache.poi:poi-ooxml:${Versions.poi}")
+
+        // auth
+        // https://github.com/supabase-community/supabase-kt
+        implementation("io.github.jan-tennert.supabase:auth-kt:${Versions.supabase}")
 
       }
     }
@@ -151,7 +157,7 @@ application {
 }
 
 val dbDriver = "org.h2.Driver"
-val dbUrl = "jdbc:h2:file:${project.buildDir}/flyway/horrors_db"
+val dbUrl = "jdbc:h2:file:${project.layout.buildDirectory.get()}/flyway/horrors_db"
 val dbUser = "test"
 val dbPassword = "test"
 val dbSchema = "room_of_horrors"
@@ -232,7 +238,7 @@ tasks.getByName<Jar>("jvmJar") {
     val webpackTask =
       tasks.getByName<org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack>("jsBrowserProductionWebpack")
     dependsOn(webpackTask) // make sure JS gets compiled first
-    from(File(webpackTask.destinationDirectory, webpackTask.outputFileName)) // bring output file along into the JAR
+    from(File(webpackTask.outputDirectory.get().toString(), webpackTask.mainOutputFileName.get())) // bring output file along into the JAR
   }
 }
 
@@ -243,4 +249,11 @@ tasks.getByName<JavaExec>("run") {
 // resolve gradle warning for depending task
 tasks.getByName("jsBrowserDevelopmentRun") {
   dependsOn(tasks.getByName("jsDevelopmentExecutableCompileSync"))
+}
+
+tasks.withType<KotlinJvmCompile>().configureEach {
+  compilerOptions {
+    jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+    freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+  }
 }

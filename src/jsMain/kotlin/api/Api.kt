@@ -46,8 +46,12 @@ import react.StateSetter
 import react.useContext
 import web.file.File
 import kotlin.math.floor
+import kotlinx.browser.window
+
 
 open class Api {
+  private val authApi = AuthApi()
+
   val client = HttpClient {
     install(ContentNegotiation) {
       json(Json {
@@ -62,11 +66,22 @@ open class Api {
     snackbarContext.showSnackbar(true)
   }
 
+  /** Checks authentication before making any request */
+  suspend fun ensureAuthenticated(): Boolean {
+    val isAuthenticated = authApi.isAuthenticated()
+    if (!isAuthenticated) {
+      window.location.href = "/login"
+    }
+    return isAuthenticated
+  }
+
   // ToDo: handle error better, currently a mix of showing snack bar and returning null
   suspend inline fun <reified T> processSimpleCall(
     displayError: Boolean = true,
     request: HttpClient.() -> HttpResponse
   ): T? {
+    if (!ensureAuthenticated()) return null
+
     val response = client.request().call.response
     return if (response.status == HttpStatusCode.OK) {
       snackbarContext.apiErrorResponse(null)
@@ -88,6 +103,8 @@ open class Api {
     displayError: Boolean = true,
     request: HttpClient.() -> HttpResponse
   ): APIErrorResponse? {
+    if (!ensureAuthenticated()) return null
+
     val response = client.request()
     return if (response.status == HttpStatusCode.OK) {
       snackbarContext.apiErrorResponse(null)
@@ -349,7 +366,7 @@ class RoomManagementApi : Api() {
           )
         }
         onUpload { bytesSentTotal, contentLength ->
-          val pct = bytesSentTotal / (contentLength / 100.0)
+          val pct = bytesSentTotal / ((contentLength ?: 0) / 100.0)
           val part = floor((pct + 5 - 1) / 5) * 5
           setProgress(part.toInt())
         }
