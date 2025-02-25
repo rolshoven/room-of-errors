@@ -2,7 +2,6 @@ package com.fynnian.application.room
 
 import com.benasher44.uuid.uuid4
 import com.fynnian.application.APIException
-import com.fynnian.application.auth.authenticatedRoute
 import com.fynnian.application.common.*
 import com.fynnian.application.common.URLS.replaceParam
 import com.fynnian.application.common.room.*
@@ -15,6 +14,7 @@ import io.ktor.server.routing.*
 import org.slf4j.LoggerFactory
 import java.io.File
 
+// ToDo: Secure endpoints
 fun Route.roomManagementApi(dependencies: DI) {
   val log = LoggerFactory.getLogger("RoomManagementApi")
   val codeParam = "code"

@@ -9,7 +9,6 @@ object URLS {
   const val ROOT = "/training"
 
   const val API_ROOT = "$ROOT/api"
-  const val API_AUTH_CHECK = "$API_ROOT/auth/check"
   const val API_USERS = "$API_ROOT/users"
   const val API_USERS_BY_ID = "$API_ROOT/users/{id}"
   const val API_ROOMS = "$API_ROOT/rooms"

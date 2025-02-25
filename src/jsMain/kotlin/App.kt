@@ -37,7 +37,7 @@ private val Routing = FC<Props> {
   BrowserRouter {
     Routes {
       Route {
-        path = URLS.ROOT
+        index = true
         element = createElement(Landingpage)
       }
       Route {

@@ -1,3 +1,3 @@
 
-rootProject.name = "room-of-errors"
+rootProject.name = "room-of-horrors"
 
